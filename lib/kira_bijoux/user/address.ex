@@ -15,7 +15,7 @@ defmodule KiraBijoux.User.Address do
   end
 
   @doc false
-  def changeset(address, attrs) do
+  def changeset(address, attrs \\ %{}) do
     address
     |> cast(attrs, [:user_id, :name, :recipient, :first_line, :second_line, :post_code, :town])
     |> validate_required([:user_id, :name, :recipient, :first_line, :second_line, :post_code, :town])

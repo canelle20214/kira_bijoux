@@ -10,7 +10,7 @@ defmodule KiraBijoux.Component do
   end
 
   @doc false
-  def changeset(component, attrs) do
+  def changeset(component, attrs \\ %{}) do
     component
     |> cast(attrs, [:component_type_id, :name])
     |> validate_required([:component_type_id, :name])

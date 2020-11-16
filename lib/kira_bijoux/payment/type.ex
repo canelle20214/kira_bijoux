@@ -9,7 +9,7 @@ defmodule KiraBijoux.Payment.Type do
   end
 
   @doc false
-  def changeset(type, attrs) do
+  def changeset(type, attrs \\ %{}) do
     type
     |> cast(attrs, [:name])
     |> validate_required([:name])

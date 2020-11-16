@@ -12,7 +12,7 @@ defmodule KiraBijoux.Article.Picture do
   end
 
   @doc false
-  def changeset(picture, attrs) do
+  def changeset(picture, attrs \\ %{}) do
     picture
     |> cast(attrs, [:article_id, :name, :path, :place])
     |> validate_required([:article_id, :name, :path, :place])

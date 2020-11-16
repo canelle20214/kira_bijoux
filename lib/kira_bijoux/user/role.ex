@@ -9,7 +9,7 @@ defmodule KiraBijoux.User.Role do
   end
 
   @doc false
-  def changeset(role, attrs) do
+  def changeset(role, attrs \\ %{}) do
     role
     |> cast(attrs, [:role])
     |> validate_required([:role])

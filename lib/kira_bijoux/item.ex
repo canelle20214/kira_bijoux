@@ -13,7 +13,7 @@ defmodule KiraBijoux.Item do
   end
 
   @doc false
-  def changeset(item, attrs) do
+  def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, [:material_id, :collection_id, :name, :price, :visibility])
     |> validate_required([:material_id, :collection_id, :name, :price, :visibility])

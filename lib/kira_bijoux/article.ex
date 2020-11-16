@@ -12,7 +12,7 @@ defmodule KiraBijoux.Article do
   end
 
   @doc false
-  def changeset(article, attrs) do
+  def changeset(article, attrs \\ %{}) do
     article
     |> cast(attrs, [:page_id, :name, :content, :place])
     |> validate_required([:page_id, :name, :content, :place])

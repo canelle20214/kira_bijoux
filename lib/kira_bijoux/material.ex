@@ -10,7 +10,7 @@ defmodule KiraBijoux.Material do
   end
 
   @doc false
-  def changeset(product, attrs) do
+  def changeset(product, attrs \\ %{}) do
     product
     |> cast(attrs, [:material_type_id, :name])
     |> validate_required([:material_type_id, :name])

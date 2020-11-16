@@ -9,7 +9,7 @@ defmodule KiraBijoux.Order.Status do
   end
 
   @doc false
-  def changeset(status, attrs) do
+  def changeset(status, attrs \\ %{}) do
     status
     |> cast(attrs, [:name])
     |> validate_required([:name])

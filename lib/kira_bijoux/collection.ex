@@ -9,7 +9,7 @@ defmodule KiraBijoux.Collection do
   end
 
   @doc false
-  def changeset(collection, attrs) do
+  def changeset(collection, attrs \\ %{}) do
     collection
     |> cast(attrs, [:name])
     |> validate_required([:name])

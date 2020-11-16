@@ -10,7 +10,7 @@ defmodule KiraBijoux.Template do
   end
 
   @doc false
-  def changeset(template, attrs) do
+  def changeset(template, attrs \\ %{}) do
     template
     |> cast(attrs, [:name, :color])
     |> validate_required([:name, :color])

@@ -23,7 +23,11 @@ defmodule KiraBijouxWeb do
 
       import Plug.Conn
       import KiraBijouxWeb.Gettext
+      import Ecto.Query, only: [from: 2]
+      import Logger
+
       alias KiraBijouxWeb.Router.Helpers, as: Routes
+      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Order, Page, Repo, Template, User}
     end
   end
 
@@ -35,8 +39,9 @@ defmodule KiraBijouxWeb do
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
-        only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
+        only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1, json: 2]
 
+      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Order, Page, Repo, Template, User}
       # Include shared imports and aliases for views
       unquote(view_helpers())
     end
@@ -66,6 +71,7 @@ defmodule KiraBijouxWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import Ecto.Query, only: [from: 2]
       import KiraBijouxWeb.ErrorHelpers
       import KiraBijouxWeb.Gettext
       alias KiraBijouxWeb.Router.Helpers, as: Routes

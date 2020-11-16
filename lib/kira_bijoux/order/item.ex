@@ -11,7 +11,7 @@ defmodule KiraBijoux.Order.Item do
   end
 
   @doc false
-  def changeset(item, attrs) do
+  def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, [:order_id, :product_item_id, :quantity])
     |> validate_required([:order_id, :product_item_id, :quantity])

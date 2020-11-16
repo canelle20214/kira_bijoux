@@ -10,7 +10,7 @@ defmodule KiraBijoux.Admin do
   end
 
   @doc false
-  def changeset(admin, attrs) do
+  def changeset(admin, attrs \\ %{}) do
     admin
     |> cast(attrs, [:login, :password])
     |> validate_required([:login, :password])

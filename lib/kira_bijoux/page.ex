@@ -10,7 +10,7 @@ defmodule KiraBijoux.Page do
   end
 
   @doc false
-  def changeset(page, attrs) do
+  def changeset(page, attrs \\ %{}) do
     page
     |> cast(attrs, [:name, :visibility])
     |> validate_required([:name, :visibility])
