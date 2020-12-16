@@ -26,9 +26,14 @@ defmodule KiraBijouxWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", KiraBijouxWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", KiraBijouxWeb do
+    pipe_through :api
+    get("/users", UserController, :index)
+    get("/users/:id", UserController, :show)
+    post("/users/create", UserController, :create)
+    put("/users/update/:id", UserController, :update)
+    delete("/users/:id", UserController, :delete)
+  end
 
   # Enables LiveDashboard only for development
   #
