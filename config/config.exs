@@ -18,6 +18,15 @@ config :kira_bijoux, KiraBijouxWeb.Endpoint,
   pubsub_server: KiraBijoux.PubSub,
   live_view: [signing_salt: "t1Teu373"]
 
+# Configures the Swagger
+config :kira_bijoux, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      router: KiraBijouxWeb.Router,
+      endpoint: KiraBijouxWeb.Endpoint
+    ]
+  }
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -25,6 +34,9 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# Use Jason for JSON parsing in Swagger
+config :phoenix_swagger, json_library: Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
