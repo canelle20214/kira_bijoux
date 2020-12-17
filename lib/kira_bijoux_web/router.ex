@@ -35,6 +35,22 @@ defmodule KiraBijouxWeb.Router do
     delete("/users/:id", UserController, :delete)
   end
 
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :kira_bijoux,
+      swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      basePath: "/api",
+      info: %{
+        version: "1.0",
+        title: "Kira Bijoux API"
+      },
+    }
+  end
+
   # Enables LiveDashboard only for development
   #
   # If you want to use the LiveDashboard in production, you should put
