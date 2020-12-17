@@ -7,6 +7,12 @@ defmodule KiraBijouxWeb.UserController do
     |> KiraBijouxWeb.UserView.render("index.json", %{users: users})
   end
 
+  def show(conn, %{"id" => id}) do
+    user = Repo.get!(User, id)
+    put_status(conn, 200)
+    |> KiraBijouxWeb.UserView.render("show.json", %{user: user})
+  end
+
   def create(conn, params) do
     firstname = params["firstname"]
     lastname = params["lastname"]
@@ -22,13 +28,7 @@ defmodule KiraBijouxWeb.UserController do
     end
   end
 
-  def show(conn, %{"user_id" => id}) do
-    user = Repo.get!(User, id)
-    put_status(conn, 200)
-    |> KiraBijouxWeb.UserView.render("show.json", %{user: user})
-  end
-
-  def update(conn, %{"user_id" => id, "mail" => mail}) do
+  def update(conn, %{"id" => id, "mail" => mail}) do
     user = Repo.get!(User, id)
     |> KiraBijoux.User.changeset(%{mail: mail})
     case Repo.update user do
@@ -41,7 +41,7 @@ defmodule KiraBijouxWeb.UserController do
     end
   end
 
-  def delete(conn, %{"user_id" => id}) do
+  def delete(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
     case Repo.delete user do
       {:ok, user} ->
