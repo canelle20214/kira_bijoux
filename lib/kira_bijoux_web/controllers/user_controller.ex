@@ -14,7 +14,7 @@ defmodule KiraBijouxWeb.UserController do
     password = params["password"]
     case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
-        put_status(conn, 200)
+        put_status(conn, 201)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
       {:error, changeset} ->
         Logger.error changeset
@@ -52,6 +52,4 @@ defmodule KiraBijouxWeb.UserController do
         put_status(conn, 500)
     end
   end
-
-
 end
