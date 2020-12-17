@@ -30,8 +30,8 @@ defmodule KiraBijouxWeb.Router do
     pipe_through :api
     get("/users", UserController, :index)
     get("/users/:id", UserController, :show)
-    post("/users/create", UserController, :create)
-    put("/users/update/:id", UserController, :update)
+    post("/users", UserController, :create)
+    put("/users/:id", UserController, :update)
     delete("/users/:id", UserController, :delete)
   end
 
