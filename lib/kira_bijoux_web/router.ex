@@ -26,9 +26,30 @@ defmodule KiraBijouxWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", KiraBijouxWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", KiraBijouxWeb do
+    pipe_through :api
+    get("/users", UserController, :index)
+    get("/users/:id", UserController, :show)
+    post("/users", UserController, :create)
+    put("/users/:id", UserController, :update)
+    delete("/users/:id", UserController, :delete)
+  end
+
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :kira_bijoux,
+      swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      basePath: "/api",
+      info: %{
+        version: "1.0",
+        title: "Kira Bijoux API"
+      },
+    }
+  end
 
   # Enables LiveDashboard only for development
   #
