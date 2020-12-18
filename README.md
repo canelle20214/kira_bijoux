@@ -37,7 +37,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 	* Tuto : https://www.guru99.com/download-install-postgresql.html
 	* Username : ```postgres``` / Password : ```postgres```
 	* Lancer logiciel Editeur du Registre :
-	* Chemin : Ordinateur\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.js
+	* Chemin : ```Ordinateur\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.js```
 	* Modifier la variable Content Type pour mettre : ```text/javascript```
 	* Redémarrer votre PC et exécuter pgAdmin4
 
