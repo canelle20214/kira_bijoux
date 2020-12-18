@@ -2,7 +2,7 @@ defmodule KiraBijoux.Material.Item do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "material_types" do
+  schema "material_items" do
     field :material_id, :id
     field :item_id, :id
 
