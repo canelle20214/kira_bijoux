@@ -5,6 +5,7 @@ defmodule KiraBijoux.Item do
   schema "items" do
     field :name, :string
     field :price, :float
+    field :description, :string
     field :visibility, :boolean, default: false
     field :material_id, :id
     field :collection_id, :id
