@@ -8,7 +8,7 @@ defmodule KiraBijoux.Repo.Migrations.CreateUsers do
       add :lastname, :string
       add :mail, :string
       add :password, :string
-      add :tel, :string
+      add :phone, :string
 
       timestamps()
     end
