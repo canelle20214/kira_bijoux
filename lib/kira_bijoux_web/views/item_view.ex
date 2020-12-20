@@ -7,6 +7,7 @@ defmodule KiraBijouxWeb.ItemView do
     |> Map.put(:description, item.description)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
+    |> Map.put(:item_type_id, item.item_type_id)
     |> Map.put(:visibility, item.visibility)
     conn
     |> json(item)
@@ -18,6 +19,7 @@ defmodule KiraBijouxWeb.ItemView do
     |> Map.put(:description, item.description)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
+    |> Map.put(:item_type_id, item.item_type_id)
     |> Map.put(:visibility, item.visibility)
     conn
     |> json(item)
@@ -30,6 +32,7 @@ defmodule KiraBijouxWeb.ItemView do
       |> Map.put(:description, n.description)
       |> Map.put(:price, n.price)
       |> Map.put(:materials, materials)
+      |> Map.put(:item_type_id, n.item_type_id)
       |> Map.put(:visibility, n.visibility)
     end)
     conn
