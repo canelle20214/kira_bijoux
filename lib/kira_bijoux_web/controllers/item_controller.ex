@@ -13,8 +13,9 @@ defmodule KiraBijouxWeb.ItemController do
     description = params["description"]
     visibility = params["visibility"]
     material_ids = params["materials"]
+    type = params["item_type_id"]
     materials = Repo.all(from m in Material, select: m, where: m.id in ^material_ids)
-    case Repo.insert %Item{name: name, price: price, description: description, visibility: visibility} do
+    case Repo.insert %Item{name: name, price: price, description: description, item_type_id: type, visibility: visibility} do
       {:ok, item} ->
         b = materials
         |> Enum.map(&Repo.insert %Material.Item{material_id: &1.id, item_id: item.id})
@@ -36,7 +37,7 @@ defmodule KiraBijouxWeb.ItemController do
   def show(conn, %{"item_id" => id}) do
     item = Repo.get!(Item, id)
     put_status(conn, 200)
-    |> ItemView.render("show.json", %{item: item})
+    |> ItemView.render("index.json", %{item: item})
   end
 
   def update(conn, params) do
@@ -44,10 +45,11 @@ defmodule KiraBijouxWeb.ItemController do
     name = params["name"] || item.name
     price = params["price"] || item.price
     description = params["description"] || item.description
+    type = params["item_type_id"]
     visibility = params["visibility"] || item.visibility
     existing_materials = Repo.all(from mi in Material.Item, select: mi.id, where: mi.item_id == ^item.id)
     materials = params["materials"] || existing_materials
-    case Repo.update User.changeset(item, %{name: name, price: price, description: description, visibility: visibility}) do
+    case Repo.update User.changeset(item, %{name: name, price: price, description: description, item_type_id: type, visibility: visibility}) do
       {:ok, item} ->
         if Enum.all?(existing_materials, & Enum.member?(materials, &1)) && length(existing_materials) == length(materials) do
           put_status(conn, 200)

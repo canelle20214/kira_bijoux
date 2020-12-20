@@ -5,7 +5,7 @@ defmodule KiraBijoux.Order.Item do
   schema "order_items" do
     field :quantity, :integer
     field :order_id, :id
-    field :product_item_id, :id
+    field :item_id, :id
 
     timestamps()
   end
@@ -13,7 +13,7 @@ defmodule KiraBijoux.Order.Item do
   @doc false
   def changeset(item, attrs \\ %{}) do
     item
-    |> cast(attrs, [:order_id, :product_item_id, :quantity])
-    |> validate_required([:order_id, :product_item_id, :quantity])
+    |> cast(attrs, [:order_id, :item_id, :quantity])
+    |> validate_required([:order_id, :item_id, :quantity])
   end
 end

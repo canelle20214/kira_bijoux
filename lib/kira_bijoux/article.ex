@@ -3,10 +3,11 @@ defmodule KiraBijoux.Article do
   import Ecto.Changeset
 
   schema "articles" do
-    field :content, :string
-    field :name, :string
-    field :place, :integer
     field :page_id, :id
+    field :template_id, :id
+    field :name, :string
+    field :content, :string
+    field :place, :integer
 
     timestamps()
   end
@@ -14,7 +15,7 @@ defmodule KiraBijoux.Article do
   @doc false
   def changeset(article, attrs \\ %{}) do
     article
-    |> cast(attrs, [:page_id, :name, :content, :place])
-    |> validate_required([:page_id, :name, :content, :place])
+    |> cast(attrs, [:page_id, :template_id, :name, :content, :place])
+    |> validate_required([:page_id, :template_id, :name, :content, :place])
   end
 end

@@ -6,7 +6,7 @@ defmodule KiraBijoux.Item.Picture do
     field :name, :string
     field :path, :string
     field :place, :integer
-    field :product_item_id, :id
+    field :item_id, :id
 
     timestamps()
   end
@@ -14,7 +14,7 @@ defmodule KiraBijoux.Item.Picture do
   @doc false
   def changeset(picture, attrs \\ %{}) do
     picture
-    |> cast(attrs, [:product_item_id, :name, :path, :place])
-    |> validate_required([:product_item_id, :name, :path, :place])
+    |> cast(attrs, [:item_id, :name, :path, :place])
+    |> validate_required([:item_id, :name, :path, :place])
   end
 end

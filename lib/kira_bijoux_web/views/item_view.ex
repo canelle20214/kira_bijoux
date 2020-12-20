@@ -2,38 +2,27 @@ defmodule KiraBijouxWeb.ItemView do
   use KiraBijouxWeb, :view
 
   def render(conn, "index.json", %{item: item}) do
-    materials = Repo.all(from mi in Material.Item, select: mi.id, where: mi.item_id == ^item.id)
-    item = Map.new(:name, item.name)
-    |> Map.put(:description, item.description)
-    |> Map.put(:price, item.price)
-    |> Map.put(:materials, materials)
-    |> Map.put(:visibility, item.visibility)
     conn
-    |> json(item)
-  end
-
-  def render(conn, "show.json", %{item: item}) do
-    materials = Repo.all(from mi in Material.Item, select: mi.id, where: mi.item_id == ^item.id)
-    item = Map.new(:name, item.name)
-    |> Map.put(:description, item.description)
-    |> Map.put(:price, item.price)
-    |> Map.put(:materials, materials)
-    |> Map.put(:visibility, item.visibility)
-    conn
-    |> json(item)
+    |> json(item_construction(item))
   end
 
   def render(conn, "index.json", %{items: items}) do
     items = Enum.map(items, fn n ->
-      materials = Repo.all(from mi in Material.Item, select: mi.id, where: mi.item_id == ^n.id)
-      Map.new(:name, n.name)
-      |> Map.put(:description, n.description)
-      |> Map.put(:price, n.price)
-      |> Map.put(:materials, materials)
-      |> Map.put(:visibility, n.visibility)
+      item_construction(n)
     end)
     conn
     |> json(items)
   end
 
+  def item_construction(item) do
+    materials = Repo.all(from mi in Material.Item, select: mi, where: mi.item_id == ^item.id)
+    Map.new(:name, item.name)
+    |> Map.put(:description, item.description)
+    |> Map.put(:price, item.price)
+    |> Map.put(:materials, materials)
+    |> Map.put(:item_type_id, item.item_type_id)
+    |> Map.put(:visibility, item.visibility)
+    |> Map.put(:inserted_at, item.inserted_at)
+    |> Map.put(:updated_at, item.updated_at)
+  end
 end

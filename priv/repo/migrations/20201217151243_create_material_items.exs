@@ -3,7 +3,7 @@ defmodule KiraBijoux.Repo.Migrations.CreateMaterialItems do
 
   def change do
     create table(:material_items) do
-      add :material_id, references(:products, [ on_delete: :delete_all, on_update: :update_all ])
+      add :material_id, references(:materials, [ on_delete: :delete_all, on_update: :update_all ])
       add :item_id, references(:items, [ on_delete: :delete_all, on_update: :update_all ])
 
       timestamps()
