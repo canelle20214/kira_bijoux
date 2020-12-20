@@ -7,6 +7,7 @@ defmodule KiraBijoux.User do
     field :lastname, :string
     field :mail, :string
     field :password, :string
+    field :phone, :integer
     field :user_role_id, :id
 
     timestamps()
