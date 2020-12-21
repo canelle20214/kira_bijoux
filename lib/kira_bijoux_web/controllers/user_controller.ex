@@ -54,6 +54,7 @@ defmodule KiraBijouxWeb.UserController do
     lastname = params["lastname"]
     mail = params["mail"]
     password = params["password"]
+    password = Comeonin.Bcrypt.hashpwsalt(password)
     case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
         put_status(conn, 201)

@@ -37,7 +37,7 @@ defmodule KiraBijouxWeb.ItemController do
   def show(conn, %{"item_id" => id}) do
     item = Repo.get!(Item, id)
     put_status(conn, 200)
-    |> ItemView.render("show.json", %{item: item})
+    |> ItemView.render("index.json", %{item: item})
   end
 
   def update(conn, params) do
