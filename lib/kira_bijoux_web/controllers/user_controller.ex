@@ -31,7 +31,7 @@ defmodule KiraBijouxWeb.UserController do
   def show(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
     put_status(conn, 200)
-    |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+    |> KiraBijouxWeb.UserView.render("show.json", %{user: user})
   end
 
 
@@ -54,6 +54,7 @@ defmodule KiraBijouxWeb.UserController do
     lastname = params["lastname"]
     mail = params["mail"]
     password = params["password"]
+    password = Comeonin.Bcrypt.hashpwsalt(password)
     case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
         put_status(conn, 201)
