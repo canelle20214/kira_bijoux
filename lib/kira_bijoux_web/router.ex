@@ -33,16 +33,17 @@ defmodule KiraBijouxWeb.Router do
     post("/users", UserController, :create)
     put("/users/:id", UserController, :update)
     delete("/users/:id", UserController, :delete)
-    
+
     get("/items", ItemController, :index)
     get("/items/:id", ItemController, :show)
     post("/items", ItemController, :create)
     put("/items/:id", ItemController, :update)
     delete("/items/:id", ItemController, :delete)
-
-    get "/auth/register", AuthController, :create
-    post "/auth/connexion", AuthController, :connect
-    delete "auth/deconnexion", AuthController, :delete
+    
+    get("/auth/session", AuthController, :get_session)
+    post("/auth/registration", AuthController, :register)
+    post("/auth/connexion", AuthController, :connect)
+    delete("auth/deconnexion", AuthController, :logout)
   end
 
   scope "/api/swagger" do
