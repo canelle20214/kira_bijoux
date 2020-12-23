@@ -30,7 +30,7 @@ defmodule KiraBijouxWeb.UserController do
   def show(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
     put_status(conn, 200)
-    |> KiraBijouxWeb.UserView.render("show.json", %{user: user})
+    |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
   end
 
 
