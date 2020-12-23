@@ -14,6 +14,7 @@ defmodule KiraBijouxWeb.AuthController do
   end
 
   def get_session(conn) do
+    Logger.error conn
     user_id = Plug.Conn.get_session(conn, :current_user_id)
     if user_id, do: !!Repo.get(User, user_id)
   end
@@ -40,7 +41,9 @@ defmodule KiraBijouxWeb.AuthController do
     password = Comeonin.Bcrypt.hashpwsalt(password)
     case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
+        Logger.error user.id
         put_status(conn, 201)
+        |> fetch_session
         |> put_session(:current_user_id, user.id)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
       {:error, changeset} ->
