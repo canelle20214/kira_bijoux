@@ -3,7 +3,6 @@ defmodule KiraBijouxWeb.UserController do
   use KiraBijouxWeb, :controller
   use PhoenixSwagger
 
-
   # get all users
   swagger_path :index do
     get("/users")
