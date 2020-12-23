@@ -16,7 +16,6 @@ defmodule KiraBijouxWeb.AuthController do
   def get_session(conn) do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
     if user_id, do: !!Repo.get(User, user_id)
-    else do: nil
   end
 
   # registration
