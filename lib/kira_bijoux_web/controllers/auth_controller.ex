@@ -81,7 +81,7 @@ defmodule KiraBijouxWeb.AuthController do
 
   # deconnexion
   swagger_path(:logout) do
-    delete("/auth/deconnexion")
+    PhoenixSwagger.Path.delete("/auth/deconnexion")
     summary("Destroy user session")
     description("user session")
     response(203, "No Content - Deleted Successfully")
