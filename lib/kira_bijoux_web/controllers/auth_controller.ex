@@ -4,7 +4,6 @@ defmodule KiraBijouxWeb.AuthController do
   use PhoenixSwagger
   alias KiraBijoux.Accounts
 
-
   # get session
   swagger_path :get_session do
     get("/auth/session")
@@ -13,9 +12,13 @@ defmodule KiraBijouxWeb.AuthController do
     response(code(:ok), "Success")
   end
 
-  def get_session(conn) do
-    Logger.error conn
+  def get_session(conn, _params) do
+    text conn, :current_user_id
+    if res == true do
+      Logger.info "connexion réussi"
+      put_status(conn, 201)
     user_id = Plug.Conn.get_session(conn, :current_user_id)
+    Logger.info user_id
     if user_id, do: !!Repo.get(User, user_id)
   end
 
@@ -38,10 +41,9 @@ defmodule KiraBijouxWeb.AuthController do
     lastname = params["lastname"]
     mail = params["mail"]
     password = params["password"]
-    password = Comeonin.Bcrypt.hashpwsalt(password)
+    password = Bcrypt.hash_pwd_salt(password)
     case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
-        Logger.error user.id
         put_status(conn, 201)
         |> fetch_session
         |> put_session(:current_user_id, user.id)
@@ -63,21 +65,26 @@ defmodule KiraBijouxWeb.AuthController do
       mail :query, :string, "The mail of the user to be created", required: true
       password :query, :string, "The password of the user to be created", required: true
     end
+    response(203, "No Content - Deleted Successfully")
   end
 
   def connect(conn, params) do
     mail = params["mail"]
     password = params["password"]
     user = Accounts.get_by_email(mail)
-    IO.inspect(user.id)
-    case Comeonin.Bcrypt.check_pass(user, password) do
-      {:ok, user} ->
-        put_status(conn, 201)
-        |> put_session(:current_user_id, user.id)
-        |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+    hash = user.password
+    res = Bcrypt.verify_pass(password, hash)
+    Logger.info conn
+
+    if res == true do
+      Logger.info "connexion réussi"
+      put_status(conn, 201)
+      |> fetch_session
+      |> put_session(:current_user_id, user.id)
+      |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+    else
+      Logger.error "Adresse mail/mot de passe incorrect"
+      put_status(conn, 500)
     end
   end
 
