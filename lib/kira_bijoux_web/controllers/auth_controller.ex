@@ -14,9 +14,6 @@ defmodule KiraBijouxWeb.AuthController do
 
   def get_session(conn, _params) do
     text conn, :current_user_id
-    if res == true do
-      Logger.info "connexion réussi"
-      put_status(conn, 201)
     user_id = Plug.Conn.get_session(conn, :current_user_id)
     Logger.info user_id
     if user_id, do: !!Repo.get(User, user_id)
@@ -96,8 +93,12 @@ defmodule KiraBijouxWeb.AuthController do
     response(203, "No Content - Deleted Successfully")
   end
 
-  def logout(conn) do
+  def logout(conn, _) do
     conn
+    Logger.info "Déconnexion réussi"
+    put_status(conn, 201)
+    |> fetch_session
     |> delete_session(:current_user_id)
+    |> KiraBijouxWeb.UserView.render("index.json")
   end
 end

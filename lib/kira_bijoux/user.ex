@@ -1,7 +1,6 @@
 defmodule KiraBijoux.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias KiraBijoux.User
   alias Comeonin.Bcrypt
 
   schema "users" do
