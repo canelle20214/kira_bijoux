@@ -84,7 +84,6 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 ## Partie Git
 
 - Commandes Gitlab Basique :
-	
 	* git clone https://github.com/CyrielleGl/kira-bijoux-front.git : **récupère le projet git**
 	* git status : **vérifie l'état des fichiers**
 	* git add . : **ajoute les fichiers aux projet git**
@@ -92,11 +91,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 	* git log --oneline -n 10 : **liste les 10 dernières sauvegardes du projet git sur une ligne**
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git** 
 	* git pull origin <nom_de_la_branche> : **met à jour ton repo avec la dernière version du projet** 	
-	
-	---
 
 - Commandes Gitlab Avancé :
-	
 	* git branch : **liste toutes les branches du projet git**
 	* git checkout <nom_de_la_branche> : **te positionne sur une branche spécifique**
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git mais dans la branche dev**
