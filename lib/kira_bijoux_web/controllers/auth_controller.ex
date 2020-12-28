@@ -85,6 +85,7 @@ defmodule KiraBijouxWeb.AuthController do
     |> fetch_session
     |> delete_session(:current_user_id)
     |> clear_session
-    |> send_resp(201, "No Content - Deleted Successfully")
+    |> put_resp_content_type("text/plain")
+    |> send_resp(201, "Succesfull Deconnection")
   end
 end
