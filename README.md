@@ -23,33 +23,39 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 - Installer Elixir
 
-  - Source : https://elixir-lang.org/install.html
-  - Tuto : https://code.tutsplus.com/tutorials/how-to-install-the-elixir-runtime--cms-28679
+  - Source : [Doc installation Elixir](https://bit.ly/3aCqkfG)
+  - Tuto : [Doc setup Elixir](https://bit.ly/3mDcA6I)
 
 - Installer Phoenix
 
-  - Source : https://hexdocs.pm/phoenix/installation.html
+  - Source : [Doc installation Phoenix](https://bit.ly/3mMQv5A)
   - Commandes :
     - `mix local.hex`
     - `mix archive.install hex phx_new 1.5.7`
 
 - Installer PostgreSQL
-  - Source : https://www.postgresql.org/download
-  - Tuto : https://www.guru99.com/download-install-postgresql.html
+
+  - Source : [Doc installation Postgresql](https://bit.ly/3mKFmlZ)
+  - Tuto : [Doc setup Postgresql](https://bit.ly/3pnqhZj)
   - Username : `postgres` / Password : `postgres`
   - Lancer logiciel Editeur du Registre :
   - Chemin : `Ordinateur\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.js`
   - Modifier la variable Content Type pour mettre : `text/javascript`
   - Redémarrer votre PC et exécuter pgAdmin4
 
+- Installer Swagger
+  - Source : [Doc setup swagger Elixir](https://bit.ly/2M63frD)
+  - Commandes :
+    - `mix phx.swagger.generate`
+
 ---
 
 - Installer nmake pour compiler bcrypt
 
-  - Source 1 : https://bit.ly/3h7wsxs
-  - Source 2 : https://bit.ly/34yoqsA
+  - Source 1 : [Forum stackoverflow Elixir](https://bit.ly/3h7wsxs)
+  - Source 2 : [Issues github Elixir](https://bit.ly/34yoqsA)
 
-  - Etape 1 ) Installer Visual studio community : https://visualstudio.microsoft.com/fr/vs/community
+  - Etape 1 ) Installer Visual studio community : [Doc installation VS2019](https://bit.ly/3hcD79E)
   - Au cours de l'installation vous serez redirigé vers Visual Studio Installer et la dessus il faut cocher :
     - Dans l'onglet charge de travail : Développement Desktop en C++
     - Dans l'onglet composants individuels : Outils C++ CMake pour Windows
