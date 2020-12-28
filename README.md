@@ -69,3 +69,12 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
     - `exit`
     - `mix ecto setup`
     - `mix phx.server`
+
+---
+
+- Infos Utilisateurs déjà créer hashés avec Bcrypt
+
+  - User de test : 
+    - Test => email : test@test.com / password : test 
+    - Toto => email : toto@toto.com / password : toto 
+    - Tonton => email : tonton@tonton.com / password : tonton 
