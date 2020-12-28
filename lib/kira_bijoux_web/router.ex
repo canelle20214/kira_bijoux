@@ -40,7 +40,6 @@ defmodule KiraBijouxWeb.Router do
     put("/items/:id", ItemController, :update)
     delete("/items/:id", ItemController, :delete)
 
-    get("/auth/session", AuthController, :get_session)
     post("/auth/registration", AuthController, :register)
     post("/auth/connexion", AuthController, :connect)
     delete("/auth/deconnexion", AuthController, :logout)

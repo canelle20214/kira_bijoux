@@ -4,21 +4,6 @@ defmodule KiraBijouxWeb.AuthController do
   use PhoenixSwagger
   alias KiraBijoux.Accounts
 
-  # get session
-  swagger_path :get_session do
-    get("/auth/session")
-    summary("Get user session")
-    description("user session")
-    response(code(:ok), "Success")
-  end
-
-  def get_session(conn, _params) do
-    text conn, :current_user_id
-    user_id = Plug.Conn.get_session(conn, :current_user_id)
-    Logger.info user_id
-    if user_id, do: !!Repo.get(User, user_id)
-  end
-
   # registration
   swagger_path :register do
     post("/auth/registration")
@@ -93,12 +78,13 @@ defmodule KiraBijouxWeb.AuthController do
     response(203, "No Content - Deleted Successfully")
   end
 
-  def logout(conn, _) do
+  def logout(conn, _params) do
     conn
-    Logger.info "Déconnexion réussi"
+    Logger.info "deconnexion reussi"
     put_status(conn, 201)
     |> fetch_session
     |> delete_session(:current_user_id)
-    |> KiraBijouxWeb.UserView.render("index.json")
+    |> clear_session
+    |> send_resp(201, "No Content - Deleted Successfully")
   end
 end
