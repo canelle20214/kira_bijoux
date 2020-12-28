@@ -26,6 +26,7 @@ defmodule KiraBijouxWeb.AuthController do
     password = Bcrypt.hash_pwd_salt(password)
     case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
+        Logger.info "successful registration"
         put_status(conn, 201)
         |> fetch_session
         |> put_session(:current_user_id, user.id)
@@ -37,7 +38,7 @@ defmodule KiraBijouxWeb.AuthController do
   end
 
 
-  # connexion
+  # connection
   swagger_path :connect do
     post("/auth/connexion")
     summary("Connect user")
@@ -56,10 +57,9 @@ defmodule KiraBijouxWeb.AuthController do
     user = Accounts.get_by_email(mail)
     hash = user.password
     res = Bcrypt.verify_pass(password, hash)
-    Logger.info conn
 
     if res == true do
-      Logger.info "connexion réussi"
+      Logger.info "successful connection"
       put_status(conn, 201)
       |> fetch_session
       |> put_session(:current_user_id, user.id)
@@ -70,7 +70,7 @@ defmodule KiraBijouxWeb.AuthController do
     end
   end
 
-  # deconnexion
+  # deconnection
   swagger_path(:logout) do
     PhoenixSwagger.Path.delete("/auth/deconnexion")
     summary("Destroy user session")
@@ -80,12 +80,12 @@ defmodule KiraBijouxWeb.AuthController do
 
   def logout(conn, _params) do
     conn
-    Logger.info "deconnexion reussi"
+    Logger.info "successful deconnection"
     put_status(conn, 201)
     |> fetch_session
     |> delete_session(:current_user_id)
     |> clear_session
     |> put_resp_content_type("text/plain")
-    |> send_resp(201, "Succesfull Deconnection")
+    |> send_resp(201, "Successful Deconnection")
   end
 end
