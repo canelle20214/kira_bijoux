@@ -100,4 +100,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 	* git merge <nom_de_la_branche> : **valide le projet git de la branche <nom_de_la_branche>**
 	* git push origin develop : **envoie le contenue branche dev à la branche develop**
   * git flow init : **initialise le workflow des branches**
-  * git flow feature start <nom_de_la_feature> **créer ta branche feature et te postionne dessus**
+  * git flow feature start <nom_de_la_feature> : **créer ta branche feature et te postionne dessus**
+  * git fetch origin : **récupère la dernière version de l'état des branches**
+  * git rebase origin : **récupère la dernière version de l'état de la base des branches**
+  * git restore * : **annule toutes modifications pour revenir à la version du dernier commit**

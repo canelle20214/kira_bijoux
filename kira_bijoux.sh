@@ -37,6 +37,7 @@ sendFilesToGitRepo() {
         read -p "Sur quelle branche souhaitez vous mettre vos modifications : " -n 100 branchName
         echo $branchName
         git push origin $branchName
+        git log --oneline -n 5 
     else
         exit
     fi
@@ -49,6 +50,7 @@ getLastSourceFromGitRepo() {
     git fetch origin
     git rebase origin
     git pull origin $branchName
+    git log --oneline -n 5 
 }
 
 welcomeBashScript
