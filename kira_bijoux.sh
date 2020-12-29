@@ -50,7 +50,15 @@ getLastSourceFromGitRepo() {
     git fetch origin
     git rebase origin
     git pull origin $branchName
-    git log --oneline -n 5 
+    git log --oneline -n 5
+    read -p "Souhaitez vous continuer (y/n) : " -n 2 scriptProgressAnswer
+    echo $scriptProgressAnswer
+    if [ $scriptProgressAnswer = "y" ]
+    then
+        getLastSourceFromGitRepo
+    else
+        exit
+    fi
 }
 
 welcomeBashScript
