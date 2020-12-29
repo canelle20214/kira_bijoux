@@ -78,3 +78,29 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
     - Test => email : test@test.com / password : test 
     - Toto => email : toto@toto.com / password : toto 
     - Tonton => email : tonton@tonton.com / password : tonton 
+
+---
+
+## Partie Git
+
+- Commandes Git Basique :
+	* git clone https://github.com/CyrielleGl/kira-bijoux-front.git : **récupère le projet git**
+	* git status : **vérifie l'état des fichiers**
+	* git add . : **ajoute les fichiers aux projet git**
+	* git commit -m "message du commit" : **donne un nom à ta sauvegarde**
+	* git log --oneline -n 10 : **liste les 10 dernières sauvegardes du projet git sur une ligne**
+	* git push origin <nom_de_la_branche> : **envoie ton projet sur git** 
+	* git pull origin <nom_de_la_branche> : **met à jour ton repo avec la dernière version du projet** 	
+
+- Commandes Git Avancées :
+	* git branch : **liste toutes les branches du projet git**
+	* git checkout <nom_de_la_branche> : **te positionne sur une branche spécifique**
+	* git push origin <nom_de_la_branche> : **envoie ton projet sur git mais dans la branche dev**
+	* git checkout develop : **te repositionne sur la branche principale develop**
+	* git merge <nom_de_la_branche> : **valide le projet git de la branche <nom_de_la_branche>**
+	* git push origin develop : **envoie le contenue branche dev à la branche develop**
+  * git flow init : **initialise le workflow des branches**
+  * git flow feature start <nom_de_la_feature> : **créer ta branche feature et te postionne dessus**
+  * git fetch origin : **récupère la dernière version de l'état des branches**
+  * git rebase origin : **récupère la dernière version de l'état de la base des branches**
+  * git restore * : **annule toutes modifications pour revenir à la version du dernier commit**
