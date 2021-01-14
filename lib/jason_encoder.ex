@@ -10,6 +10,6 @@ defimpl Jason.Encoder, for: User do
     end
 
     defp sanitize_map(map) do
-        Map.drop(map, [:__meta__, :__struct__, :password])
+        Map.drop(map, [:__meta__, :__struct__])
     end
 end
