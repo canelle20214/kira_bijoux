@@ -1,10 +1,10 @@
 defmodule KiraBijoux.Repo.Migrations.CreatePages do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:pages) do
       add :name, :string
-      add :visibility, :boolean, default: false, null: false
+      add :visibility, :boolean, default: true, null: true
 
       timestamps()
     end

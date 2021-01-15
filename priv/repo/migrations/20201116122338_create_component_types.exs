@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreateComponentTypes do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:component_types) do

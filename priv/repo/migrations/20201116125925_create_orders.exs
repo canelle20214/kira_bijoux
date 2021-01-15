@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreateOrders do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:orders) do
