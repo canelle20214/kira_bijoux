@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreateCreateUserRoles do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:user_roles) do

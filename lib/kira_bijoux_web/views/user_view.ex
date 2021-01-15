@@ -1,5 +1,5 @@
 defmodule KiraBijouxWeb.UserView do
-  use KiraBijouxWeb, :view
+ use KiraBijouxWeb, :view
 
   def render(conn, "index.json", %{user: user}) do
     conn

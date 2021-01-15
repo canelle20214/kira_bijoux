@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreateMaterials do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:materials) do

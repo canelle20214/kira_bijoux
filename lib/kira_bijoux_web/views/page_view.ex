@@ -1,3 +1,3 @@
 defmodule KiraBijouxWeb.PageView do
-  use KiraBijouxWeb, :view
+ use KiraBijouxWeb, :view
 end

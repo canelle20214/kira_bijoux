@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreateUserAddresses do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:user_addresses) do

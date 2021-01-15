@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreatePaymentTypes do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:payment_types) do
