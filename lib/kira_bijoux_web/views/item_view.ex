@@ -16,12 +16,16 @@ defmodule KiraBijouxWeb.ItemView do
 
   def item_construction(item) do
     materials = Repo.all(from mi in Material.Item, select: mi, where: mi.item_id == ^item.id)
-    Map.new(:name, item.name)
+    parent = Repo.get!(Item.Parent, item.item_parent_id)
+    type = Repo.get!(Item.Type, parent.item_type_id)
+    collection = Repo.get!(Collection, parent.collection_id)
+    Map.new(:name, parent.name)
     |> Map.put(:description, item.description)
     |> Map.put(:stock, item.stock)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
-    |> Map.put(:item_type_id, item.item_type_id)
+    |> Map.put(:item_type, type)
+    |> Map.put(:collection, collection)
     |> Map.put(:visibility, item.visibility)
     |> Map.put(:inserted_at, item.inserted_at)
     |> Map.put(:updated_at, item.updated_at)
