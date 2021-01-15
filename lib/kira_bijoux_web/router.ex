@@ -42,7 +42,6 @@ defmodule KiraBijouxWeb.Router do
 
     post("/auth/registration", AuthController, :register)
     post("/auth/connexion", AuthController, :connect)
-    delete("/auth/deconnexion", AuthController, :logout)
   end
 
   scope "/api/swagger" do
@@ -57,7 +56,7 @@ defmodule KiraBijouxWeb.Router do
       info: %{
         version: "1.0",
         title: "Kira Bijoux API"
-      },
+      }
     }
   end
 
