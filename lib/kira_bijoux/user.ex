@@ -1,13 +1,13 @@
 defmodule KiraBijoux.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Comeonin.Bcrypt
 
   schema "users" do
     field :firstname, :string
     field :lastname, :string
     field :mail, :string
     field :password, :string
-    field :phone, :integer
     field :user_role_id, :id
 
     timestamps()
@@ -18,5 +18,6 @@ defmodule KiraBijoux.User do
     user
     |> cast(attrs, [:user_role_id, :firstname, :lastname, :mail, :password])
     |> validate_required([:user_role_id, :firstname, :lastname, :mail, :password])
+    |> update_change(:password, &Bcrypt.hash_pwd_salt/2)
   end
 end
