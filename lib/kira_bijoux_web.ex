@@ -6,7 +6,7 @@ defmodule KiraBijouxWeb do
   This can be used in your application as:
 
       use KiraBijouxWeb, :controller
-      use KiraBijouxWeb, :view
+     use KiraBijouxWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -54,6 +54,14 @@ defmodule KiraBijouxWeb do
 
       import Plug.Conn
       import Phoenix.Controller
+    end
+  end
+
+  def migration do
+    quote do
+      use Ecto.Migration
+      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Order, Page, Repo, Template, User}
+
     end
   end
 

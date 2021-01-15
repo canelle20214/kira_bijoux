@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.InsertUsersTable do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     execute "INSERT INTO user_roles (id, role, inserted_at, updated_at) VALUES (1, 'user', '17-12-2020', '18-12-2020')"

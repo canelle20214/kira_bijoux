@@ -18,6 +18,7 @@ defmodule KiraBijouxWeb.ItemView do
     materials = Repo.all(from mi in Material.Item, select: mi, where: mi.item_id == ^item.id)
     Map.new(:name, item.name)
     |> Map.put(:description, item.description)
+    |> Map.put(:stock, item.stock)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
     |> Map.put(:item_type_id, item.item_type_id)

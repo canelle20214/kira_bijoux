@@ -1,5 +1,5 @@
 defmodule KiraBijoux.Repo.Migrations.CreateItemPictures do
-  use Ecto.Migration
+  use KiraBijouxWeb, :migration
 
   def change do
     create table(:item_pictures) do

@@ -11,11 +11,20 @@ defmodule KiraBijouxWeb.ItemController do
     name = params["name"]
     price = params["price"]
     description = params["description"]
+    stock = params["stock"]
     visibility = params["visibility"]
     material_ids = params["materials"]
     type = params["item_type_id"]
+    collection = params["collection_id"]
+    parent =
+      case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.name == ^name) do
+        {:ok, p} ->
+          p
+        {:error, _} ->
+          Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
+      end
     materials = Repo.all(from m in Material, select: m, where: m.id in ^material_ids)
-    case Repo.insert %Item{name: name, price: price, description: description, item_type_id: type, visibility: visibility} do
+    case Repo.insert %Item{item_parent_id: parent.id, name: name, price: price, stock: stock, description: description, visibility: visibility} do
       {:ok, item} ->
         b = materials
         |> Enum.map(&Repo.insert %Material.Item{material_id: &1.id, item_id: item.id})
@@ -44,12 +53,21 @@ defmodule KiraBijouxWeb.ItemController do
     item = Repo.get!(Item, params["item_id"])
     name = params["name"] || item.name
     price = params["price"] || item.price
+    stock = params["stock"] || item.stock
     description = params["description"] || item.description
     type = params["item_type_id"]
+    collection = params["collection_id"]
     visibility = params["visibility"] || item.visibility
     existing_materials = Repo.all(from mi in Material.Item, select: mi.id, where: mi.item_id == ^item.id)
     materials = params["materials"] || existing_materials
-    case Repo.update User.changeset(item, %{name: name, price: price, description: description, item_type_id: type, visibility: visibility}) do
+    parent =
+      case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.collection_id == ^collection and it.name == ^name) do
+        {:ok, p} ->
+          p
+        {:error, _} ->
+          Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
+      end
+    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, name: name, price: price, stock: stock, description: description, visibility: visibility}) do
       {:ok, item} ->
         if Enum.all?(existing_materials, & Enum.member?(materials, &1)) && length(existing_materials) == length(materials) do
           put_status(conn, 200)

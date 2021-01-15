@@ -3,20 +3,19 @@ defmodule KiraBijoux.Item do
   import Ecto.Changeset
 
   schema "items" do
+    field :item_parent_id, :id
     field :name, :string
     field :price, :float
+    field :stock, :integer
     field :description, :string
-    field :visibility, :boolean, default: false
-    field :item_type_id, :id
-    field :collection_id, :id
-
+    field :visibility, :boolean, default: true
     timestamps()
   end
 
   @doc false
   def changeset(item, attrs \\ %{}) do
     item
-    |> cast(attrs, [:item_type_id, :collection_id, :name, :price, :visibility])
-    |> validate_required([:item_type_id, :collection_id, :name, :price, :visibility])
+    |> cast(attrs, [:item_parent_id, :name, :price, :stock, :visibility])
+    |> validate_required([:item_parent_id, :name, :price, :stock, :visibility])
   end
 end
