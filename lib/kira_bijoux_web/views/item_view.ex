@@ -19,7 +19,7 @@ defmodule KiraBijouxWeb.ItemView do
     parent = Repo.get!(Item.Parent, item.item_parent_id)
     type = Repo.get!(Item.Type, parent.item_type_id)
     collection = Repo.get!(Collection, parent.collection_id)
-    Map.new(:name, parent.name)
+    Map.new(name: parent.name)
     |> Map.put(:description, item.description)
     |> Map.put(:stock, item.stock)
     |> Map.put(:price, item.price)
