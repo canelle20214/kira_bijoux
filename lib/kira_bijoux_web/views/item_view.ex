@@ -7,11 +7,9 @@ defmodule KiraBijouxWeb.ItemView do
   end
 
   def render(conn, "index.json", %{items: items}) do
-    items =
-      Enum.map(items, fn n ->
-        item_construction(n)
-      end)
-
+    items = Enum.map(items, fn n ->
+      item_construction(n)
+    end)
     conn
     |> json(items)
   end
@@ -21,7 +19,6 @@ defmodule KiraBijouxWeb.ItemView do
     parent = Repo.get!(Item.Parent, item.item_parent_id)
     type = Repo.get!(Item.Type, parent.item_type_id)
     collection = Repo.get!(Collection, parent.collection_id)
-
     Map.new(:name, parent.name)
     |> Map.put(:description, item.description)
     |> Map.put(:stock, item.stock)
