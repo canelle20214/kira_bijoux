@@ -37,8 +37,6 @@ defmodule KiraBijouxWeb.AuthController do
         Logger.info("successful registration")
 
         put_status(conn, 201)
-        |> fetch_session
-        |> put_session(:current_user_id, user.id)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
 
       {:error, changeset} ->
@@ -73,8 +71,6 @@ defmodule KiraBijouxWeb.AuthController do
       Logger.info("successful connection")
 
       put_status(conn, 201)
-      |> fetch_session
-      |> put_session(:current_user_id, user.id)
       |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
     else
       Logger.error("Adresse mail/mot de passe incorrect")
