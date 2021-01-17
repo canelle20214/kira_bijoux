@@ -26,7 +26,7 @@ defmodule KiraBijouxWeb.ItemController do
     produces "application/json"
     parameters do
       name :query, :string, "The name of the item to be created", required: true
-      price :query, :float, "The price of the item to be created", required: true
+      price :query, :number, "The price of the item to be created", required: true
       description :query, :string, "The description of the item to be created", required: true
       stock :query, :integer, "The stock of the item to be created", required: true
       visibility :query, :boolean, "The visibility of the item to be created", required: true
@@ -45,6 +45,7 @@ defmodule KiraBijouxWeb.ItemController do
     material_ids = params["materials"]
     type = params["item_type_id"]
     collection = params["collection_id"]
+
     parent =
       case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.name == ^name) do
         {:ok, p} ->
@@ -88,6 +89,22 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
 
+  # get item by parent id
+  swagger_path :showParent do
+    get("/items/parent/{item_parent_id}")
+    summary("Get item by parent id")
+    description("Item filtered by parent id")
+    parameter :item_parent_id, :path, :integer, "The parent id of the item to be display", required: true
+    response(code(:ok), "Success")
+  end
+
+  def showParent(conn, %{"item_parent_id" => item_parent_id}) do
+    item = Repo.get!(Item, item_parent_id)
+    put_status(conn, 200)
+    |> ItemView.render("index.json", %{item: item})
+  end
+
+
   # update item
   swagger_path :update do
     put("/items/{item_id}")
@@ -97,7 +114,7 @@ defmodule KiraBijouxWeb.ItemController do
     parameter :item_id, :path, :integer, "The id of the item to be updated", required: true
     parameters do
       name :query, :string, "The name of the item to be created", required: true
-      price :query, :float, "The price of the item to be created", required: true
+      price :query, :number, "The price of the item to be created", required: true
       description :query, :string, "The description of the item to be created", required: true
       stock :query, :integer, "The stock of the item to be created", required: true
       visibility :query, :boolean, "The visibility of the item to be created", required: true
