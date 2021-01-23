@@ -49,10 +49,13 @@ defmodule KiraBijouxWeb.ItemController do
     parent =
       case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.name == ^name) do
         {:ok, p} ->
+          IO.inspect('2')
           p
         {:error, _} ->
+          IO.inspect('3')
           Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
       end
+    IO.inspect(parent)
     materials = Repo.all(from m in Material, select: m, where: m.id in ^material_ids)
     case Repo.insert %Item{item_parent_id: parent.id, name: name, price: price, stock: stock, description: description, visibility: visibility} do
       {:ok, item} ->
@@ -84,22 +87,6 @@ defmodule KiraBijouxWeb.ItemController do
 
   def show(conn, %{"item_id" => id}) do
     item = Repo.get!(Item, id)
-    put_status(conn, 200)
-    |> ItemView.render("index.json", %{item: item})
-  end
-
-
-  # get item by parent id
-  swagger_path :showParent do
-    get("/items/parent/{item_parent_id}")
-    summary("Get item by parent id")
-    description("Item filtered by parent id")
-    parameter :item_parent_id, :path, :integer, "The parent id of the item to be display", required: true
-    response(code(:ok), "Success")
-  end
-
-  def showParent(conn, %{"item_parent_id" => item_parent_id}) do
-    item = Repo.get!(Item, item_parent_id)
     put_status(conn, 200)
     |> ItemView.render("index.json", %{item: item})
   end
