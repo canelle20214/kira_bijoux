@@ -49,10 +49,8 @@ defmodule KiraBijouxWeb.ItemController do
     parent =
       case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.name == ^name) do
         {:ok, p} ->
-          IO.inspect('2')
           p
         {:error, _} ->
-          IO.inspect('3')
           Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
       end
     IO.inspect(parent)
