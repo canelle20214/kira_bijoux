@@ -1,11 +1,6 @@
 alias KiraBijoux.User
-alias KiraBijoux.User.Address
-alias KiraBijoux.User.Role
-
 alias KiraBijoux.Item
 alias KiraBijoux.Material.Item
-alias KiraBijoux.Item.Parent
-alias KiraBijoux.Item.Type
 alias KiraBijoux.Collection
 
 ### Jason Encoder for User
