@@ -18,6 +18,6 @@ defmodule KiraBijoux.User do
     user
     |> cast(attrs, [:user_role_id, :firstname, :lastname, :mail, :password])
     |> validate_required([:user_role_id, :firstname, :lastname, :mail, :password])
-    |> update_change(:password, &Bcrypt.hash_pwd_salt/2)
+    |> update_change(:password, &Bcrypt.hashpwsalt/2)
   end
 end
