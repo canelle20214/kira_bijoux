@@ -24,7 +24,7 @@ defmodule KiraBijouxWeb.ItemView do
     |> Map.put(:stock, item.stock)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
-    #|> Map.put(:item_type, type)
+    |> Map.put(:item_type, type)
     |> Map.put(:collection, collection)
     |> Map.put(:visibility, item.visibility)
     |> Map.put(:inserted_at, item.inserted_at)
