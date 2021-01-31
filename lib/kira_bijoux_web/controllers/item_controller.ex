@@ -88,6 +88,31 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
 
+  # get item by category
+  swagger_path :showByCategory do
+    get("/items/category/{name}")
+    summary("Get item by category")
+    description("Item filtered by category")
+    parameter :name, :path, :string, "The name of the category of item to be display", required: true
+    response(code(:ok), "Success")
+  end
+
+  def showByCategory(conn, %{"name" => name}) do
+    items = Repo.all(from i in Item, select: i, 
+      join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
+      join: it in Item.Type, on: ip.item_type_id == it.id, 
+      where: it.name == ^name)
+    if items == [] do
+      Logger.error("aucun item trouver")
+      put_status(conn, 404)
+    else
+      Logger.info("recherche item en cours")
+      put_status(conn, 200)
+      |> ItemView.render("index.json", %{items: items})
+    end
+  end
+
+
   # update item
   swagger_path :update do
     put("/items/{item_id}")
