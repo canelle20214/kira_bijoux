@@ -98,18 +98,17 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def showByCategory(conn, %{"name" => name}) do
-    type_id = Repo.one(from it in Item.Type, select: it.id, where: it.name == ^name)
-    if type_id != nil do
-      parent_id = Repo.all(from ip in Item.Parent, select: ip.id, where: ip.item_type_id == ^type_id)
-      items = Enum.map(parent_id, fn item -> 
-        items_list = Repo.all(from i in Item, select: i, where: i.item_parent_id == ^item)
-      end)
+    items = Repo.all(from i in Item, select: i, 
+      join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
+      join: it in Item.Type, on: ip.item_type_id == it.id, 
+      where: it.name == ^name)
+    if items == [] do
+      Logger.error("aucun item trouver")
+      put_status(conn, 404)
+    else
       Logger.info("recherche item en cours")
       put_status(conn, 200)
       |> ItemView.render("index.json", %{items: items})
-    else
-      Logger.error("aucun item trouver")
-      put_status(conn, 404)
     end
   end
 
