@@ -36,6 +36,7 @@ defmodule KiraBijouxWeb.Router do
 
     get("/items", ItemController, :index)
     get("/items/:item_id", ItemController, :show)
+    get("/items/category/:name", ItemController, :showByCategory)
     post("/items", ItemController, :create)
     put("/items/:item_id", ItemController, :update)
     delete("/items/:item_id", ItemController, :delete)
