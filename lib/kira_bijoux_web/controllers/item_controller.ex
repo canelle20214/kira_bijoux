@@ -1,10 +1,39 @@
 defmodule KiraBijouxWeb.ItemController do
+  import Plug.Conn.Status, only: [code: 1]
   use KiraBijouxWeb, :controller
+  use PhoenixSwagger
+
+  # get all items
+  swagger_path :index do
+    get("/items")
+    summary("Get all items")
+    description("List of items")
+    response(code(:ok), "Success")
+  end
 
   def index(conn, _params) do
     items = Repo.all(from i in Item, select: i)
     put_status(conn, 200)
     |> ItemView.render("index.json", %{items: items})
+  end
+
+
+  # create item
+  swagger_path :create do
+    post("/items")
+    summary("Create item")
+    description("Create a new item")
+    produces "application/json"
+    parameters do
+      name :query, :string, "The name of the item to be created", required: true
+      price :query, :number, "The price of the item to be created", required: true
+      description :query, :string, "The description of the item to be created", required: true
+      stock :query, :integer, "The stock of the item to be created", required: true
+      visibility :query, :boolean, "The visibility of the item to be created", required: true
+      materials :query, :integer, "The materials of the item to be created", required: true
+      item_type_id :query, :integer, "The item_type_id of the item to be created", required: true
+      collection_id :query, :integer, "The collection_id of the item to be created", required: true
+    end
   end
 
   def create(conn, params) do
@@ -43,10 +72,64 @@ defmodule KiraBijouxWeb.ItemController do
     end
   end
 
+  # get item by id
+  swagger_path :show do
+    get("/items/{item_id}")
+    summary("Get item by id")
+    description("Item filtered by id")
+    parameter :item_id, :path, :integer, "The id of the item to be display", required: true
+    response(code(:ok), "Success")
+  end
+
   def show(conn, %{"item_id" => id}) do
     item = Repo.get!(Item, id)
     put_status(conn, 200)
     |> ItemView.render("index.json", %{item: item})
+  end
+
+
+  # get item by category
+  swagger_path :showByCategory do
+    get("/items/category/{name}")
+    summary("Get item by category")
+    description("Item filtered by category")
+    parameter :name, :path, :string, "The name of the category of item to be display", required: true
+    response(code(:ok), "Success")
+  end
+
+  def showByCategory(conn, %{"name" => name}) do
+    items = Repo.all(from i in Item, select: i, 
+      join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
+      join: it in Item.Type, on: ip.item_type_id == it.id, 
+      where: it.name == ^name)
+    if items == [] do
+      Logger.error("aucun item trouver")
+      put_status(conn, 404)
+    else
+      Logger.info("recherche item en cours")
+      put_status(conn, 200)
+      |> ItemView.render("index.json", %{items: items})
+    end
+  end
+
+
+  # update item
+  swagger_path :update do
+    put("/items/{item_id}")
+    summary("Update item")
+    description("Update an existing item")
+    produces "application/json"
+    parameter :item_id, :path, :integer, "The id of the item to be updated", required: true
+    parameters do
+      name :query, :string, "The name of the item to be created", required: true
+      price :query, :number, "The price of the item to be created", required: true
+      description :query, :string, "The description of the item to be created", required: true
+      stock :query, :integer, "The stock of the item to be created", required: true
+      visibility :query, :boolean, "The visibility of the item to be created", required: true
+      materials :query, :integer, "The materials of the item to be created", required: true
+      item_type_id :query, :integer, "The item_type_id of the item to be created", required: true
+      collection_id :query, :integer, "The collection_id of the item to be created", required: true
+    end
   end
 
   def update(conn, params) do
@@ -82,6 +165,15 @@ defmodule KiraBijouxWeb.ItemController do
         Logger.error changeset
         put_status(conn, 500)
     end
+  end
+
+  # delete item
+  swagger_path(:delete) do
+    PhoenixSwagger.Path.delete("/items/{item_id}")
+    summary("Delete Item")
+    description("Delete a Item by id")
+    parameter :item_id, :path, :integer, "The id of the item to be deleted", required: true
+    response(203, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"item_id" => id}) do
