@@ -118,7 +118,7 @@ defmodule KiraBijouxWeb.ItemController do
     get("/items/category/item/{name}")
     summary("Get item by name")
     description("Item filtered by name")
-    parameter :name, :path, :string, "The string of the item to be display", required: true
+    parameter :name, :path, :string, "The name of the item to be display", required: true
     response(code(:ok), "Success")
   end
 
