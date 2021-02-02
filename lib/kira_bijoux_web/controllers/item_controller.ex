@@ -103,12 +103,36 @@ defmodule KiraBijouxWeb.ItemController do
       join: it in Item.Type, on: ip.item_type_id == it.id, 
       where: it.name == ^name)
     if items == [] do
-      Logger.error("aucun item trouver")
+      Logger.error("aucun items trouver")
+      put_status(conn, 404)
+    else
+      Logger.info("recherche items en cours")
+      put_status(conn, 200)
+      |> ItemView.render("index.json", %{items: items})
+    end
+  end
+
+
+  # get item by name
+  swagger_path :showByName do
+    get("/items/category/item/{name}")
+    summary("Get item by name")
+    description("Item filtered by name")
+    parameter :name, :path, :string, "The string of the item to be display", required: true
+    response(code(:ok), "Success")
+  end
+
+  def showByName(conn, %{"name" => name}) do
+    item = Repo.all(from i in Item, select: i, 
+      join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
+      where: ip.name == ^name)
+    if item == [] do
+      Logger.error("l'item n'existe pas")
       put_status(conn, 404)
     else
       Logger.info("recherche item en cours")
       put_status(conn, 200)
-      |> ItemView.render("index.json", %{items: items})
+      |> ItemView.render("index.json", %{items: item})
     end
   end
 
