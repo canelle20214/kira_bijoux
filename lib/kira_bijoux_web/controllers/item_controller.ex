@@ -125,7 +125,7 @@ defmodule KiraBijouxWeb.ItemController do
   def showByName(conn, %{"name" => name}) do
     item = Repo.all(from i in Item, select: i, 
       join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
-      where: ip.name == ^name)
+      where: ilike(ip.name, ^"%#{name}%"))
     if item == [] do
       Logger.error("l'item n'existe pas")
       put_status(conn, 404)
