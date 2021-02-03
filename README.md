@@ -74,10 +74,12 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 - Infos Utilisateurs déjà créer hashés avec Bcrypt
 
-  - User de test : 
+  - Users de test : 
     - Test => email : test@test.com / password : test 
     - Toto => email : toto@toto.com / password : toto 
     - Tonton => email : tonton@tonton.com / password : tonton 
+  - Admin de test :
+    - Admin => email : admin@gmail.com / password : admin
 
 ---
 
@@ -99,7 +101,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 	* git checkout develop : **te repositionne sur la branche principale develop**
 	* git merge <nom_de_la_branche> : **valide le projet git de la branche <nom_de_la_branche>**
 	* git push origin develop : **envoie le contenue branche dev à la branche develop**
-  * git flow init : **initialise le workflow des branches**
+  * git flow init : **initialise l'environnement de travail des branches du projet**
   * git flow feature start <nom_de_la_feature> : **créer ta branche feature et te postionne dessus**
   * git fetch origin : **récupère la dernière version de l'état des branches**
   * git rebase origin : **récupère la dernière version de l'état de la base des branches**
