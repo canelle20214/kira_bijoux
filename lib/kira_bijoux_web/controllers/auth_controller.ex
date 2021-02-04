@@ -35,7 +35,6 @@ defmodule KiraBijouxWeb.AuthController do
          }) do
       {:ok, user} ->
         Logger.info("successful registration")
-
         put_status(conn, 201)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
 
@@ -69,7 +68,6 @@ defmodule KiraBijouxWeb.AuthController do
 
     if res == true do
       Logger.info("successful connection")
-
       put_status(conn, 201)
       |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
     else

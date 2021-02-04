@@ -105,6 +105,7 @@ defmodule KiraBijouxWeb.ItemController do
     if items == [] do
       Logger.error("aucun items trouver")
       put_status(conn, 404)
+      |> json([])
     else
       Logger.info("recherche items en cours")
       put_status(conn, 200)
@@ -129,6 +130,7 @@ defmodule KiraBijouxWeb.ItemController do
     if item == [] do
       Logger.error("l'item n'existe pas")
       put_status(conn, 404)
+      |> json([])
     else
       Logger.info("recherche item en cours")
       put_status(conn, 200)
