@@ -4,7 +4,6 @@ defmodule KiraBijoux.Repo.Migrations.CreateItems do
   def change do
     create table(:items) do
       add :item_parent_id, references(:item_parents, [ on_delete: :delete_all, on_update: :update_all ])
-      add :name, :string
       add :description, :text
       add :price, :float
       add :stock, :integer

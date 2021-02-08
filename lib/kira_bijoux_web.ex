@@ -61,6 +61,7 @@ defmodule KiraBijouxWeb do
     quote do
       use Ecto.Migration
       alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Order, Page, Repo, Template, User}
+      import Ecto.Query, only: [from: 2]
 
     end
   end
