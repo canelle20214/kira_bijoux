@@ -24,7 +24,7 @@ defmodule KiraBijouxWeb.AuthController do
     lastname = params["lastname"]
     mail = params["mail"]
     password = params["password"]
-    password = Bcrypt.hash_pwd_salt(password)
+    |> Bcrypt.hash_pwd_salt()
 
     case Repo.insert(%User{
            firstname: firstname,
