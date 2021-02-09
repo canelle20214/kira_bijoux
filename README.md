@@ -1,10 +1,10 @@
 # KiraBijoux
 
 ## Sommaire
-=================
-* [Pour démarrer votre serveur Phoenix](#pour-demarrer-votre-serveur-phoenix)
+
+* [Pour demarrer votre serveur Phoenix](#pour-demarrer-votre-serveur-phoenix)
   * [En savoir plus](#en-savoir-plus)
-* [Configurer Elixir / Phoenix](#configurer-elixir-phoenix)
+* [Configurer Elixir et Phoenix](#configurer-elixir-phoenix)
   * [Installer Elixir](#installer-elixir)
   * [Installer Phoenix](#installer-phoenix)
   * [Installer PostgreSQL](#installer-postgresql)
@@ -18,7 +18,7 @@
 
 ---
 
-Pour démarrer votre serveur Phoenix
+Pour demarrer votre serveur Phoenix
 
 - Installez les dépendances avec `mix deps.get`
 - Créer et migrer votre base de données avec `mix ecto.setup`
@@ -37,7 +37,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 - Forum: https://elixirforum.com/c/phoenix-forum
 - Source: https://github.com/phoenixframework/phoenix
 
-## Configurer Elixir / Phoenix
+## Configurer Elixir et Phoenix
 
 - Installer Elixir
 
