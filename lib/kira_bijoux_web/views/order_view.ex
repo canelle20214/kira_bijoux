@@ -14,7 +14,7 @@ defmodule KiraBijouxWeb.OrderView do
 
   def order_construction(order) do
     order_items = Repo.all(from oi in Order.Item, select: oi, where: oi.order_id == ^order.id)
-    |> KiraBijouxWeb.OrderItemView.order_item_construction()
+    |> Enum.map(&KiraBijouxWeb.OrderItemView.order_item_construction(&1))
     status = Repo.get!(Order.Status, order.order_status_id)
     |> KiraBijouxWeb.OrderStatusView.order_status_construction()
     address = Repo.get!(User.Address, order.user_address_id)
