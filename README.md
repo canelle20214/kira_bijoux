@@ -10,12 +10,12 @@
   * [Installer PostgreSQL](#installer-postgresql)
   * [Installer nmake pour compiler bcrypt](#installer-nmake-pour-compiler-bcrypt)
 * [Infos utiles](#infos-utiles)
-  * [Générer le Swagger](#generer-le-swagger)
-  * [Générer le schéma de la base de donnée (SGBD)](#generer-le-schéma-de-la-base-de-donnee-sgbd)
-  * [Infos Utilisateurs déjà créer hashés avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
+  * [Generer le Swagger](#generer-le-swagger)
+  * [Generer le schema de la base de donnee (SGBD)](#generer-le-schéma-de-la-base-de-donnee-sgbd)
+  * [Infos Utilisateurs deja creer hashes avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
 * [Partie Git](#partie-git)
   * [Commandes Git Basique](#commandes-git-basique)
-  * [Commandes Git Avancées](#commandes-git-avancees)
+  * [Commandes Git Avancees](#commandes-git-avancees)
   
 ## Pour demarrer votre serveur Phoenix
 
@@ -82,12 +82,12 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 
 ## Infos utiles
 
-### Générer le Swagger
+### Generer le Swagger
   - Source : [Doc setup swagger Elixir](https://bit.ly/2M63frD)
   - Commandes :
     - `mix phx.swagger.generate`
 
-### Générer le schéma de la base de donnée (SGBD)
+### Generer le schema de la base de donnee (SGBD)
 
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
     - Installer Wamp pour Phpmyadmin et Mysql Workbench
@@ -103,7 +103,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - puis sélectionner la base de donnée utilisé puis faites valider
     - et réaranger le schéma en vous basant sur l'exemple de la dernière version du SBGD
 
-### Infos Utilisateurs déjà créer hashés avec Bcrypt
+### Infos Utilisateurs deja creer hashes avec Bcrypt
 
   - Users de test : 
     - Test => email : test@test.com / password : test 
@@ -123,7 +123,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git** 
 	* git pull origin <nom_de_la_branche> : **met à jour ton repo avec la dernière version du projet** 	
 
-### Commandes Git Avancées
+### Commandes Git Avancees
 	* git branch : **liste toutes les branches du projet git**
 	* git checkout <nom_de_la_branche> : **te positionne sur une branche spécifique**
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git mais dans la branche dev**
