@@ -90,7 +90,6 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 ### Generer le schema de la base de donnee (SGBD)
 
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
-    - PS : schéma de la base de donnée = SGBD
     - Installer Wamp pour Phpmyadmin et Mysql Workbench
     - Récupérer le dossier Config Mysql du repo [Elixir_Phoenix_Projets](https://bit.ly/3rC4gqJ)
     - Modifier les fichiers suivants pour taper sur Mysql :
