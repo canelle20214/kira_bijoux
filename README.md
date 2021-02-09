@@ -4,7 +4,7 @@
 
 * [Pour demarrer votre serveur Phoenix](#pour-demarrer-votre-serveur-phoenix)
   * [En savoir plus](#en-savoir-plus)
-* [Configurer Elixir et Phoenix](#configurer-elixir-phoenix)
+* [Configurer Elixir et Phoenix](#configurer-elixir-et-phoenix)
   * [Installer Elixir](#installer-elixir)
   * [Installer Phoenix](#installer-phoenix)
   * [Installer PostgreSQL](#installer-postgresql)
@@ -18,7 +18,7 @@
 
 ---
 
-Pour demarrer votre serveur Phoenix
+## Pour demarrer votre serveur Phoenix
 
 - Installez les dépendances avec `mix deps.get`
 - Créer et migrer votre base de données avec `mix ecto.setup`
@@ -93,6 +93,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 - Générer le schéma de la base de donnée (SGBD)
 
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
+    - Installer Wamp pour Phpmyadmin et Mysql Workbench
     - Récupérer le dossier Config Mysql du repo [Elixir_Phoenix_Projets](https://bit.ly/3rC4gqJ)
     - Modifier les fichiers suivants pour taper sur Mysql :
       - (mix.hex + dev.exs + tests.exs + repo.ex) => en s'inspirant du dossier récupérer précédemment
