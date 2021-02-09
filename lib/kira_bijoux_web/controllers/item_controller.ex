@@ -53,7 +53,7 @@ defmodule KiraBijouxWeb.ItemController do
           Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
       end
     materials = Repo.all(from m in Material, select: m, where: m.id in ^material_ids)
-    case Repo.insert %Item{item_parent_id: parent.id, name: name, price: price, stock: stock, description: description, visibility: visibility} do
+    case Repo.insert %Item{item_parent_id: parent.id, price: price, stock: stock, description: description, visibility: visibility} do
       {:ok, item} ->
         b = materials
         |> Enum.map(&Repo.insert %Material.Item{material_id: &1.id, item_id: item.id})
@@ -98,9 +98,9 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def showByCategory(conn, %{"name" => name}) do
-    items = Repo.all(from i in Item, select: i, 
-      join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
-      join: it in Item.Type, on: ip.item_type_id == it.id, 
+    items = Repo.all(from i in Item, select: i,
+      join: ip in Item.Parent, on: i.item_parent_id == ip.id,
+      join: it in Item.Type, on: ip.item_type_id == it.id,
       where: it.name == ^name)
     if items == [] do
       Logger.error("aucun items trouver")
@@ -124,8 +124,8 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def showByName(conn, %{"name" => name}) do
-    item = Repo.all(from i in Item, select: i, 
-      join: ip in Item.Parent, on: i.item_parent_id == ip.id, 
+    item = Repo.all(from i in Item, select: i,
+      join: ip in Item.Parent, on: i.item_parent_id == ip.id,
       where: ilike(ip.name, ^"%#{name}%"))
     if item == [] do
       Logger.error("l'item n'existe pas")
@@ -160,7 +160,8 @@ defmodule KiraBijouxWeb.ItemController do
 
   def update(conn, params) do
     item = Repo.get!(Item, params["item_id"])
-    name = params["name"] || item.name
+    parent = Repo.get!(Item.Parent, item.item_parent_id)
+    name = params["name"] || parent.name
     price = params["price"] || item.price
     stock = params["stock"] || item.stock
     description = params["description"] || item.description
@@ -176,7 +177,7 @@ defmodule KiraBijouxWeb.ItemController do
         {:error, _} ->
           Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
       end
-    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, name: name, price: price, stock: stock, description: description, visibility: visibility}) do
+    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, price: price, stock: stock, description: description, visibility: visibility}) do
       {:ok, item} ->
         if Enum.all?(existing_materials, & Enum.member?(materials, &1)) && length(existing_materials) == length(materials) do
           put_status(conn, 200)

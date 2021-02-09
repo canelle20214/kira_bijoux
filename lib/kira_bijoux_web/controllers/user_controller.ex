@@ -45,6 +45,7 @@ defmodule KiraBijouxWeb.UserController do
       lastname :query, :string, "The lastname of the user to be created", required: true
       mail :query, :string, "The mail of the user to be created", required: true
       password :query, :string, "The password of the user to be created", required: true
+      phone :query, :string, "The phone of the user to be created", required: false
     end
   end
 
