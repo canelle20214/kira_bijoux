@@ -28,9 +28,8 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   def show(conn, %{"user_id" => user_id}) do
     order_id = Repo.one(from o in Order, select: o,
-      where: o.user_adress_id == ^user_id)
-
-    order_items = Repo.one(from i in Order.Item, select: i, where: i.order_id == ^order_id)
+      where: o.user_address_id == ^user_id)
+    order_items = Repo.one(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
     if order_items == [] do
       Logger.error("le panier est vide")
       put_status(conn, 404)
@@ -59,9 +58,8 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     item_id = params["item_id"]
     user_id = params["user_id"]
     quantity = params["quantity"]
-    order_id = Repo.one(from o in Order, select: o,
-      where: o.user_adress_id == ^user_id)
-    case Repo.insert %Order.Item{item_id: item_id, order_id: order_id, quantity: quantity} do
+    order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
+    case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
     {:ok, order_items} ->
       put_status(conn, 201)
       |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_items: order_items})
