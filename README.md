@@ -8,8 +8,9 @@
   * [Installer Elixir](#installer-elixir)
   * [Installer Phoenix](#installer-phoenix)
   * [Installer PostgreSQL](#installer-postgresql)
-  * [Générer le Swagger](#generer-le-swagger)
   * [Installer nmake pour compiler bcrypt](#installer-nmake-pour-compiler-bcrypt)
+* [Infos utiles](#infos-utiles)
+  * [Générer le Swagger](#generer-le-swagger)
   * [Générer le schéma de la base de donnée (SGBD)](#generer-le-schéma-de-la-base-de-donnee-sgbd)
   * [Infos Utilisateurs déjà créer hashés avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
 * [Partie Git](#partie-git)
@@ -27,7 +28,7 @@ Vous pouvez maintenant visiter [`localhost:4000`](http://localhost:4000) à part
 
 Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](https://hexdocs.pm/phoenix/deployment.html).
 
-## En savoir plus
+### En savoir plus
 
 - Site officiel: https://www.phoenixframework.org/
 - Guides: https://hexdocs.pm/phoenix/overview.html
@@ -59,12 +60,6 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Modifier la variable Content Type pour mettre : `text/javascript`
   - Redémarrer votre PC et exécuter pgAdmin4
 
-- Générer le Swagger
-  - Source : [Doc setup swagger Elixir](https://bit.ly/2M63frD)
-  - Commandes :
-    - `mix phx.swagger.generate`
-
-
 ### Installer nmake pour compiler bcrypt
 
   - Source 1 : [Forum stackoverflow Elixir](https://bit.ly/3h7wsxs)
@@ -84,6 +79,13 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - `exit`
     - `mix ecto.setup`
     - `mix phx.server`
+
+## Infos utiles
+
+### Générer le Swagger
+  - Source : [Doc setup swagger Elixir](https://bit.ly/2M63frD)
+  - Commandes :
+    - `mix phx.swagger.generate`
 
 ### Générer le schéma de la base de donnée (SGBD)
 
