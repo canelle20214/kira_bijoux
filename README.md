@@ -75,7 +75,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - Générer le schéma de la base de donnée (SGBD)
 
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
-    - Récupérer le dossier Config Mysql du repo Elixir_Phoenix_Projets (https://bit.ly/3rC4gqJ)
+    - Récupérer le dossier Config Mysql du repo [Elixir_Phoenix_Projets](https://bit.ly/3rC4gqJ)
     - Modifier les fichiers suivants pour taper sur Mysql :
       - (mix.hex + dev.exs + tests.exs + repo.ex) => en s'inspirant du dossier récupérer précédemment
       - vous devrez par contre utiliser la dépendance MyXQL plutot que postgrex 
