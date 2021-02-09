@@ -88,7 +88,6 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - `mix phx.swagger.generate`
 
 ### Generer le schema de la base de donnee
-
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
     - PS : schéma de la base de donnée = SGBD
     - Installer Wamp pour Phpmyadmin et Mysql Workbench
