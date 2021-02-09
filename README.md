@@ -67,8 +67,25 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
     - `cmd /K "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64`
     - `mix compile`
     - `exit`
-    - `mix ecto setup`
+    - `mix ecto.setup`
     - `mix phx.server`
+
+---
+
+- Générer le schéma de la base de donnée (SGBD)
+
+  - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
+    - Récupérer le dossier Config Mysql du repo Elixir_Phoenix_Projets (https://bit.ly/3rC4gqJ)
+    - Modifier les fichiers suivants pour taper sur Mysql :
+      - (mix.hex + dev.exs + tests.exs + repo.ex) => en s'inspirant du dossier récupérer précédemment
+      - vous devrez par contre utiliser la dépendance MyXQL plutot que postgrex 
+      - puis rentrer vos informations de connexions de votre phpmyadmin
+      - et lancer la commande `mix deps.get` puis `mix ecto.setup` et c'est bon vous avez la bdd
+  - Etape 2 ) Générer le SGBD avec Mysql Workbench :
+    - se connecter à l'instance de connexion MYSQL
+    - dans le menu en haut clicker sur Database puis Reverse Engineer
+    - sélectionner la base de donnée utilisé puis faites valider
+    - réaranger le schéma en vous basant sur l'exemple de la dernière version du SBGD
 
 ---
 
