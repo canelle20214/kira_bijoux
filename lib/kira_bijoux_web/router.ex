@@ -46,7 +46,7 @@ defmodule KiraBijouxWeb.Router do
     post("/auth/connexion", AuthController, :connect)
 
     get("/shop", ShoppingCartController, :index)
-    get("/shop/user/:name", ShoppingCartController, :showByName)
+    get("/shop/user/:user_id", ShoppingCartController, :show)
     post("/shop", ShoppingCartController, :create)
   end
 
