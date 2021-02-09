@@ -4,7 +4,7 @@
 
 * [Pour demarrer votre serveur Phoenix](#pour-demarrer-votre-serveur-phoenix)
   * [En savoir plus](#en-savoir-plus)
-* [Configurer Elixir et Phoenix](#configurer-elixir-et-phoenix)
+* [Configurer le Back](#configurer-le-back)
   * [Installer Elixir](#installer-elixir)
   * [Installer Phoenix](#installer-phoenix)
   * [Installer PostgreSQL](#installer-postgresql)
@@ -37,21 +37,21 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 - Forum: https://elixirforum.com/c/phoenix-forum
 - Source: https://github.com/phoenixframework/phoenix
 
-## Configurer Elixir et Phoenix
+## Configurer le Back
 
-- Installer Elixir
+### Installer Elixir
 
   - Source : [Doc installation Elixir](https://bit.ly/3aCqkfG)
   - Tuto : [Doc setup Elixir](https://bit.ly/3mDcA6I)
 
-- Installer Phoenix
+### Installer Phoenix
 
   - Source : [Doc installation Phoenix](https://bit.ly/3mMQv5A)
   - Commandes :
     - `mix local.hex`
     - `mix archive.install hex phx_new 1.5.7`
 
-- Installer PostgreSQL
+### Installer PostgreSQL
 
   - Source : [Doc installation Postgresql](https://bit.ly/3mKFmlZ)
   - Tuto : [Doc setup Postgresql](https://bit.ly/3pnqhZj)
@@ -66,9 +66,8 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Commandes :
     - `mix phx.swagger.generate`
 
----
 
-- Installer nmake pour compiler bcrypt
+### Installer nmake pour compiler bcrypt
 
   - Source 1 : [Forum stackoverflow Elixir](https://bit.ly/3h7wsxs)
   - Source 2 : [Issues github Elixir](https://bit.ly/34yoqsA)
@@ -88,9 +87,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - `mix ecto.setup`
     - `mix phx.server`
 
----
-
-- Générer le schéma de la base de donnée (SGBD)
+### Générer le schéma de la base de donnée (SGBD)
 
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
     - Installer Wamp pour Phpmyadmin et Mysql Workbench
@@ -106,9 +103,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - puis sélectionner la base de donnée utilisé puis faites valider
     - et réaranger le schéma en vous basant sur l'exemple de la dernière version du SBGD
 
----
-
-- Infos Utilisateurs déjà créer hashés avec Bcrypt
+### Infos Utilisateurs déjà créer hashés avec Bcrypt
 
   - Users de test : 
     - Test => email : test@test.com / password : test 
@@ -117,11 +112,9 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Admin de test :
     - Admin => email : admin@gmail.com / password : admin
 
----
-
 ## Partie Git
 
-- Commandes Git Basique
+### Commandes Git Basique
 	* git clone https://github.com/CyrielleGl/kira-bijoux-front.git : **récupère le projet git**
 	* git status : **vérifie l'état des fichiers**
 	* git add . : **ajoute les fichiers aux projet git**
@@ -130,7 +123,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git** 
 	* git pull origin <nom_de_la_branche> : **met à jour ton repo avec la dernière version du projet** 	
 
-- Commandes Git Avancées
+### Commandes Git Avancées
 	* git branch : **liste toutes les branches du projet git**
 	* git checkout <nom_de_la_branche> : **te positionne sur une branche spécifique**
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git mais dans la branche dev**
