@@ -39,7 +39,7 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     else
       Logger.info("recherche panier en cours")
       put_status(conn, 200)
-      |> ItemView.render("index.json", %{order_items: order_items})
+      |> OrderItemView.render("index.json", %{order_items: order_items})
     end
   end
 
