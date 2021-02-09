@@ -27,11 +27,10 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   end
 
   def show(conn, %{"user_id" => user_id}) do
-    user_id = params["user_id"]
     order_id = Repo.one(from o in Order, select: o,
       where: o.user_adress_id == ^user_id)
 
-    order_items = Repo.one(from i in Order.Item, select: i, where: i.order_id = ^order_id)
+    order_items = Repo.one(from i in Order.Item, select: i, where: i.order_id == ^order_id)
     if order_items == [] do
       Logger.error("le panier est vide")
       put_status(conn, 404)
