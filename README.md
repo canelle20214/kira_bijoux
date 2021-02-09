@@ -15,9 +15,7 @@
 * [Partie Git](#partie-git)
   * [Commandes Git Basique](#commandes-git-basique)
   * [Commandes Git Avancées](#commandes-git-avancees)
-
----
-
+  
 ## Pour demarrer votre serveur Phoenix
 
 - Installez les dépendances avec `mix deps.get`
