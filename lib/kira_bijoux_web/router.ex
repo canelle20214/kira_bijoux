@@ -44,6 +44,10 @@ defmodule KiraBijouxWeb.Router do
 
     post("/auth/registration", AuthController, :register)
     post("/auth/connexion", AuthController, :connect)
+
+    get("/shop", ShoppingCartController, :index)
+    get("/shop/user/:name", ShoppingCartController, :showByName)
+    post("/shop", ShoppingCartController, :create)
   end
 
   scope "/api/swagger" do
