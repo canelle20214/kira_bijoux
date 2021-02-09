@@ -11,7 +11,7 @@
   * [Installer nmake pour compiler bcrypt](#installer-nmake-pour-compiler-bcrypt)
 * [Infos utiles](#infos-utiles)
   * [Generer le Swagger](#generer-le-swagger)
-  * [Generer le schema de la base de donnee (SGBD)](#generer-le-schéma-de-la-base-de-donnee-sgbd)
+  * [Generer le schema de la base de donnee](#generer-le-schéma-de-la-base-de-donnee)
   * [Infos Utilisateurs deja creer hashes avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
 * [Partie Git](#partie-git)
   * [Commandes Git Basique](#commandes-git-basique)
@@ -87,9 +87,10 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Commandes :
     - `mix phx.swagger.generate`
 
-### Generer le schema de la base de donnee (SGBD)
+### Generer le schema de la base de donnee
 
   - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
+    - PS : schéma de la base de donnée = SGBD
     - Installer Wamp pour Phpmyadmin et Mysql Workbench
     - Récupérer le dossier Config Mysql du repo [Elixir_Phoenix_Projets](https://bit.ly/3rC4gqJ)
     - Modifier les fichiers suivants pour taper sur Mysql :
