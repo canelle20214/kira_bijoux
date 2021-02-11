@@ -14,7 +14,7 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   def index(conn, _params) do
     order_items = Repo.all(from i in Order.Item, select: i)
     put_status(conn, 200)
-    |> OrderItemView.render("index.json", %{order_items: order_items})
+    |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_items: order_items})
   end
 
   # get shopping cart by user
@@ -29,15 +29,15 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   def show(conn, %{"user_id" => user_id}) do
     order_id = Repo.one(from o in Order, select: o,
       where: o.user_address_id == ^user_id)
-    order_items = Repo.one(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
-    if order_items == [] do
+      order_item = Repo.one(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
+    if order_item == [] do
       Logger.error("le panier est vide")
       put_status(conn, 404)
       |> json([])
     else
       Logger.info("recherche panier en cours")
       put_status(conn, 200)
-      |> OrderItemView.render("index.json", %{order_items: order_items})
+      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
     end
   end
 
@@ -56,13 +56,16 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   def create(conn, params) do
     item_id = params["item_id"]
+    |> String.to_integer()
     user_id = params["user_id"]
     quantity = params["quantity"]
+    |> String.to_integer()
+
     order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
     case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
-    {:ok, order_items} ->
+    {:ok, order_item} ->
       put_status(conn, 201)
-      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_items: order_items})
+      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
     {:error, changeset} ->
       Logger.error changeset
       put_status(conn, 500)
