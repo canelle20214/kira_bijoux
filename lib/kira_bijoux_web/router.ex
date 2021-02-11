@@ -48,6 +48,7 @@ defmodule KiraBijouxWeb.Router do
     get("/shop", ShoppingCartController, :index)
     get("/shop/user/:user_id", ShoppingCartController, :show)
     post("/shop", ShoppingCartController, :create)
+    delete("/shop/:item_id", ShoppingCartController, :delete)
   end
 
   scope "/api/swagger" do

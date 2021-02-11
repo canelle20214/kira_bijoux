@@ -56,10 +56,8 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   def create(conn, params) do
     item_id = params["item_id"]
-    |> String.to_integer()
     user_id = params["user_id"]
     quantity = params["quantity"]
-    |> String.to_integer()
 
     order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
     case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
@@ -69,6 +67,26 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     {:error, changeset} ->
       Logger.error changeset
       put_status(conn, 500)
+    end
+  end
+
+  # remove item to shopping cart
+  swagger_path(:delete) do
+    PhoenixSwagger.Path.delete("/shop/{item_id}")
+    summary("Delete Item of shopping cart")
+    description("Delete a Item by id")
+    parameter :item_id, :path, :integer, "The id of the item of shopping cart to be deleted", required: true
+    response(203, "No Content - Deleted Successfully")
+  end
+
+  def delete(conn, %{"item_id" => item_id}) do
+    case Repo.delete Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id) do
+      {:ok, order_item} ->
+        put_status(conn, 200)
+        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
     end
   end
 end
