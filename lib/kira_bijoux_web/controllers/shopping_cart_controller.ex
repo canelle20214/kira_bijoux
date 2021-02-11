@@ -29,15 +29,15 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   def show(conn, %{"user_id" => user_id}) do
     order_id = Repo.one(from o in Order, select: o,
       where: o.user_address_id == ^user_id)
-      order_item = Repo.one(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
-    if order_item == [] do
+    order_items = Repo.all(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
+    if order_items == nil do
       Logger.error("le panier est vide")
       put_status(conn, 404)
       |> json([])
     else
       Logger.info("recherche panier en cours")
       put_status(conn, 200)
-      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_items: order_items})
     end
   end
 
