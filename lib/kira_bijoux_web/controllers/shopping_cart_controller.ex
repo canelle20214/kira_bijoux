@@ -70,6 +70,34 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     end
   end
 
+  # update quantity of item of shopping cart
+  swagger_path :update do
+    put("/shop/{item_id}")
+    summary("Update quantity of shopping cart")
+    description("Update an existing shopping cart")
+    produces "application/json"
+    parameter :item_id, :path, :integer, "The id of the item of the shopping cart to be updated", required: true
+    parameters do
+      quantity :query, :integer, "The quantity of the item of the shopping cart to be updated", required: true
+    end
+  end
+
+  def update(conn, %{"item_id" => item_id, "quantity" => quantity}) do
+    quantity = String.to_integer(quantity)
+    item_id = String.to_integer(item_id)
+
+    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+    |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+    case Repo.update order_item do
+      {:ok, order_item} ->
+        put_status(conn, 200)
+        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
+    end
+  end
+
   # remove item to shopping cart
   swagger_path(:delete) do
     PhoenixSwagger.Path.delete("/shop/{item_id}")
@@ -80,13 +108,15 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   end
 
   def delete(conn, %{"item_id" => item_id}) do
-    case Repo.delete Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id) do
-      {:ok, order_item} ->
-        put_status(conn, 200)
-        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+    if order_item == nil do
+      Logger.error("l'item n'est pas présent dans le panier")
+      put_status(conn, 404)
+      |> json([])
+    else
+      Repo.delete(order_item)
+      put_status(conn, 200)
+      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
     end
   end
 end

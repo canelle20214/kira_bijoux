@@ -48,6 +48,7 @@ defmodule KiraBijouxWeb.Router do
     get("/shop", ShoppingCartController, :index)
     get("/shop/user/:user_id", ShoppingCartController, :show)
     post("/shop", ShoppingCartController, :create)
+    put("/shop/:item_id", ShoppingCartController, :update)
     delete("/shop/:item_id", ShoppingCartController, :delete)
   end
 
