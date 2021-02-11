@@ -22,9 +22,11 @@ defmodule KiraBijouxWeb do
       use Phoenix.Controller, namespace: KiraBijouxWeb
 
       import Plug.Conn
+      import Plug.Conn.Status, only: [code: 1]
       import KiraBijouxWeb.Gettext
       import Ecto.Query, only: [from: 2]
       import Logger
+      use PhoenixSwagger
 
       alias KiraBijouxWeb.Router.Helpers, as: Routes
       alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Order, Page, Repo, Template, User}

@@ -1,7 +1,5 @@
 defmodule KiraBijouxWeb.ItemController do
-  import Plug.Conn.Status, only: [code: 1]
   use KiraBijouxWeb, :controller
-  use PhoenixSwagger
 
   # get all items
   swagger_path :index do
@@ -11,35 +9,77 @@ defmodule KiraBijouxWeb.ItemController do
     response(code(:ok), "Success")
   end
 
-  def index(conn, _params) do
+  def index(conn, _) do
     items = Repo.all(from i in Item, select: i)
     put_status(conn, 200)
     |> ItemView.render("index.json", %{items: items})
   end
 
+  def swagger_schema do
+    %{
+      Item: swagger_schema do
+        title "Item"
+        description "Item descr"
+        properties do
+          name :string, "Subtitle"
+          subtitle :string, "Subtitle"
+          description :string, "Description"
+          price :number, "Price"
+          length :string, "Length"
+          stock :integer, "Stock"
+          visibility :boolean, "Visibility"
+          materials :array, "Material"
+          collection_id :integer, "Collection id"
+          item_type_id :integer, "Item type id"
+        end
+      end
+    }
+  end
 
   # create item
   swagger_path :create do
     post("/items")
     summary("Create item")
     description("Create a new item")
+    parameter :item, :body, Schema.ref(:Item), "Item", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+          name: "Collier",
+          subtitle: "Collier",
+          description: "Collier",
+          price: 35.5,
+          length: "35 cm",
+          stock: 4,
+          visibility: true,
+          materials: [1,4],
+          collection_id: 1,
+          item_type_id: 1
+        })
     produces "application/json"
-    parameters do
-      name :query, :string, "The name of the item to be created", required: true
-      price :query, :number, "The price of the item to be created", required: true
-      description :query, :string, "The description of the item to be created", required: true
-      stock :query, :integer, "The stock of the item to be created", required: true
-      visibility :query, :boolean, "The visibility of the item to be created", required: true
-      materials :query, :integer, "The materials of the item to be created", required: true
-      item_type_id :query, :integer, "The item_type_id of the item to be created", required: true
-      collection_id :query, :integer, "The collection_id of the item to be created", required: true
-    end
+    response(200, "OK", Schema.ref(:Item),
+      example:
+      %{
+        item:
+        %{
+          name: "Collier",
+          subtitle: "Collier",
+          description: "Collier",
+          price: 35.5,
+          length: "35 cm",
+          stock: 4,
+          visibility: true,
+          materials: [1,4],
+          collection_id: 1,
+          item_type_id: 1
+        }
+      }
+    )
   end
 
   def create(conn, params) do
     name = params["name"]
     price = params["price"]
+    subtitle = params["subtitle"]
     description = params["description"]
+    length = params["length"]
     stock = params["stock"]
     visibility = params["visibility"]
     material_ids = params["materials"]
@@ -47,22 +87,22 @@ defmodule KiraBijouxWeb.ItemController do
     collection = params["collection_id"]
     parent =
       case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.name == ^name) do
-        {:ok, p} ->
-          p
-        {:error, _} ->
+        nil ->
           Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
+        p ->
+          p
       end
     materials = Repo.all(from m in Material, select: m, where: m.id in ^material_ids)
-    case Repo.insert %Item{item_parent_id: parent.id, price: price, stock: stock, description: description, visibility: visibility} do
+    case Repo.insert %Item{item_parent_id: parent.id, subtitle: subtitle, length: length, price: price, stock: stock, description: description, visibility: visibility} do
       {:ok, item} ->
         b = materials
         |> Enum.map(&Repo.insert %Material.Item{material_id: &1.id, item_id: item.id})
-        |> Enum.all?(& &1 == {:ok, %Material.Item{}})
+        |> Enum.all?(& &1 = {:ok, %Material.Item{}})
         if b do
             put_status(conn, 201)
             |> ItemView.render("index.json", %{item: item})
         else
-            put_status(conn, :not_linked)
+            put_status(conn, :conflict)
             |> ItemView.render("index.json", %{item: item})
         end
 
@@ -74,14 +114,14 @@ defmodule KiraBijouxWeb.ItemController do
 
   # get item by id
   swagger_path :show do
-    get("/items/{item_id}")
+    get("/items/{id}")
     summary("Get item by id")
     description("Item filtered by id")
-    parameter :item_id, :path, :integer, "The id of the item to be display", required: true
+    parameter :id, :path, :integer, "Id", required: true
     response(code(:ok), "Success")
   end
 
-  def show(conn, %{"item_id" => id}) do
+  def show(conn, %{"id" => id}) do
     item = Repo.get!(Item, id)
     put_status(conn, 200)
     |> ItemView.render("index.json", %{item: item})
@@ -141,43 +181,48 @@ defmodule KiraBijouxWeb.ItemController do
 
   # update item
   swagger_path :update do
-    put("/items/{item_id}")
+    put("/items/{id}")
     summary("Update item")
     description("Update an existing item")
     produces "application/json"
-    parameter :item_id, :path, :integer, "The id of the item to be updated", required: true
-    parameters do
-      name :query, :string, "The name of the item to be created", required: true
-      price :query, :number, "The price of the item to be created", required: true
-      description :query, :string, "The description of the item to be created", required: true
-      stock :query, :integer, "The stock of the item to be created", required: true
-      visibility :query, :boolean, "The visibility of the item to be created", required: true
-      materials :query, :integer, "The materials of the item to be created", required: true
-      item_type_id :query, :integer, "The item_type_id of the item to be created", required: true
-      collection_id :query, :integer, "The collection_id of the item to be created", required: true
-    end
+    parameter :id, :path, :integer, "Id of the item to be updated", required: true
+    parameter :item, :body, Schema.ref(:Item), "Changes in item", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+        name: "Collier",
+        subtitle: "Collier",
+        description: "Collier",
+        price: 35.5,
+        length: "35 cm",
+        stock: 4,
+        visibility: true,
+        materials: [1,4],
+        collection_id: 1,
+        item_type_id: 1
+      }
+    )
   end
 
   def update(conn, params) do
-    item = Repo.get!(Item, params["item_id"])
+    item = Repo.get!(Item, params["id"])
     parent = Repo.get!(Item.Parent, item.item_parent_id)
     name = params["name"] || parent.name
     price = params["price"] || item.price
     stock = params["stock"] || item.stock
+    subtitle = params["subtitle"] || item.subtitle
     description = params["description"] || item.description
-    type = params["item_type_id"]
-    collection = params["collection_id"]
+    length = params["length"] || item.length
+    type = params["item_type_id"] || parent.item_type_id
+    collection = params["collection_id"] || parent.collection_id
     visibility = params["visibility"] || item.visibility
     existing_materials = Repo.all(from mi in Material.Item, select: mi.id, where: mi.item_id == ^item.id)
     materials = params["materials"] || existing_materials
     parent =
       case Repo.one(from it in Item.Parent, where: it.item_type_id == ^type and it.collection_id == ^collection and it.name == ^name) do
-        {:ok, p} ->
-          p
-        {:error, _} ->
+        nil ->
           Repo.insert!(%Item.Parent{name: name, item_type_id: type, collection_id: collection})
+        p ->
+          p
       end
-    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, price: price, stock: stock, description: description, visibility: visibility}) do
+    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, subtitle: subtitle, length: length, price: price, stock: stock, description: description, visibility: visibility}) do
       {:ok, item} ->
         if Enum.all?(existing_materials, & Enum.member?(materials, &1)) && length(existing_materials) == length(materials) do
           put_status(conn, 200)
@@ -196,16 +241,17 @@ defmodule KiraBijouxWeb.ItemController do
 
   # delete item
   swagger_path(:delete) do
-    PhoenixSwagger.Path.delete("/items/{item_id}")
+    PhoenixSwagger.Path.delete("/items/{id}")
     summary("Delete Item")
     description("Delete a Item by id")
-    parameter :item_id, :path, :integer, "The id of the item to be deleted", required: true
+    parameter :id, :path, :integer, "The id of the item to be deleted", required: true
     response(203, "No Content - Deleted Successfully")
   end
 
-  def delete(conn, %{"item_id" => id}) do
+  def delete(conn, %{"id" => id}) do
     case Repo.delete Repo.get!(Item, id) do
       {:ok, item} ->
+        #Phoenix.json/2 cannot render 204 status https://git.pleroma.social/pleroma/pleroma/-/issues/2029
         put_status(conn, 200)
         |> ItemView.render("index.json", %{item: item})
       {:error, changeset} ->
