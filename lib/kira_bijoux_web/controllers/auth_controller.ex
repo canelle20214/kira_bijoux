@@ -27,21 +27,27 @@ defmodule KiraBijouxWeb.AuthController do
     password = params["password"]
     |> Bcrypt.hash_pwd_salt()
 
-    case Repo.insert(%User{
-           firstname: firstname,
-           lastname: lastname,
-           mail: mail,
-           password: password,
-           user_role_id: 1
-         }) do
-      {:ok, user} ->
-        Logger.info("successful registration")
-        put_status(conn, 201)
-        |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+    emailExists = Repo.exists?(from u in User, where: u.mail == ^mail)
+    if emailExists == true do
+      Logger.error("l'email existe déjà")
+      put_status(conn, 500)
+    else
+      case Repo.insert(%User{
+            firstname: firstname,
+            lastname: lastname,
+            mail: mail,
+            password: password,
+            user_role_id: 1
+          }) do
+        {:ok, user} ->
+          Logger.info("successful registration")
+          put_status(conn, 201)
+          |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
 
-      {:error, changeset} ->
-        Logger.error(changeset)
-        put_status(conn, 500)
+        {:error, changeset} ->
+          Logger.error(changeset)
+          put_status(conn, 500)
+      end
     end
   end
 
