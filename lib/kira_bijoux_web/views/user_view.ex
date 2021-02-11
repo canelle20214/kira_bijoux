@@ -1,22 +1,3 @@
-# defmodule KiraBijouxWeb.UserView do
-#  use KiraBijouxWeb, :view
-
-#   def render(conn, "index.json", %{user: user}) do
-#     conn
-#     |> json(user)
-#   end
-
-#   def render(conn, "index.json", %{users: users}) do
-#     conn
-#     |> json(users)
-#   end
-# end
-
-### ATTENTION ###
-# TODO pour l'instant ce code ne fonctionne et fait crash entierrement l'api
-# A décommenter une fois que les fichiers de migrations pour les insert de données
-# auront été ajoutés dans la base donnée
-
 defmodule KiraBijouxWeb.UserView do
   use KiraBijouxWeb, :view
 
@@ -33,11 +14,15 @@ defmodule KiraBijouxWeb.UserView do
 
   def user_construction(user) do
     addresses = Repo.all(from ua in User.Address, select: ua, where: ua.user_id == ^user.id)
+    |> Enum.map(&KiraBijouxWeb.UserAddressView.user_address_construction(&1))
     role = Repo.get!(User.Role, user.user_role_id)
-    Map.new(firstname: user.firstname)
+    |> KiraBijouxWeb.UserRoleView.user_role_construction()
+    Map.new(id: user.id)
+    |> Map.put(:firstname, user.firstname)
     |> Map.put(:lastname, user.lastname)
     |> Map.put(:mail, user.mail)
     |> Map.put(:password, user.password)
+    |> Map.put(:phone, user.phone)
     |> Map.put(:addresses, addresses)
     |> Map.put(:role, role)
     |> Map.put(:inserted_at, user.inserted_at)

@@ -15,16 +15,27 @@ defmodule KiraBijouxWeb.ItemView do
   end
 
   def item_construction(item) do
-    materials = Repo.all(from mi in Material.Item, select: mi, where: mi.item_id == ^item.id)
+    materials = Repo.all(from m in Material,
+    select: m,
+    join: mi in Material.Item, on: m.id == mi.material_id,
+    where: mi.item_id == ^item.id)
+    |> Enum.map(&KiraBijouxWeb.MaterialView.material_construction(&1))
     parent = Repo.get!(Item.Parent, item.item_parent_id)
-    type = Repo.get!(Item.Type, parent.item_type_id)
-    collection = Repo.get!(Collection, parent.collection_id)
-    Map.new(name: parent.name)
+    |> KiraBijouxWeb.ItemParentView.item_parent_construction()
+    type = Repo.get!(Item.Type, parent.item_type.id)
+    |> KiraBijouxWeb.ItemTypeView.item_type_construction()
+    collection = Repo.get!(Collection, parent.collection.id)
+    |> KiraBijouxWeb.CollectionView.collection_construction()
+    pictures = Repo.all(from ip in Item.Picture, select: ip, where: ip.item_id == ^item.id)
+    |> Enum.map(&KiraBijouxWeb.ItemPictureView.item_picture_construction(&1))
+    Map.new(id: item.id)
+    |> Map.put(:name, parent.name)
     |> Map.put(:description, item.description)
     |> Map.put(:stock, item.stock)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
     |> Map.put(:item_type, type)
+    |> Map.put(:item_pictures, pictures)
     |> Map.put(:collection, collection)
     |> Map.put(:visibility, item.visibility)
     |> Map.put(:inserted_at, item.inserted_at)

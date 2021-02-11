@@ -45,6 +45,7 @@ defmodule KiraBijouxWeb.UserController do
       lastname :query, :string, "The lastname of the user to be created", required: true
       mail :query, :string, "The mail of the user to be created", required: true
       password :query, :string, "The password of the user to be created", required: true
+      phone :query, :string, "The phone of the user to be created", required: false
     end
   end
 
@@ -52,9 +53,10 @@ defmodule KiraBijouxWeb.UserController do
     firstname = params["firstname"]
     lastname = params["lastname"]
     mail = params["mail"]
+    phone = params["phone"] || nil
     password = params["password"]
-    password = Bcrypt.hash_pwd_salt(password)
-    case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: password, user_role_id: 1} do
+    |> Bcrypt.hash_pwd_salt()
+    case Repo.insert %User{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password, user_role_id: 1} do
       {:ok, user} ->
         put_status(conn, 201)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})

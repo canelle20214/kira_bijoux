@@ -1,39 +1,56 @@
 # KiraBijoux
 
-To start your Phoenix server:
+## Sommaire
 
-- Install dependencies with `mix deps.get`
-- Create and migrate your database with `mix ecto.setup`
-- Install Node.js dependencies with `npm install` inside the `assets` directory
-- Start Phoenix endpoint with `mix phx.server`
+* [Pour demarrer votre serveur Phoenix](#pour-demarrer-votre-serveur-phoenix)
+  * [En savoir plus](#en-savoir-plus)
+* [Configurer le Back](#configurer-le-back)
+  * [Installer Elixir](#installer-elixir)
+  * [Installer Phoenix](#installer-phoenix)
+  * [Installer PostgreSQL](#installer-postgresql)
+  * [Installer nmake pour compiler bcrypt](#installer-nmake-pour-compiler-bcrypt)
+* [Infos utiles](#infos-utiles)
+  * [Generer le Swagger](#generer-le-swagger)
+  * [Generer le schema de la base de donnee (SGBD)](#generer-le-schema-de-la-base-de-donnee-sgbd)
+  * [Infos Utilisateurs deja creer hashes avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
+* [Partie Git](#partie-git)
+  * [Commandes Git Basique](#commandes-git-basique)
+  * [Commandes Git Avancees](#commandes-git-avancees)
+  
+## Pour demarrer votre serveur Phoenix
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+- Installez les dépendances avec `mix deps.get`
+- Créer et migrer votre base de données avec `mix ecto.setup`
+- Installez les dépendances de Node.js avec `npm install` dans le répertoire `assets`
+- Démarrez le serveur de Phoenix avec `mix phx.server`
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Vous pouvez maintenant visiter [`localhost:4000`](http://localhost:4000) à partir de votre navigateur.
 
-## Learn more
+Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](https://hexdocs.pm/phoenix/deployment.html).
 
-- Official website: https://www.phoenixframework.org/
+### En savoir plus
+
+- Site officiel: https://www.phoenixframework.org/
 - Guides: https://hexdocs.pm/phoenix/overview.html
 - Docs: https://hexdocs.pm/phoenix
 - Forum: https://elixirforum.com/c/phoenix-forum
 - Source: https://github.com/phoenixframework/phoenix
 
-## Configurer Elixir / Phoenix
+## Configurer le Back
 
-- Installer Elixir
+### Installer Elixir
 
   - Source : [Doc installation Elixir](https://bit.ly/3aCqkfG)
   - Tuto : [Doc setup Elixir](https://bit.ly/3mDcA6I)
 
-- Installer Phoenix
+### Installer Phoenix
 
   - Source : [Doc installation Phoenix](https://bit.ly/3mMQv5A)
   - Commandes :
     - `mix local.hex`
     - `mix archive.install hex phx_new 1.5.7`
 
-- Installer PostgreSQL
+### Installer PostgreSQL
 
   - Source : [Doc installation Postgresql](https://bit.ly/3mKFmlZ)
   - Tuto : [Doc setup Postgresql](https://bit.ly/3pnqhZj)
@@ -43,14 +60,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   - Modifier la variable Content Type pour mettre : `text/javascript`
   - Redémarrer votre PC et exécuter pgAdmin4
 
-- Installer Swagger
-  - Source : [Doc setup swagger Elixir](https://bit.ly/2M63frD)
-  - Commandes :
-    - `mix phx.swagger.generate`
-
----
-
-- Installer nmake pour compiler bcrypt
+### Installer nmake pour compiler bcrypt
 
   - Source 1 : [Forum stackoverflow Elixir](https://bit.ly/3h7wsxs)
   - Source 2 : [Issues github Elixir](https://bit.ly/34yoqsA)
@@ -67,12 +77,33 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
     - `cmd /K "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64`
     - `mix compile`
     - `exit`
-    - `mix ecto setup`
+    - `mix ecto.setup`
     - `mix phx.server`
 
----
+## Infos utiles
 
-- Infos Utilisateurs déjà créer hashés avec Bcrypt
+### Generer le Swagger
+  - Source : [Doc setup swagger Elixir](https://bit.ly/2M63frD)
+  - Commandes :
+    - `mix phx.swagger.generate`
+
+### Generer le schema de la base de donnee (SGBD)
+
+  - Etape 1 ) Configurer le Back pour taper sur Mysql plutot que Postgres :
+    - Installer [Wamp](https://bit.ly/2YZE39d) pour avoir Phpmyadmin et [Mysql Workbench](https://bit.ly/2Z1wPS4)
+    - Récupérer le dossier Config Mysql du repo [Elixir_Phoenix_Projets](https://bit.ly/3rC4gqJ)
+    - Modifier les fichiers suivants pour taper sur Mysql :
+      - (mix.hex + dev.exs + tests.exs + repo.ex) => en s'inspirant du dossier récupérer précédemment
+      - ensuite vous devrez par contre utiliser la dépendance MyXQL plutot que Postgrex 
+      - puis rentrer vos informations de connexions de votre phpmyadmin
+      - et lancer la commande `mix deps.get` puis `mix ecto.setup` et c'est bon vous avez la bdd
+  - Etape 2 ) Générer le SGBD avec Mysql Workbench :
+    - se connecter à l'instance de connexion MYSQL avec Mysql Workbench
+    - ensuite dans le menu en haut clicker sur Database puis Reverse Engineer
+    - puis sélectionner la base de donnée utilisé puis faites valider
+    - et réaranger le schéma en vous basant sur l'exemple de la dernière version du SBGD
+
+### Infos Utilisateurs deja creer hashes avec Bcrypt
 
   - Users de test : 
     - Test => email : test@test.com / password : test 
@@ -81,11 +112,9 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   - Admin de test :
     - Admin => email : admin@gmail.com / password : admin
 
----
-
 ## Partie Git
 
-- Commandes Git Basique :
+### Commandes Git Basique
 	* git clone https://github.com/CyrielleGl/kira-bijoux-front.git : **récupère le projet git**
 	* git status : **vérifie l'état des fichiers**
 	* git add . : **ajoute les fichiers aux projet git**
@@ -94,7 +123,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git** 
 	* git pull origin <nom_de_la_branche> : **met à jour ton repo avec la dernière version du projet** 	
 
-- Commandes Git Avancées :
+### Commandes Git Avancees
 	* git branch : **liste toutes les branches du projet git**
 	* git checkout <nom_de_la_branche> : **te positionne sur une branche spécifique**
 	* git push origin <nom_de_la_branche> : **envoie ton projet sur git mais dans la branche dev**
