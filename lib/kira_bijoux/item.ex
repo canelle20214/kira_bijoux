@@ -4,7 +4,9 @@ defmodule KiraBijoux.Item do
 
   schema "items" do
     field :item_parent_id, :id
+    field :subtitle, :string
     field :price, :float
+    field :length, :string
     field :stock, :integer
     field :description, :string
     field :visibility, :boolean, default: true
@@ -14,7 +16,7 @@ defmodule KiraBijoux.Item do
   @doc false
   def changeset(item, attrs \\ %{}) do
     item
-    |> cast(attrs, [:item_parent_id, :price, :stock, :visibility])
-    |> validate_required([:item_parent_id, :price, :stock, :visibility])
+    |> cast(attrs, [:item_parent_id, :subtitle, :price, :length, :stock, :visibility])
+    |> validate_required([:item_parent_id, :subtitle, :price, :length, :stock, :visibility])
   end
 end

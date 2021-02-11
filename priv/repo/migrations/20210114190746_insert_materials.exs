@@ -13,7 +13,9 @@ defmodule KiraBijoux.Repo.Migrations.InsertMaterials do
       %{name: "Quartz rose", material_type_id: pierre, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "Amethyste", material_type_id: pierre, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "Pierre de lune", material_type_id: pierre, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
-      %{name: "Labradorite", material_type_id: pierre, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)} ]
+      %{name: "Labradorite", material_type_id: pierre, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "Jaspe Kambaba", material_type_id: pierre, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
+      ]
     )
   end
 end
