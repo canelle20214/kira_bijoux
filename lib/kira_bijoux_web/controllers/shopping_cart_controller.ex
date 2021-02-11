@@ -56,10 +56,8 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   def create(conn, params) do
     item_id = params["item_id"]
-    |> String.to_integer()
     user_id = params["user_id"]
     quantity = params["quantity"]
-    |> String.to_integer()
 
     order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
     case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
@@ -69,6 +67,53 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     {:error, changeset} ->
       Logger.error changeset
       put_status(conn, 500)
+    end
+  end
+
+  # update quantity of item of shopping cart
+  swagger_path :update do
+    put("/shop/{item_id}")
+    summary("Update quantity of shopping cart")
+    description("Update an existing shopping cart")
+    produces "application/json"
+    parameter :item_id, :path, :integer, "The id of the item of the shopping cart to be updated", required: true
+    parameters do
+      quantity :query, :integer, "The quantity of the item of the shopping cart to be updated", required: true
+    end
+  end
+
+  def update(conn, %{"item_id" => item_id, "quantity" => quantity}) do
+    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+    |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+    case Repo.update order_item do
+      {:ok, order_item} ->
+        put_status(conn, 200)
+        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
+    end
+  end
+
+  # remove item to shopping cart
+  swagger_path(:delete) do
+    PhoenixSwagger.Path.delete("/shop/{item_id}")
+    summary("Delete Item of shopping cart")
+    description("Delete a Item by id")
+    parameter :item_id, :path, :integer, "The id of the item of shopping cart to be deleted", required: true
+    response(203, "No Content - Deleted Successfully")
+  end
+
+  def delete(conn, %{"item_id" => item_id}) do
+    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+    if order_item == nil do
+      Logger.error("l'item n'est pas présent dans le panier")
+      put_status(conn, 404)
+      |> json([])
+    else
+      Repo.delete(order_item)
+      put_status(conn, 200)
+      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
     end
   end
 end
