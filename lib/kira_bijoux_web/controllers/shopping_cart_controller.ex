@@ -83,9 +83,6 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   end
 
   def update(conn, %{"item_id" => item_id, "quantity" => quantity}) do
-    quantity = String.to_integer(quantity)
-    item_id = String.to_integer(item_id)
-
     order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
     |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
     case Repo.update order_item do
