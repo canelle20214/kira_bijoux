@@ -12,6 +12,7 @@ defmodule KiraBijoux.Repo.Migrations.CreateUsers do
 
       timestamps()
     end
+    create index(:users, [:mail])
 
   end
 end
