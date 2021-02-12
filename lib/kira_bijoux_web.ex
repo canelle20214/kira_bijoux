@@ -29,7 +29,7 @@ defmodule KiraBijouxWeb do
       use PhoenixSwagger
 
       alias KiraBijouxWeb.Router.Helpers, as: Routes
-      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User}
+      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User, Payment}
       alias KiraBijouxWeb.{ItemView, UserView}
     end
   end
@@ -44,7 +44,7 @@ defmodule KiraBijouxWeb do
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1, json: 2]
 
-      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User}
+      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User, Payment}
       # Include shared imports and aliases for views
       unquote(view_helpers())
     end
@@ -62,7 +62,7 @@ defmodule KiraBijouxWeb do
   def migration do
     quote do
       use Ecto.Migration
-      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User}
+      alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User, Payment}
       import Ecto.Query, only: [from: 2]
 
     end
