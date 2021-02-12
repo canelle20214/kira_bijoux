@@ -49,8 +49,8 @@ defmodule KiraBijoux.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
       {:excoveralls, "~> 0.13.0"},
-      {:comeonin, "~> 5.3"},
-      {:bcrypt_elixir, "~> 2.2"}
+      {:bcrypt_elixir, "~> 2.2"},
+      {:comeonin, "~> 5.3"}
     ]
   end
 

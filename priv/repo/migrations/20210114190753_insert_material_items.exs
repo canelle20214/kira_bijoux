@@ -17,7 +17,8 @@ defmodule KiraBijoux.Repo.Migrations.InsertMaterialItems do
     [item12 | list12] = list11
     [item13 | list13] = list12
     [item14 | list14] = list13
-    [item15 | _] = list14
+    [item15 | list15] = list14
+    [item16 | _] = list15
     material1 = Repo.one(from m in Material, select: m.id, where: m.name == "Argent 925")
     material2 = Repo.one(from m in Material, select: m.id, where: m.name == "Larvikite")
     material3 = Repo.one(from m in Material, select: m.id, where: m.name == "Lapis Lazuli")
@@ -27,6 +28,7 @@ defmodule KiraBijoux.Repo.Migrations.InsertMaterialItems do
     material7 = Repo.one(from m in Material, select: m.id, where: m.name == "Amethyste")
     material8 = Repo.one(from m in Material, select: m.id, where: m.name == "Pierre de lune")
     material9 = Repo.one(from m in Material, select: m.id, where: m.name == "Labradorite")
+    material10 = Repo.one(from m in Material, select: m.id, where: m.name == "Jaspe Kambaba")
     Repo.insert_all(Material.Item,
       [ %{item_id: item1, material_id: material1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{item_id: item2, material_id: material1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
@@ -51,7 +53,9 @@ defmodule KiraBijoux.Repo.Migrations.InsertMaterialItems do
       %{item_id: item13, material_id: material3, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{item_id: item14, material_id: material1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{item_id: item15, material_id: material1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
-      %{item_id: item15, material_id: material4, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
+      %{item_id: item15, material_id: material4, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{item_id: item16, material_id: material1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{item_id: item16, material_id: material10, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
       ]
     )
   end
