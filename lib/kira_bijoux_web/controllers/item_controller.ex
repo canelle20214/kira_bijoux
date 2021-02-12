@@ -15,7 +15,7 @@ defmodule KiraBijouxWeb.ItemController do
     |> ItemView.render("index.json", %{items: items})
   end
 
-  def swagger_schema do
+  def swagger_definitions do
     %{
       Item: swagger_schema do
         title "Item"
