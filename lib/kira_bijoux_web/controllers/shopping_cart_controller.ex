@@ -59,14 +59,21 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     user_id = params["user_id"]
     quantity = params["quantity"]
 
-    order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
-    case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
-    {:ok, order_item} ->
-      put_status(conn, 201)
-      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
-    {:error, changeset} ->
-      Logger.error changeset
-      put_status(conn, 500)
+    item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+    if quantity > item_stock do
+      Logger.error("la quantité est incorrecte")
+      put_status(conn, 404)
+      |> json([])
+    else
+      order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
+      case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
+      {:ok, order_item} ->
+        put_status(conn, 201)
+        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
+      end
     end
   end
 
@@ -83,15 +90,22 @@ defmodule KiraBijouxWeb.ShoppingCartController do
   end
 
   def update(conn, %{"item_id" => item_id, "quantity" => quantity}) do
-    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
-    |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
-    case Repo.update order_item do
-      {:ok, order_item} ->
-        put_status(conn, 200)
-        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+    item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+    if quantity > item_stock do
+      Logger.error("la quantité est incorrecte")
+      put_status(conn, 404)
+      |> json([])
+    else
+      order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+      |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+      case Repo.update order_item do
+        {:ok, order_item} ->
+          put_status(conn, 200)
+          |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+        {:error, changeset} ->
+          Logger.error changeset
+          put_status(conn, 500)
+      end
     end
   end
 
