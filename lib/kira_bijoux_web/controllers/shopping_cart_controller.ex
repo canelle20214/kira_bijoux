@@ -59,6 +59,7 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     user_id = params["user_id"]
     quantity = params["quantity"]
 
+    # on vérifie si l'item n'est pas déjà présent dans le panier de l'utilisateur
     order_id = Repo.one(from o in Order, select: o,
       where: o.user_address_id == ^user_id)
     order_items = Repo.all(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
@@ -72,12 +73,14 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       end
     end)
 
+    # on vérifie si la quantité saisi est supérieur aux nombre items en stock pour cet item
     item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
     if quantity > item_stock do
-      Logger.error("la quantité est incorrecte")
+      Logger.error("la quantité saisi est incorrecte")
       put_status(conn, 404)
       |> json([])
     else
+      # si on n'a pas d'erreur alors on ajoute l'item au panier
       order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
       case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
       {:ok, order_item} ->
