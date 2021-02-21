@@ -95,24 +95,26 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   # update quantity of item of shopping cart
   swagger_path :update do
-    put("/shop/{item_id}")
+    put("/shop/{item_id}/{user_id}")
     summary("Update quantity of shopping cart")
     description("Update an existing shopping cart")
     produces "application/json"
     parameter :item_id, :path, :integer, "The id of the item of the shopping cart to be updated", required: true
     parameters do
+      user_id :path, :integer, "The id of the user of the shopping cart to be created", required: true
       quantity :query, :integer, "The quantity of the item of the shopping cart to be updated", required: true
     end
   end
 
-  def update(conn, %{"item_id" => item_id, "quantity" => quantity}) do
+  def update(conn, %{"item_id" => item_id, "user_id" => user_id, "quantity" => quantity}) do
     item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+    quantity = String.to_integer(quantity)
     if quantity > item_stock do
       Logger.error("la quantité est incorrecte")
       put_status(conn, 404)
       |> json([])
     else
-      order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+      order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id and o.order_id == ^user_id)
       |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
       case Repo.update order_item do
         {:ok, order_item} ->
@@ -127,15 +129,18 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   # remove item to shopping cart
   swagger_path(:delete) do
-    PhoenixSwagger.Path.delete("/shop/{item_id}")
+    PhoenixSwagger.Path.delete("/shop/{item_id}/{user_id}")
     summary("Delete Item of shopping cart")
     description("Delete a Item by id")
     parameter :item_id, :path, :integer, "The id of the item of shopping cart to be deleted", required: true
+    parameters do
+      user_id :path, :integer, "The id of the user of the shopping cart to be created", required: true
+    end
     response(203, "No Content - Deleted Successfully")
   end
 
-  def delete(conn, %{"item_id" => item_id}) do
-    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+  def delete(conn, %{"item_id" => item_id, "user_id" => user_id}) do
+    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id and o.order_id == ^user_id)
     if order_item == nil do
       Logger.error("l'item n'est pas présent dans le panier")
       put_status(conn, 404)
