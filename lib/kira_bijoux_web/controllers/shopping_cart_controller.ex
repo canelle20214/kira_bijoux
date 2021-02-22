@@ -64,12 +64,34 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       where: o.user_address_id == ^user_id)
     order_items = Repo.all(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
 
+    # on parcours tous les items présents dans le panier de l'utilisateur
     Enum.map(order_items, fn x ->
+      # si l'item est déjà présent dans le panier alors on fait un update de la quatité de l'item
+      # en lui passant la somme de l'ancienne quantité et de la nouvelle
       if x.item_id == item_id do
-        Logger.error("L'item est deja present dans le panier")
-        put_status(conn, 500)
-        |> json([])
-        exit(:shutdown)
+        quantity = x.quantity + quantity
+        order_item = x
+        |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+        case Repo.update order_item do
+          {:ok, order_item} ->
+            # on vérifie si la quantité saisi est supérieur aux nombre items en stock pour cet item
+            item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+            if quantity > item_stock do
+              Logger.error("la quantité saisi est incorrecte")
+              put_status(conn, 404)
+              |> json([])
+            else
+              # si on n'a pas d'erreur alors on modifie l'item du panier et on sort de la fonction
+              # avec exit() afin de ne pas éxécuter la suite du code de la fonction
+              put_status(conn, 200)
+              |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+            end
+            exit(:shutdown)
+          {:error, changeset} ->
+            Logger.error changeset
+            put_status(conn, 500)
+            exit(:shutdown)
+        end
       end
     end)
 
@@ -108,7 +130,6 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
   def update(conn, %{"item_id" => item_id, "user_id" => user_id, "quantity" => quantity}) do
     item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
-    quantity = String.to_integer(quantity)
     if quantity > item_stock do
       Logger.error("la quantité est incorrecte")
       put_status(conn, 404)
