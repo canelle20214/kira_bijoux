@@ -66,7 +66,7 @@ defmodule KiraBijouxWeb.ShoppingCartController do
 
     # on parcours tous les items présents dans le panier de l'utilisateur
     Enum.map(order_items, fn x ->
-      # si l'item est déjà présent dans le panier alors on fait un update de la quatité de l'item
+      # si l'item est déjà présent dans le panier alors on fait un update de la quantité de l'item
       # en lui passant la somme de l'ancienne quantité et de la nouvelle
       if x.item_id == item_id do
         quantity = x.quantity + quantity
