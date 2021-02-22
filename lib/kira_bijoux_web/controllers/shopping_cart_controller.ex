@@ -70,32 +70,33 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       # en lui passant la somme de l'ancienne quantité et de la nouvelle
       if x.item_id == item_id do
         quantity = x.quantity + quantity
-        order_item = x
-        |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
-        case Repo.update order_item do
-          {:ok, order_item} ->
-            # on vérifie si la quantité saisi est supérieur aux nombre items en stock pour cet item
-            item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
-            if quantity > item_stock do
-              Logger.error("la quantité saisi est incorrecte")
-              put_status(conn, 404)
-              |> json([])
-            else
+        # on vérifie si la nouvelle quantité est supérieur aux nombre d'items en stock pour cet item
+        item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+        if quantity > item_stock do
+          Logger.error("la quantite saisi est incorrecte")
+          put_status(conn, 404)
+          |> json([])
+          exit(:shutdown)
+        else
+          order_item = x
+          |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+          case Repo.update order_item do
+            {:ok, order_item} ->
               # si on n'a pas d'erreur alors on modifie l'item du panier et on sort de la fonction
               # avec exit() afin de ne pas éxécuter la suite du code de la fonction
               put_status(conn, 200)
               |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
-            end
-            exit(:shutdown)
-          {:error, changeset} ->
-            Logger.error changeset
-            put_status(conn, 500)
-            exit(:shutdown)
+              exit(:shutdown)
+            {:error, changeset} ->
+              Logger.error changeset
+              put_status(conn, 500)
+              exit(:shutdown)
+          end
         end
       end
     end)
 
-    # on vérifie si la quantité saisi est supérieur aux nombre items en stock pour cet item
+    # on vérifie si la quantité saisi est supérieur aux nombre d'items en stock pour cet item
     item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
     if quantity > item_stock do
       Logger.error("la quantité saisi est incorrecte")
