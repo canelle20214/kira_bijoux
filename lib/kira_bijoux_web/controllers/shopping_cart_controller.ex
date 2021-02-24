@@ -41,17 +41,31 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     end
   end
 
+  def swagger_definitions do
+    %{
+      Shop: swagger_schema do
+        title "Shop"
+        description "Shop descr"
+        properties do
+          item_id :integer, "Item id"
+          user_id :integer, "User id"
+          quantity :integer, "Quantity"
+        end
+      end
+    }
+  end
+
   # add product to shopping cart
   swagger_path :create do
     post("/shop")
     summary("Create shopping cart")
     description("Create a new shopping cart")
     produces "application/json"
-    parameters do
-      item_id :query, :integer, "The item_id of the shopping cart to be created", required: true
-      user_id :query, :integer, "The user_id of the shopping cart to be created", required: true
-      quantity :query, :integer, "The quantity of the shopping cart to be created", required: true
-    end
+    parameter :shop, :body, Schema.ref(:Shop), "Shop", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      item_id: 1,
+      user_id: 1,
+      quantity: 1
+    })
   end
 
   def create(conn, params) do
@@ -123,10 +137,10 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     description("Update an existing shopping cart")
     produces "application/json"
     parameter :item_id, :path, :integer, "The id of the item of the shopping cart to be updated", required: true
-    parameters do
-      user_id :path, :integer, "The id of the user of the shopping cart to be created", required: true
-      quantity :query, :integer, "The quantity of the item of the shopping cart to be updated", required: true
-    end
+    parameter :shop, :body, Schema.ref(:Shop), "Shop", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      user_id: 1,
+      quantity: 2
+    })
   end
 
   def update(conn, %{"item_id" => item_id, "user_id" => user_id, "quantity" => quantity}) do

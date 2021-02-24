@@ -33,6 +33,21 @@ defmodule KiraBijouxWeb.UserController do
     |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
   end
 
+  def swagger_definitions do
+    %{
+      User: swagger_schema do
+        title "User"
+        description "User descr"
+        properties do
+          firstname :string, "Firstname"
+          lastname :string, "Lastname"
+          mail :string, "Mail"
+          password :string, "Password"
+          phone :string, "Phone"
+        end
+      end
+    }
+  end
 
   # create user
   swagger_path :create do
@@ -40,13 +55,13 @@ defmodule KiraBijouxWeb.UserController do
     summary("Create user")
     description("Create a new user")
     produces "application/json"
-    parameters do
-      firstname :query, :string, "The firstname of the user to be created", required: true
-      lastname :query, :string, "The lastname of the user to be created", required: true
-      mail :query, :string, "The mail of the user to be created", required: true
-      password :query, :string, "The password of the user to be created", required: true
-      phone :query, :string, "The phone of the user to be created", required: false
-    end
+    parameter :user, :body, Schema.ref(:User), "User", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      firstname: "John",
+      lastname: "Doe",
+      mail: "john.doe@gmail.com",
+      password: "1234",
+      phone: "0643239066"
+    })
   end
 
   def create(conn, params) do
@@ -69,14 +84,14 @@ defmodule KiraBijouxWeb.UserController do
 
   # update user
   swagger_path :update do
-    put("/users/{id}")
+    post("/users/{id}")
     summary("Update user")
     description("Update an existing user")
     produces "application/json"
     parameter :id, :path, :integer, "The id of the user to be updated", required: true
-    parameters do
-      mail :query, :string, "The mail of the user to be updated", required: true
-    end
+    parameter :user, :body, Schema.ref(:User), "User", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      mail: "john.doe@gmail.com"
+    })
   end
 
   def update(conn, %{"id" => id, "mail" => mail}) do
