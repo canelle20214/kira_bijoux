@@ -41,37 +41,19 @@ defmodule KiraBijouxWeb.ItemController do
     post("/items")
     summary("Create item")
     description("Create a new item")
-    parameter :item, :body, Schema.ref(:Item), "Item", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-          name: "Collier",
-          subtitle: "Collier",
-          description: "Collier",
-          price: 35.5,
-          length: "35 cm",
-          stock: 4,
-          visibility: true,
-          materials: [1,4],
-          collection_id: 1,
-          item_type_id: 1
-        })
     produces "application/json"
-    response(200, "OK", Schema.ref(:Item),
-      example:
-      %{
-        item:
-        %{
-          name: "Collier",
-          subtitle: "Collier",
-          description: "Collier",
-          price: 35.5,
-          length: "35 cm",
-          stock: 4,
-          visibility: true,
-          materials: [1,4],
-          collection_id: 1,
-          item_type_id: 1
-        }
-      }
-    )
+    parameter :item, :body, Schema.ref(:Item), "Item", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      name: "Collier",
+      subtitle: "Collier",
+      description: "Collier",
+      price: 35.5,
+      length: "35 cm",
+      stock: 4,
+      visibility: true,
+      materials: [1,4],
+      collection_id: 1,
+      item_type_id: 1
+    })
   end
 
   def create(conn, params) do
