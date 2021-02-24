@@ -84,7 +84,7 @@ defmodule KiraBijouxWeb.UserController do
 
   # update user
   swagger_path :update do
-    post("/users/{id}")
+    put("/users/{id}")
     summary("Update user")
     description("Update an existing user")
     produces "application/json"
