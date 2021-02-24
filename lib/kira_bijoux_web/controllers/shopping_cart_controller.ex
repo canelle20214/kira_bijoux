@@ -41,17 +41,31 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     end
   end
 
+  def swagger_definitions do
+    %{
+      Shop: swagger_schema do
+        title "Shop"
+        description "Shop descr"
+        properties do
+          item_id :integer, "Item id"
+          user_id :integer, "User id"
+          quantity :integer, "Quantity"
+        end
+      end
+    }
+  end
+
   # add product to shopping cart
   swagger_path :create do
     post("/shop")
     summary("Create shopping cart")
     description("Create a new shopping cart")
     produces "application/json"
-    parameters do
-      item_id :query, :integer, "The item_id of the shopping cart to be created", required: true
-      user_id :query, :integer, "The user_id of the shopping cart to be created", required: true
-      quantity :query, :integer, "The quantity of the shopping cart to be created", required: true
-    end
+    parameter :shop, :body, Schema.ref(:Shop), "Shop", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      item_id: 1,
+      user_id: 1,
+      quantity: 1
+    })
   end
 
   def create(conn, params) do
@@ -59,53 +73,110 @@ defmodule KiraBijouxWeb.ShoppingCartController do
     user_id = params["user_id"]
     quantity = params["quantity"]
 
-    order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
-    case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
-    {:ok, order_item} ->
-      put_status(conn, 201)
-      |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
-    {:error, changeset} ->
-      Logger.error changeset
-      put_status(conn, 500)
+    # on vérifie si l'item n'est pas déjà présent dans le panier de l'utilisateur
+    order_id = Repo.one(from o in Order, select: o,
+      where: o.user_address_id == ^user_id)
+    order_items = Repo.all(from i in Order.Item, select: i, where: i.order_id == ^order_id.id)
+
+    # on parcours tous les items présents dans le panier de l'utilisateur
+    Enum.map(order_items, fn x ->
+      # si l'item est déjà présent dans le panier alors on fait un update de la quantité de l'item
+      # en lui passant la somme de l'ancienne quantité et de la nouvelle
+      if x.item_id == item_id do
+        quantity = x.quantity + quantity
+        # on vérifie si la nouvelle quantité est supérieur aux nombre d'items en stock pour cet item
+        item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+        if quantity > item_stock do
+          Logger.error("la quantite saisi est incorrecte")
+          put_status(conn, 404)
+          |> json([])
+          exit(:shutdown)
+        else
+          order_item = x
+          |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+          case Repo.update order_item do
+            {:ok, order_item} ->
+              # si on n'a pas d'erreur alors on modifie l'item du panier et on sort de la fonction
+              # avec exit() afin de ne pas éxécuter la suite du code de la fonction
+              put_status(conn, 200)
+              |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+              exit(:shutdown)
+            {:error, changeset} ->
+              Logger.error changeset
+              put_status(conn, 500)
+              exit(:shutdown)
+          end
+        end
+      end
+    end)
+
+    # on vérifie si la quantité saisi est supérieur aux nombre d'items en stock pour cet item
+    item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+    if quantity > item_stock do
+      Logger.error("la quantité saisi est incorrecte")
+      put_status(conn, 404)
+      |> json([])
+    else
+      # si on n'a pas d'erreur alors on ajoute l'item au panier
+      order_id = Repo.one(from o in Order, select: o, where: o.user_address_id == ^user_id)
+      case Repo.insert %Order.Item{order_id: order_id.id, item_id: item_id, quantity: quantity} do
+      {:ok, order_item} ->
+        put_status(conn, 201)
+        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
+      end
     end
   end
 
   # update quantity of item of shopping cart
   swagger_path :update do
-    put("/shop/{item_id}")
+    put("/shop/{item_id}/{user_id}")
     summary("Update quantity of shopping cart")
     description("Update an existing shopping cart")
     produces "application/json"
     parameter :item_id, :path, :integer, "The id of the item of the shopping cart to be updated", required: true
-    parameters do
-      quantity :query, :integer, "The quantity of the item of the shopping cart to be updated", required: true
-    end
+    parameter :shop, :body, Schema.ref(:Shop), "Shop", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      user_id: 1,
+      quantity: 2
+    })
   end
 
-  def update(conn, %{"item_id" => item_id, "quantity" => quantity}) do
-    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
-    |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
-    case Repo.update order_item do
-      {:ok, order_item} ->
-        put_status(conn, 200)
-        |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+  def update(conn, %{"item_id" => item_id, "user_id" => user_id, "quantity" => quantity}) do
+    item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
+    if quantity > item_stock do
+      Logger.error("la quantité est incorrecte")
+      put_status(conn, 404)
+      |> json([])
+    else
+      order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id and o.order_id == ^user_id)
+      |> KiraBijoux.Order.Item.changeset(%{quantity: quantity})
+      case Repo.update order_item do
+        {:ok, order_item} ->
+          put_status(conn, 200)
+          |> KiraBijouxWeb.OrderItemView.render("index.json", %{order_item: order_item})
+        {:error, changeset} ->
+          Logger.error changeset
+          put_status(conn, 500)
+      end
     end
   end
 
   # remove item to shopping cart
   swagger_path(:delete) do
-    PhoenixSwagger.Path.delete("/shop/{item_id}")
+    PhoenixSwagger.Path.delete("/shop/{item_id}/{user_id}")
     summary("Delete Item of shopping cart")
     description("Delete a Item by id")
     parameter :item_id, :path, :integer, "The id of the item of shopping cart to be deleted", required: true
+    parameters do
+      user_id :path, :integer, "The id of the user of the shopping cart to be created", required: true
+    end
     response(203, "No Content - Deleted Successfully")
   end
 
-  def delete(conn, %{"item_id" => item_id}) do
-    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id)
+  def delete(conn, %{"item_id" => item_id, "user_id" => user_id}) do
+    order_item = Repo.one(from o in Order.Item, select: o, where: o.item_id == ^item_id and o.order_id == ^user_id)
     if order_item == nil do
       Logger.error("l'item n'est pas présent dans le panier")
       put_status(conn, 404)
