@@ -49,6 +49,22 @@ defmodule KiraBijouxWeb.UserController do
     }
   end
 
+  def swagger_definitions do
+    %{
+      Address: swagger_schema do
+        title "Address"
+        description "Address descr"
+        properties do
+          name :string, "Name"
+          first_line :string, "First line"
+          second_line :string, "Second line"
+          post_code :string, "Post code"
+          town :string, "Town"
+        end
+      end
+    }
+  end
+
   # create user
   swagger_path :create do
     post("/users")
@@ -81,6 +97,40 @@ defmodule KiraBijouxWeb.UserController do
     end
   end
 
+  # add address to user
+  swagger_path :addAddress do
+    post("/users/address/{id}")
+    summary("Create address")
+    description("Create a new address")
+    produces "application/json"
+    parameter :id, :path, :integer, "The id of the user to be add address", required: true
+    parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      name: "Maison",
+      first_line: "8 rue de la gare",
+      second_line: "",
+      post_code: "75009",
+      town: "Paris"
+    })
+  end
+
+  def addAddress(conn, params) do
+    id = params["id"]
+    name = params["name"]
+    first_line = params["first_line"]
+    second_line = params["second_line"] || nil
+    post_code = params["post_code"]
+    town = params["town"]
+
+    user_id = Repo.one(from u in User, select: u.id, where: u.id == ^id)
+    case Repo.insert %User.Address{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, recipient: "", user_id: user_id} do
+      {:ok, user_address} ->
+        put_status(conn, 201)
+        |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
+    end
+  end
 
   # update user
   swagger_path :update do
