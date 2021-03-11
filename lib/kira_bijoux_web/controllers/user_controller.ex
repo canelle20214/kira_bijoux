@@ -90,14 +90,24 @@ defmodule KiraBijouxWeb.UserController do
     produces "application/json"
     parameter :id, :path, :integer, "The id of the user to be updated", required: true
     parameter :user, :body, Schema.ref(:User), "User", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-      mail: "john.doe@gmail.com"
+      firstname: "Johno",
+      lastname: "Doeno",
+      mail: "johno.doeno@gmail.com",
+      password: "12345",
+      phone: "0643239067"
     })
   end
 
-  def update(conn, %{"id" => id, "mail" => mail}) do
-    user = Repo.get!(User, id)
-    |> KiraBijoux.User.changeset(%{mail: mail})
-    case Repo.update user do
+  def update(conn, params) do
+    user = Repo.get!(User, params["id"])
+    firstname = params["firstname"]
+    lastname = params["lastname"]
+    mail = params["mail"]
+    phone = params["phone"]
+    password = params["password"]
+    |> Bcrypt.hash_pwd_salt()
+
+    case Repo.update User.changeset(user, %{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password}) do
       {:ok, user} ->
         put_status(conn, 200)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
