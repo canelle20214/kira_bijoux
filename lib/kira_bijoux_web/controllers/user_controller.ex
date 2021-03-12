@@ -202,31 +202,31 @@ defmodule KiraBijouxWeb.UserController do
     })
   end
 
-    def updateAddress(conn, params) do
-      id = params["id"]
-      name = params["name"]
-      first_line = params["first_line"]
-      second_line = params["second_line"] || nil
-      post_code = params["post_code"]
-      town = params["town"]
-      country = params["country"]
+  def updateAddress(conn, params) do
+    id = params["id"]
+    name = params["name"]
+    first_line = params["first_line"]
+    second_line = params["second_line"] || nil
+    post_code = params["post_code"]
+    town = params["town"]
+    country = params["country"]
 
-      user_address = Repo.one(from u in User.Address, select: u, where: u.user_id == ^id)
-      if user_address == nil do
-        Logger.error("l'addresse n'existe pas")
-        put_status(conn, 404)
-        |> json([])
-      else
-        case Repo.update User.Address.changeset(user_address, %{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country}) do
-          {:ok, user_address} ->
-            put_status(conn, 201)
-            |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
-          {:error, changeset} ->
-            Logger.error changeset
-            put_status(conn, 500)
-        end
+    user_address = Repo.one(from u in User.Address, select: u, where: u.user_id == ^id)
+    if user_address == nil do
+      Logger.error("l'addresse n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      case Repo.update User.Address.changeset(user_address, %{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country}) do
+        {:ok, user_address} ->
+          put_status(conn, 201)
+          |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
+        {:error, changeset} ->
+          Logger.error changeset
+          put_status(conn, 500)
       end
     end
+  end
 
   # delete user
   swagger_path(:delete) do
