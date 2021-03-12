@@ -31,8 +31,11 @@ defmodule KiraBijouxWeb.Router do
     get("/users", UserController, :index)
     get("/users/:id", UserController, :show)
     post("/users", UserController, :create)
+    post("/users/address/:id", UserController, :createAddress)
     put("/users/:id", UserController, :update)
+    put("/users/address/:id", UserController, :updateAddress)
     delete("/users/:id", UserController, :delete)
+    delete("/users/address/:id", UserController, :deleteAddress)
 
     get("/items", ItemController, :index)
     get("/items/:id", ItemController, :show)
