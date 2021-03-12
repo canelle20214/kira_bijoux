@@ -10,6 +10,7 @@ defmodule KiraBijoux.Repo.Migrations.CreateUserAddresses do
       add :second_line, :string
       add :post_code, :string
       add :town, :string
+      add :country, :string
 
       timestamps()
     end

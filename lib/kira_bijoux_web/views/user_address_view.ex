@@ -20,6 +20,7 @@ defmodule KiraBijouxWeb.UserAddressView do
     |> Map.put(:second_line, user_address.second_line)
     |> Map.put(:post_code, user_address.post_code)
     |> Map.put(:town, user_address.town)
+    |> Map.put(:country, user_address.country)
     |> Map.put(:inserted_at, user_address.inserted_at)
     |> Map.put(:updated_at, user_address.updated_at)
   end
