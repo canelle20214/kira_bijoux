@@ -135,7 +135,6 @@ defmodule KiraBijouxWeb.UserController do
       put_status(conn, 404)
       |> json([])
     else
-      IO.inspect(recipient)
       case Repo.insert %User.Address{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: recipient, user_id: user.id} do
         {:ok, user_address} ->
           put_status(conn, 201)
