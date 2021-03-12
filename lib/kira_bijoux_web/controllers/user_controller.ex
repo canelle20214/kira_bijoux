@@ -50,6 +50,7 @@ defmodule KiraBijouxWeb.UserController do
           mail :string, "Mail"
           password :string, "Password"
           phone :string, "Phone"
+          address :array, "Address"
         end
       end,
 
@@ -78,7 +79,8 @@ defmodule KiraBijouxWeb.UserController do
       lastname: "Doe",
       mail: "john.doe@gmail.com",
       password: "1234",
-      phone: "0643239066"
+      phone: "0643239066",
+      address: []
     })
   end
 
@@ -147,12 +149,15 @@ defmodule KiraBijouxWeb.UserController do
       mail: "johno.doeno@gmail.com",
       password: "12345",
       phone: "0643239067",
-      materials: [1,4]
+      address: [
+        "Maison", "9 rue de la gare", "", "75006", "Paris"
+      ]
     })
   end
 
   def update(conn, params) do
     id = params["id"]
+    address = params["address"]
     firstname = params["firstname"]
     lastname = params["lastname"]
     mail = params["mail"]
@@ -160,12 +165,20 @@ defmodule KiraBijouxWeb.UserController do
     password = params["password"]
     |> Bcrypt.hash_pwd_salt()
 
+    name = Enum.at(address, 0)
+    first_line = Enum.at(address, 1)
+    second_line = Enum.at(address, 2)
+    post_code = Enum.at(address, 3)
+    town = Enum.at(address, 4)
+
     user = Repo.one(from u in User, select: u, where: u.id == ^id)
+    user_address = Repo.one(from u in User.Address, select: u, where: u.user_id == ^id)
     if user == nil do
       Logger.error("le user n'existe pas")
       put_status(conn, 404)
       |> json([])
     else
+      Repo.update User.Address.changeset(user_address, %{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town})
       case Repo.update User.changeset(user, %{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password}) do
         {:ok, user} ->
           put_status(conn, 200)
