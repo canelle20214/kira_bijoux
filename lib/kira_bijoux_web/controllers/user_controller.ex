@@ -62,6 +62,7 @@ defmodule KiraBijouxWeb.UserController do
           second_line :string, "Second line"
           post_code :string, "Post code"
           town :string, "Town"
+          recipient :string, "Recipient"
           country :string, "Country"
         end
       end
@@ -113,6 +114,7 @@ defmodule KiraBijouxWeb.UserController do
       second_line: "",
       post_code: "75009",
       town: "Paris",
+      recipient: "M John Doe",
       country: "France"
     })
   end
@@ -124,6 +126,7 @@ defmodule KiraBijouxWeb.UserController do
     second_line = params["second_line"] || nil
     post_code = params["post_code"]
     town = params["town"]
+    recipient = params["recipient"]
     country = params["country"]
 
     user = Repo.one(from u in User, select: u, where: u.id == ^id)
@@ -132,7 +135,8 @@ defmodule KiraBijouxWeb.UserController do
       put_status(conn, 404)
       |> json([])
     else
-      case Repo.insert %User.Address{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: "", user_id: user.id} do
+      IO.inspect(recipient)
+      case Repo.insert %User.Address{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: recipient, user_id: user.id} do
         {:ok, user_address} ->
           put_status(conn, 201)
           |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
@@ -198,7 +202,7 @@ defmodule KiraBijouxWeb.UserController do
       second_line: "",
       post_code: "75006",
       town: "Paris",
-      recipient: "M John",
+      recipient: "M Johno Doe",
       country: "France"
     })
   end
