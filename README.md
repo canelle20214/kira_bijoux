@@ -130,8 +130,8 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 
 ### Commandes Git Basique
   ```
-  | Commandes | Explication |
-  | --------- |:-----------:|
+  |                            Commandes                          |           Explication        |
+  | ------------------------------------------------------------- | ---------------------------- |
   | git clone https://github.com/CyrielleGl/kira-bijoux-front.git | récupère le projet git |
   | git status | vérifie l'état des fichiers |
   | git add . | ajoute les fichiers aux projet git |
