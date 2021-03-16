@@ -134,21 +134,39 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   |                            Commandes                          |               Explication              |
   | ------------------------------------------------------------- | -------------------------------------- |
   | git clone https://github.com/CyrielleGl/kira-bijoux-front.git |             récupère projet git        |
+  |---------------------------------------------------------------|----------------------------------------|
   |                            git status                         |            vérifie état des fichiers   |
+  |---------------------------------------------------------------|----------------------------------------|
   |                            git add .                          |        ajoute fichiers aux projet      |
+  |---------------------------------------------------------------|----------------------------------------|
   |                git commit -m "<message_du_commit>"            |        donne nom à ta sauvegarde       |
+  |---------------------------------------------------------------|----------------------------------------|
   |                      git log --oneline -n 10                  |        liste dernières sauvegardes     |
+  |---------------------------------------------------------------|----------------------------------------|
   |                 git push origin <nom_de_la_branche>           |            envoie projet sur git       |
+  |---------------------------------------------------------------|----------------------------------------|
   |                git pull origin <nom_de_la_branche>            |               met à jour repo          |
+  |---------------------------------------------------------------|----------------------------------------|
   ```
 
 ### Commandes Git Avancees
-	* git branch => liste toutes les branches du projet git
-	* git checkout <nom_de_la_branche> => te positionne sur une branche spécifique
-	* git push origin <nom_de_la_branche> => envoie ton projet sur git mais dans la branche dev
-	* git checkout develop => te repositionne sur la branche principale develop
-	* git merge <nom_de_la_branche> => valide le projet git de la branche <nom_de_la_branche>
-	* git push origin develop => envoie le contenue branche dev à la branche develop
+  ```
+  |---------------------------------------------------------------|----------------------------------------|
+  |                            Commandes                          |               Explication              |
+  | ------------------------------------------------------------- | -------------------------------------- |
+  |                            git branch                         |            liste les branches          |
+  |---------------------------------------------------------------|----------------------------------------|
+  |                   git checkout <nom_de_la_branche>            |         positionne sur une branche     |
+  |---------------------------------------------------------------|----------------------------------------|
+  |                 git push origin <nom_de_la_branche>           |      envoie ton projet sur la branche  |
+  |---------------------------------------------------------------|----------------------------------------|
+  |                        git checkout develop                   |            positionne sur develop      |
+  |---------------------------------------------------------------|----------------------------------------|
+  |                  git merge <nom_de_la_branche>                |                merge ta branche        |
+  |---------------------------------------------------------------|----------------------------------------|
+  |                      git push origin develop                  |          envoie modifs sur develop     |
+  |---------------------------------------------------------------|----------------------------------------|
+  ```
 
 ### Commandes Git Autres
 	* git flow init => initialise l'environnement de travail des branches du projet
