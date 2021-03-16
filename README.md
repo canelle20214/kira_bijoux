@@ -131,7 +131,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 ### Commandes Git Basique
 
   |                            Commandes                          |               Explication              |
-  | ------------------------------------------------------------- | -------------------------------------- |
+  |:-------------------------------------------------------------:|:--------------------------------------:|
   | git clone https://github.com/CyrielleGl/kira-bijoux-front.git |             récupère projet git        |
   |                            git status                         |            vérifie état des fichiers   |
   |                            git add .                          |        ajoute fichiers aux projet      |  |                git commit -m "<message_du_commit>"            |        donne nom à ta sauvegarde       |
@@ -142,7 +142,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 ### Commandes Git Avancees
 
   |                            Commandes                          |               Explication              |
-  | ------------------------------------------------------------- | -------------------------------------- |
+  |:-------------------------------------------------------------:|:--------------------------------------:|
   |                            git branch                         |            liste les branches          |
   |                   git checkout <nom_de_la_branche>            |         positionne sur une branche     |
   |                 git push origin <nom_de_la_branche>           |      envoie ton projet sur la branche  |
@@ -153,7 +153,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 ### Commandes Git Autres
   
   |                            Commandes                          |               Explication              |
-  | ------------------------------------------------------------- | -------------------------------------- |
+  |:-------------------------------------------------------------:|:--------------------------------------:|
   |                            git flow init                      |         initialise les branches        |
   |              git flow feature start <nom_de_la_feature>       |         démarre ta branche feature     |
   |                          git fetch origin                     |         récupère état des branches     |
