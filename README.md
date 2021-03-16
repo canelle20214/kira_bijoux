@@ -150,4 +150,4 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 	* git flow feature start <nom_de_la_feature> => créer ta branche feature et te postionne dessus
 	* git fetch origin => récupère la dernière version de l'état des branches
 	* git rebase origin => récupère la dernière version de l'état de la base des branches
-	* git restore * => annule toutes modifications pour revenir à la version du dernier commit
+	* git restore . => annule toutes modifications pour revenir à la version du dernier commit
