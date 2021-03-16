@@ -146,7 +146,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 	* git push origin develop => envoie le contenue branche dev à la branche develop
 
 ### Commandes Git Autres
-  * **git flow init** => initialise l'environnement de travail des branches du projet
+  * git flow init => initialise l'environnement de travail des branches du projet
   * git flow feature start <nom_de_la_feature> => créer ta branche feature et te postionne dessus
   * git fetch origin => récupère la dernière version de l'état des branches
   * git rebase origin => récupère la dernière version de l'état de la base des branches
