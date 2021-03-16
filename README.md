@@ -130,7 +130,6 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 
 ### Commandes Git Basique
 
-  |---------------------------------------------------------------|----------------------------------------|
   |                            Commandes                          |               Explication              |
   | ------------------------------------------------------------- | -------------------------------------- |
   | git clone https://github.com/CyrielleGl/kira-bijoux-front.git |             récupère projet git        |
@@ -139,12 +138,9 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   |                      git log --oneline -n 10                  |        liste dernières sauvegardes     |
   |                 git push origin <nom_de_la_branche>           |            envoie projet sur git       |
   |                git pull origin <nom_de_la_branche>            |               met à jour repo          |
-  |---------------------------------------------------------------|----------------------------------------|
-
 
 ### Commandes Git Avancees
 
-  |---------------------------------------------------------------|----------------------------------------|
   |                            Commandes                          |               Explication              |
   | ------------------------------------------------------------- | -------------------------------------- |
   |                            git branch                         |            liste les branches          |
@@ -153,12 +149,9 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   |                        git checkout develop                   |            positionne sur develop      |
   |                  git merge <nom_de_la_branche>                |                merge ta branche        |
   |                      git push origin develop                  |          envoie modifs sur develop     |
-  |---------------------------------------------------------------|----------------------------------------|
-
 
 ### Commandes Git Autres
   
-  |---------------------------------------------------------------|----------------------------------------|
   |                            Commandes                          |               Explication              |
   | ------------------------------------------------------------- | -------------------------------------- |
   |                            git flow init                      |         initialise les branches        |
@@ -166,4 +159,3 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   |                          git fetch origin                     |         récupère état des branches     |
   |                         git rebase origin                     |        récupère la base des branches   |
   |                          git restore .                        |       annule toutes modifications      |
-  |---------------------------------------------------------------|----------------------------------------|
