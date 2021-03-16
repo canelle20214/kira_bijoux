@@ -13,6 +13,7 @@
   * [Generer le Swagger](#generer-le-swagger)
   * [Generer le schema de la base de donnee (SGBD)](#generer-le-schema-de-la-base-de-donnee-sgbd)
   * [Infos Utilisateurs deja creer hashes avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
+  * [Exemples Erreurs](#exemples-erreurs)
 * [Partie Git](#partie-git)
   * [Commandes Git Basique](#commandes-git-basique)
   * [Commandes Git Avancees](#commandes-git-avancees)
@@ -111,6 +112,18 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - Tonton => email : tonton@tonton.com / password : tonton 
   - Admin de test :
     - Admin => email : admin@gmail.com / password : admin
+
+### Exemples Erreurs
+
+  - Base de données pas à jour :
+    - aller dans le gestionnaire des taches et arreter pgadmin 
+    - ensuite détruisez votre base de donnée actuelle avec un `mix ecto.drop`
+    - puis récréer votre base de donée avec les dernières modifs en faisant un `mix ecto.setup`
+  - Erreur de Build : 
+    - il faut que vous lancez git bash comme terminal
+    - Puis commencer par détruire votre dossier build actuelle avec un `rm -rf _build`
+    - Vous aurez peut etre a avoir à éxécuter `npm deps.get` pour rétélcharger les dépendances
+    - puis recréer votre dossier build avec les dernères modifs en faisant un `mix ecto.setup`
 
 ## Partie Git
 
