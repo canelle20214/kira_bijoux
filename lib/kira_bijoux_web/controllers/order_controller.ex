@@ -106,7 +106,7 @@ defmodule KiraBijouxWeb.OrderController do
     get("/orders/user/{id}")
     summary("Get order by user id")
     description("Order filtered by user_id")
-    parameter :name, :path, :string, "Id of user's orders to be displayed", required: true
+    parameter :id, :path, :integer, "Id of user's orders to be displayed", required: true
     response(code(:ok), "Success")
   end
 
