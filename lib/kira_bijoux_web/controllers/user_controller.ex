@@ -1,7 +1,5 @@
 defmodule KiraBijouxWeb.UserController do
-  import Plug.Conn.Status, only: [code: 1]
   use KiraBijouxWeb, :controller
-  use PhoenixSwagger
 
   # get all users
   swagger_path :index do

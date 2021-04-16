@@ -1,7 +1,5 @@
 defmodule KiraBijouxWeb.AddressController do
-  import Plug.Conn.Status, only: [code: 1]
   use KiraBijouxWeb, :controller
-  use PhoenixSwagger
 
   # get address by user
   swagger_path :show do
