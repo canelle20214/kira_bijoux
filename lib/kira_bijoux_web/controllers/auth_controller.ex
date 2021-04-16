@@ -4,20 +4,35 @@ defmodule KiraBijouxWeb.AuthController do
   use PhoenixSwagger
   alias KiraBijoux.Accounts
 
+  def swagger_definitions do
+    %{
+      Auth: swagger_schema do
+        title "Auth"
+        description "Auth descr"
+        properties do
+          firstname :string, "Firstname"
+          lastname :string, "Lastname"
+          mail :string, "Mail"
+          password :string, "Password"
+          phone :string, "Phone"
+        end
+      end
+    }
+  end
+
   # registration
   swagger_path :register do
     post("/auth/registration")
     summary("Register user")
     description("Register a new user")
-    produces("application/json")
-
-    parameters do
-      firstname(:query, :string, "The firstname of the user to be created", required: true)
-      lastname(:query, :string, "The lastname of the user to be created", required: true)
-      mail(:query, :string, "The mail of the user to be created", required: true)
-      password(:query, :string, "The password of the user to be created", required: true)
-      phone :query, :string, "The phone of the user to be created", required: false
-    end
+    produces "application/json"
+    parameter :auth, :body, Schema.ref(:Auth), "Auth", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      firstname: "John",
+      lastname: "Doe",
+      mail: "john.doe@gmail.com",
+      password: "1234",
+      phone: "0643239066"
+    })
   end
 
   def register(conn, params) do
@@ -56,14 +71,11 @@ defmodule KiraBijouxWeb.AuthController do
     post("/auth/connexion")
     summary("Connect user")
     description("Connect a new user")
-    produces("application/json")
-
-    parameters do
-      mail(:query, :string, "The mail of the user to be created", required: true)
-      password(:query, :string, "The password of the user to be created", required: true)
-    end
-
-    response(203, "No Content - Deleted Successfully")
+    produces "application/json"
+    parameter :auth, :body, Schema.ref(:Auth), "Auth", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      mail: "john.doe@gmail.com",
+      password: "1234",
+    })
   end
 
   def connect(conn, params) do

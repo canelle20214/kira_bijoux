@@ -9,6 +9,7 @@ defmodule KiraBijoux.User.Address do
     field :recipient, :string
     field :second_line, :string
     field :town, :string
+    field :country, :string
     field :user_id, :id
 
     timestamps()
@@ -17,7 +18,7 @@ defmodule KiraBijoux.User.Address do
   @doc false
   def changeset(address, attrs \\ %{}) do
     address
-    |> cast(attrs, [:user_id, :name, :recipient, :first_line, :second_line, :post_code, :town])
-    |> validate_required([:user_id, :name, :recipient, :first_line, :post_code, :town])
+    |> cast(attrs, [:user_id, :name, :recipient, :first_line, :second_line, :post_code, :town, :country])
+    |> validate_required([:user_id, :name, :recipient, :first_line, :post_code, :town, :country])
   end
 end

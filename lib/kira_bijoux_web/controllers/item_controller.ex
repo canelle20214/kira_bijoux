@@ -126,9 +126,15 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def show(conn, %{"id" => id}) do
-    item = Repo.get!(Item, id)
-    put_status(conn, 200)
-    |> ItemView.render("index.json", %{item: item})
+    item = Repo.one(from i in Item, select: i, where: i.id == ^id)
+    if item == nil do
+      Logger.error("l'item n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      put_status(conn, 200)
+      |> ItemView.render("index.json", %{item: item})
+    end
   end
 
 
@@ -255,14 +261,15 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def delete(conn, %{"id" => id}) do
-    case Repo.delete Repo.get!(Item, id) do
-      {:ok, item} ->
-        #Phoenix.json/2 cannot render 204 status https://git.pleroma.social/pleroma/pleroma/-/issues/2029
-        put_status(conn, 200)
-        |> ItemView.render("index.json", %{item: item})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+    item = Repo.one(from i in Item, select: i, where: i.id == ^id)
+    if item == nil do
+      Logger.error("l'item n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      Repo.delete(item)
+      put_status(conn, 200)
+      |> ItemView.render("index.json", %{item: item})
     end
   end
 end

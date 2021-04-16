@@ -13,9 +13,11 @@
   * [Generer le Swagger](#generer-le-swagger)
   * [Generer le schema de la base de donnee (SGBD)](#generer-le-schema-de-la-base-de-donnee-sgbd)
   * [Infos Utilisateurs deja creer hashes avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
+  * [Exemples Erreurs](#exemples-erreurs)
 * [Partie Git](#partie-git)
   * [Commandes Git Basique](#commandes-git-basique)
   * [Commandes Git Avancees](#commandes-git-avancees)
+  * [Commandes Git Autres](#commandes-git-autres)
   
 ## Pour demarrer votre serveur Phoenix
 
@@ -112,26 +114,48 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Admin de test :
     - Admin => email : admin@gmail.com / password : admin
 
+### Exemples Erreurs
+
+  - Base de données pas à jour :
+    - aller dans le gestionnaire des taches et arreter pgadmin 
+    - ensuite détruisez votre base de donnée actuelle avec un `mix ecto.drop`
+    - puis récréer votre base de donée avec les dernières modifs en faisant un `mix ecto.setup`
+  - Erreur de Build : 
+    - il faut que vous lancez git bash comme terminal
+    - Puis commencer par détruire votre dossier build actuelle avec un `rm -rf _build`
+    - Vous aurez peut etre a avoir à éxécuter `npm deps.get` pour rétélcharger les dépendances
+    - puis recréer votre dossier build avec les dernères modifs en faisant un `mix ecto.setup`
+
 ## Partie Git
 
 ### Commandes Git Basique
-	* git clone https://github.com/CyrielleGl/kira-bijoux-front.git : **récupère le projet git**
-	* git status : **vérifie l'état des fichiers**
-	* git add . : **ajoute les fichiers aux projet git**
-	* git commit -m "message du commit" : **donne un nom à ta sauvegarde**
-	* git log --oneline -n 10 : **liste les 10 dernières sauvegardes du projet git sur une ligne**
-	* git push origin <nom_de_la_branche> : **envoie ton projet sur git** 
-	* git pull origin <nom_de_la_branche> : **met à jour ton repo avec la dernière version du projet** 	
+
+  |                            Commandes                          |               Explication              |
+  |:-------------------------------------------------------------:|:--------------------------------------:|
+  | git clone https://github.com/CyrielleGl/kira-bijoux-front.git |           récupère le projet git       |
+  |                            git status                         |          vérifie l'état des fichiers   |
+  |                            git add .                          |        ajoute les fichiers aux projet  |  |                git commit -m "<message_du_commit>"            |        donne un nom à ta sauvegarde    |
+  |                      git log --oneline -n 10                  |        liste les dernières sauvegardes |
+  |                 git push origin <nom_de_la_branche>           |            envoie ton projet sur git   |
+  |                git pull origin <nom_de_la_branche>            |               met à jour le repo       |
 
 ### Commandes Git Avancees
-	* git branch : **liste toutes les branches du projet git**
-	* git checkout <nom_de_la_branche> : **te positionne sur une branche spécifique**
-	* git push origin <nom_de_la_branche> : **envoie ton projet sur git mais dans la branche dev**
-	* git checkout develop : **te repositionne sur la branche principale develop**
-	* git merge <nom_de_la_branche> : **valide le projet git de la branche <nom_de_la_branche>**
-	* git push origin develop : **envoie le contenue branche dev à la branche develop**
-  * git flow init : **initialise l'environnement de travail des branches du projet**
-  * git flow feature start <nom_de_la_feature> : **créer ta branche feature et te postionne dessus**
-  * git fetch origin : **récupère la dernière version de l'état des branches**
-  * git rebase origin : **récupère la dernière version de l'état de la base des branches**
-  * git restore * : **annule toutes modifications pour revenir à la version du dernier commit**
+
+  |                            Commandes                          |               Explication              |
+  |:-------------------------------------------------------------:|:--------------------------------------:|
+  |                            git branch                         |            liste les branches          |
+  |                   git checkout <nom_de_la_branche>            |         te positionne sur une branche  |
+  |                 git push origin <nom_de_la_branche>           |      envoie ton projet sur la branche  |
+  |                        git checkout develop                   |            te positionne sur develop   |
+  |                  git merge <nom_de_la_branche>                |        merge ta branche sur develop    |
+  |                      git push origin develop                  |        envoie tes modifs sur develop   |
+
+### Commandes Git Autres
+  
+  |                            Commandes                          |               Explication              |
+  |:-------------------------------------------------------------:|:--------------------------------------:|
+  |                            git flow init                      |      initialise toutes les branches    |
+  |              git flow feature start <nom_de_la_feature>       |       démarre ta branche feature       |
+  |                          git fetch origin                     |        récupère l'état des branches    |
+  |                         git rebase origin                     |        récupère la source des branches |
+  |                          git restore .                        |       annule toutes les modifications  |

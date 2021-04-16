@@ -28,11 +28,46 @@ defmodule KiraBijouxWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
-    put_status(conn, 200)
-    |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+    user = Repo.one(from u in User, select: u, where: u.id == ^id)
+    if user == nil do
+      Logger.error("le user n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      put_status(conn, 200)
+      |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+    end
   end
 
+  def swagger_definitions do
+    %{
+      User: swagger_schema do
+        title "User"
+        description "User descr"
+        properties do
+          firstname :string, "Firstname"
+          lastname :string, "Lastname"
+          mail :string, "Mail"
+          password :string, "Password"
+          phone :string, "Phone"
+        end
+      end,
+
+      Address: swagger_schema do
+        title "Address"
+        description "Address descr"
+        properties do
+          name :string, "Name"
+          first_line :string, "First line"
+          second_line :string, "Second line"
+          post_code :string, "Post code"
+          town :string, "Town"
+          recipient :string, "Recipient"
+          country :string, "Country"
+        end
+      end
+    }
+  end
 
   # create user
   swagger_path :create do
@@ -40,13 +75,13 @@ defmodule KiraBijouxWeb.UserController do
     summary("Create user")
     description("Create a new user")
     produces "application/json"
-    parameters do
-      firstname :query, :string, "The firstname of the user to be created", required: true
-      lastname :query, :string, "The lastname of the user to be created", required: true
-      mail :query, :string, "The mail of the user to be created", required: true
-      password :query, :string, "The password of the user to be created", required: true
-      phone :query, :string, "The phone of the user to be created", required: false
-    end
+    parameter :user, :body, Schema.ref(:User), "User", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      firstname: "John",
+      lastname: "Doe",
+      mail: "john.doe@gmail.com",
+      password: "1234",
+      phone: "0643239066"
+    })
   end
 
   def create(conn, params) do
@@ -66,6 +101,50 @@ defmodule KiraBijouxWeb.UserController do
     end
   end
 
+  # create address to user
+  swagger_path :createAddress do
+    post("/users/address/{id}")
+    summary("Create address")
+    description("Create a new address")
+    produces "application/json"
+    parameter :id, :path, :integer, "The id of the user who want add address", required: true
+    parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      name: "Maison",
+      first_line: "8 rue de la gare",
+      second_line: "",
+      post_code: "75009",
+      town: "Paris",
+      recipient: "M John Doe",
+      country: "France"
+    })
+  end
+
+  def createAddress(conn, params) do
+    id = params["id"]
+    name = params["name"]
+    first_line = params["first_line"]
+    second_line = params["second_line"] || nil
+    post_code = params["post_code"]
+    town = params["town"]
+    recipient = params["recipient"]
+    country = params["country"]
+
+    user = Repo.one(from u in User, select: u, where: u.id == ^id)
+    if user == nil do
+      Logger.error("le user n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      case Repo.insert %User.Address{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: recipient, user_id: user.id} do
+        {:ok, user_address} ->
+          put_status(conn, 201)
+          |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
+        {:error, changeset} ->
+          Logger.error changeset
+          put_status(conn, 500)
+      end
+    end
+  end
 
   # update user
   swagger_path :update do
@@ -74,24 +153,89 @@ defmodule KiraBijouxWeb.UserController do
     description("Update an existing user")
     produces "application/json"
     parameter :id, :path, :integer, "The id of the user to be updated", required: true
+    parameter :user, :body, Schema.ref(:User), "User", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      firstname: "Johno",
+      lastname: "Doeno",
+      mail: "johno.doeno@gmail.com",
+      password: "12345",
+      phone: "0643239067"
+    })
+  end
+
+  def update(conn, params) do
+    id = params["id"]
+    firstname = params["firstname"]
+    lastname = params["lastname"]
+    mail = params["mail"]
+    phone = params["phone"]
+    password = params["password"]
+    |> Bcrypt.hash_pwd_salt()
+
+    user = Repo.one(from u in User, select: u, where: u.id == ^id)
+    if user == nil do
+      Logger.error("le user n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      case Repo.update User.changeset(user, %{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password}) do
+        {:ok, user} ->
+          put_status(conn, 200)
+          |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+        {:error, changeset} ->
+          Logger.error changeset
+          put_status(conn, 500)
+      end
+    end
+  end
+
+  # update address to user
+  swagger_path :updateAddress do
+    put("/users/address/{user_id}/{address_id}")
+    summary("Update address")
+    description("Update an existing address")
+    produces "application/json"
+    parameter :user_id, :path, :integer, "The id of the user to be updated", required: true
     parameters do
-      mail :query, :string, "The mail of the user to be updated", required: true
+      address_id :path, :integer, "The id of the address to be updated", required: true
     end
+    parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      name: "Maison",
+      first_line: "9 rue de la gare",
+      second_line: "",
+      post_code: "75006",
+      town: "Paris",
+      recipient: "M Johno Doe",
+      country: "France"
+    })
   end
 
-  def update(conn, %{"id" => id, "mail" => mail}) do
-    user = Repo.get!(User, id)
-    |> KiraBijoux.User.changeset(%{mail: mail})
-    case Repo.update user do
-      {:ok, user} ->
-        put_status(conn, 200)
-        |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+  def updateAddress(conn, params) do
+    user_id = params["user_id"]
+    address_id = params["address_id"]
+    name = params["name"]
+    first_line = params["first_line"]
+    second_line = params["second_line"] || nil
+    post_code = params["post_code"]
+    town = params["town"]
+    recipient = params["recipient"]
+    country = params["country"]
+
+    user_address = Repo.one(from u in User.Address, select: u, where: u.id == ^address_id and u.user_id == ^user_id)
+    if user_address == nil do
+      Logger.error("le user ou l'addresse n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      case Repo.update User.Address.changeset(user_address, %{name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, recipient: recipient, country: country}) do
+        {:ok, user_address} ->
+          put_status(conn, 201)
+          |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
+        {:error, changeset} ->
+          Logger.error changeset
+          put_status(conn, 500)
+      end
     end
   end
-
 
   # delete user
   swagger_path(:delete) do
@@ -103,14 +247,37 @@ defmodule KiraBijouxWeb.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
-    case Repo.delete user do
-      {:ok, user} ->
-        put_status(conn, 200)
-        |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+    user = Repo.one(from u in User, select: u, where: u.id == ^id)
+    if user == nil do
+      Logger.error("le user n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      Repo.delete(user)
+      put_status(conn, 200)
+      |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+    end
+  end
+
+  # delete address of user
+  swagger_path(:deleteAddress) do
+    PhoenixSwagger.Path.delete("/users/address/{id}")
+    summary("Delete Address")
+    description("Delete a address by id")
+    parameter :id, :path, :integer, "The id of the address to be deleted", required: true
+    response(203, "No Content - Deleted Successfully")
+  end
+
+  def deleteAddress(conn, %{"id" => id}) do
+    user_address = Repo.one(from u in User.Address, select: u, where: u.id == ^id)
+    if user_address == nil do
+      Logger.error("l'adresse n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      Repo.delete(user_address)
+      put_status(conn, 200)
+      |> KiraBijouxWeb.UserAddressView.render("index.json", %{user_address: user_address})
     end
   end
 end
