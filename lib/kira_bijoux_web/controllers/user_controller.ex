@@ -208,6 +208,7 @@ defmodule KiraBijouxWeb.UserController do
 
   def updateAddress(conn, params) do
     id = params["id"]
+    |> String.to_integer()
     name = params["name"]
     first_line = params["first_line"]
     second_line = params["second_line"] || nil
