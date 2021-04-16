@@ -45,11 +45,19 @@ defmodule KiraBijouxWeb.Router do
     post("/auth/registration", AuthController, :register)
     post("/auth/connexion", AuthController, :connect)
 
-    get("/shop", ShoppingCartController, :index)
-    get("/shop/user/:user_id", ShoppingCartController, :show)
-    post("/shop", ShoppingCartController, :create)
-    put("/shop/:item_id", ShoppingCartController, :update)
-    delete("/shop/:item_id", ShoppingCartController, :delete)
+    get("/orders", OrderController, :index)
+    get("/orders/:id", OrderController, :show)
+    get("/orders/user/:id", OrderController, :showByUserId)
+    post("/orders", OrderController, :create)
+    put("/orders/:id", OrderController, :update)
+    delete("/orders/:id", OrderController, :delete)
+
+    get("/order-items", OrderItemController, :index)
+    get("/order-items/:id", OrderItemController, :show)
+    get("/order-items/order/:id", OrderItemController, :showByOrderId)
+    post("/order-items", OrderItemController, :create)
+    put("/order-items/:id", OrderItemController, :update)
+    delete("/order-items/:id", OrderItemController, :delete)
   end
 
   scope "/api/swagger" do
