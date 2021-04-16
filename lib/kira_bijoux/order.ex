@@ -7,6 +7,8 @@ defmodule KiraBijoux.Order do
     field :order_status_id, :id
     field :user_address_id, :id
     field :payment_type_id, :id
+    field :send_at, :naive_datetime
+    field :received_at, :naive_datetime
 
     timestamps()
   end
@@ -14,7 +16,7 @@ defmodule KiraBijoux.Order do
   @doc false
   def changeset(order, attrs \\ %{}) do
     order
-    |> cast(attrs, [:order_status_id, :user_address_id, :payment_type_id ,:price])
+    |> cast(attrs, [:order_status_id, :user_address_id, :payment_type_id ,:price, :send_at, :received_at])
     |> validate_required([:order_status_id, :user_address_id, :payment_type_id ,:price])
   end
 end
