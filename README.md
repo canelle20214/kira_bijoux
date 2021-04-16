@@ -123,8 +123,14 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Erreur de Build : 
     - il faut que vous lancez git bash comme terminal
     - Puis commencer par détruire votre dossier build actuelle avec un `rm -rf _build`
-    - Vous aurez peut etre a avoir à éxécuter `npm deps.get` pour rétélcharger les dépendances
+    - vous aurez peut etre a avoir à éxécuter `npm deps.get` pour rétélcharger les dépendances
     - puis recréer votre dossier build avec les dernères modifs en faisant un `mix ecto.setup`
+  - Champ inconnu en base de donnée :
+    - pour la newsletter si il vous manque le champ cc en base de donnée
+    - vous devrez aller dans le fichier newsletter.ex
+    - et changer les :object par des :cc
+    - puis il vous faudra resetup la bdd avec un `mix ecto.drop` et un `mix ecto.setup`
+    - après celà remettez les :object au lieu des :cc comme c'était avant et refaite un `mix ecto.setup` au cas où
 
 ## Partie Git
 
