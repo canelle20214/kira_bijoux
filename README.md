@@ -134,7 +134,8 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   |:-------------------------------------------------------------:|:--------------------------------------:|
   | git clone https://github.com/CyrielleGl/kira-bijoux-front.git |           récupère le projet git       |
   |                            git status                         |          vérifie l'état des fichiers   |
-  |                            git add .                          |        ajoute les fichiers aux projet  |  |                git commit -m "<message_du_commit>"            |        donne un nom à ta sauvegarde    |
+  |                            git add .                          |        ajoute les fichiers aux projet  |  
+  |                git commit -m "<message_du_commit>"            |        donne un nom à ta sauvegarde    |
   |                      git log --oneline -n 10                  |        liste les dernières sauvegardes |
   |                 git push origin <nom_de_la_branche>           |            envoie ton projet sur git   |
   |                git pull origin <nom_de_la_branche>            |               met à jour le repo       |
