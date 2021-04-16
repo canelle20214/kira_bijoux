@@ -122,7 +122,7 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - puis récréer votre base de donée avec les dernières modifs en faisant un `mix ecto.setup`
   - Erreur de Build : 
     - il faut que vous lancez git bash comme terminal
-    - Puis commencer par détruire votre dossier build actuelle avec un `rm -rf _build`
+    - puis commencer par détruire votre dossier build actuelle avec un `rm -rf _build`
     - vous aurez peut etre a avoir à éxécuter `npm deps.get` pour rétélcharger les dépendances
     - puis recréer votre dossier build avec les dernères modifs en faisant un `mix ecto.setup`
   - Champ inconnu en base de donnée :
