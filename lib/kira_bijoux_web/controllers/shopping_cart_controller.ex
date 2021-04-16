@@ -1,7 +1,5 @@
 defmodule KiraBijouxWeb.ShoppingCartController do
-  import Plug.Conn.Status, only: [code: 1]
   use KiraBijouxWeb, :controller
-  use PhoenixSwagger
 
   # get all shopping cart
   swagger_path :index do
