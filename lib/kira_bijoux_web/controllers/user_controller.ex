@@ -107,7 +107,7 @@ defmodule KiraBijouxWeb.UserController do
     summary("Create address")
     description("Create a new address")
     produces "application/json"
-    parameter :id, :path, :integer, "The id of the address to be updated", required: true
+    parameter :id, :path, :integer, "The id of the user who want add address", required: true
     parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       name: "Maison",
       first_line: "8 rue de la gare",
@@ -131,7 +131,7 @@ defmodule KiraBijouxWeb.UserController do
 
     user = Repo.one(from u in User, select: u, where: u.id == ^id)
     if user == nil do
-      Logger.error("l'addresse n'existe pas")
+      Logger.error("le user n'existe pas")
       put_status(conn, 404)
       |> json([])
     else
@@ -190,11 +190,14 @@ defmodule KiraBijouxWeb.UserController do
 
   # update address to user
   swagger_path :updateAddress do
-    put("/users/address/{id}")
+    put("/users/address/{user_id}/{address_id}")
     summary("Update address")
     description("Update an existing address")
     produces "application/json"
-    parameter :id, :path, :integer, "The id of the address to be updated", required: true
+    parameter :user_id, :path, :integer, "The id of the user to be updated", required: true
+    parameters do
+      address_id :path, :integer, "The id of the address to be updated", required: true
+    end
     parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       name: "Maison",
       first_line: "9 rue de la gare",
@@ -207,7 +210,8 @@ defmodule KiraBijouxWeb.UserController do
   end
 
   def updateAddress(conn, params) do
-    id = params["id"]
+    user_id = params["user_id"]
+    address_id = params["address_id"]
     name = params["name"]
     first_line = params["first_line"]
     second_line = params["second_line"] || nil
@@ -216,9 +220,9 @@ defmodule KiraBijouxWeb.UserController do
     recipient = params["recipient"]
     country = params["country"]
 
-    user_address = Repo.one(from u in User.Address, select: u, where: u.user_id == ^id)
+    user_address = Repo.one(from u in User.Address, select: u, where: u.id == ^address_id and u.user_id == ^user_id)
     if user_address == nil do
-      Logger.error("l'addresse n'existe pas")
+      Logger.error("le user ou l'addresse n'existe pas")
       put_status(conn, 404)
       |> json([])
     else
@@ -265,7 +269,7 @@ defmodule KiraBijouxWeb.UserController do
   end
 
   def deleteAddress(conn, %{"id" => id}) do
-    user_address = Repo.one(from u in User.Address, select: u, where: u.user_id == ^id)
+    user_address = Repo.one(from u in User.Address, select: u, where: u.id == ^id)
     if user_address == nil do
       Logger.error("l'adresse n'existe pas")
       put_status(conn, 404)
