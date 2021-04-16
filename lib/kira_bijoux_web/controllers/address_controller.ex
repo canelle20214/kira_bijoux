@@ -43,8 +43,8 @@ defmodule KiraBijouxWeb.AddressController do
   end
 
   # create address to user
-  swagger_path :createAddress do
-    post("/users/address/{id}")
+  swagger_path :create do
+    post("/address/{id}")
     summary("Create address")
     description("Create a new address")
     produces "application/json"
@@ -60,7 +60,7 @@ defmodule KiraBijouxWeb.AddressController do
     })
   end
 
-  def createAddress(conn, params) do
+  def create(conn, params) do
     id = params["id"]
     name = params["name"]
     first_line = params["first_line"]
@@ -88,8 +88,8 @@ defmodule KiraBijouxWeb.AddressController do
   end
 
   # update address to user
-  swagger_path :updateAddress do
-    put("/users/address/{user_id}/{address_id}")
+  swagger_path :update do
+    put("/address/{user_id}/{address_id}")
     summary("Update address")
     description("Update an existing address")
     produces "application/json"
@@ -108,7 +108,7 @@ defmodule KiraBijouxWeb.AddressController do
     })
   end
 
-  def updateAddress(conn, params) do
+  def update(conn, params) do
     user_id = params["user_id"]
     address_id = params["address_id"]
     name = params["name"]
@@ -137,15 +137,15 @@ defmodule KiraBijouxWeb.AddressController do
   end
 
   # delete address of user
-  swagger_path(:deleteAddress) do
-    PhoenixSwagger.Path.delete("/users/address/{id}")
+  swagger_path(:delete) do
+    PhoenixSwagger.Path.delete("/address/{id}")
     summary("Delete Address")
     description("Delete a address by id")
     parameter :id, :path, :integer, "The id of the address to be deleted", required: true
     response(203, "No Content - Deleted Successfully")
   end
 
-  def deleteAddress(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id}) do
     user_address = Repo.one(from u in User.Address, select: u, where: u.id == ^id)
     if user_address == nil do
       Logger.error("l'adresse n'existe pas")
