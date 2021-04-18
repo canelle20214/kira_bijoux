@@ -27,6 +27,7 @@ defmodule KiraBijouxWeb.ItemController do
           price :number, "Price"
           length :string, "Length"
           stock :integer, "Stock"
+          tva :float, "TVA"
           visibility :boolean, "Visibility"
           materials :array, "Material"
           collection_id :integer, "Collection id"
@@ -41,19 +42,39 @@ defmodule KiraBijouxWeb.ItemController do
     post("/items")
     summary("Create item")
     description("Create a new item")
-    produces "application/json"
     parameter :item, :body, Schema.ref(:Item), "Item", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-      name: "Collier",
-      subtitle: "Collier",
-      description: "Collier",
-      price: 35.5,
-      length: "35 cm",
-      stock: 4,
-      visibility: true,
-      materials: [1,4],
-      collection_id: 1,
-      item_type_id: 1
-    })
+          name: "Collier",
+          subtitle: "Collier",
+          description: "Collier",
+          price: 35.5,
+          length: "35 cm",
+          stock: 4,
+          tva: 0.2,
+          visibility: true,
+          materials: [1,4],
+          collection_id: 1,
+          item_type_id: 1
+        })
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Item),
+      example:
+      %{
+        item:
+        %{
+          name: "Collier",
+          subtitle: "Collier",
+          description: "Collier",
+          price: 35.5,
+          length: "35 cm",
+          stock: 4,
+          tva: 0.2,
+          visibility: true,
+          materials: [1,4],
+          collection_id: 1,
+          item_type_id: 1
+        }
+      }
+    )
   end
 
   def create(conn, params) do
@@ -63,6 +84,7 @@ defmodule KiraBijouxWeb.ItemController do
     description = params["description"]
     length = params["length"]
     stock = params["stock"]
+    tva = params["tva"]
     visibility = params["visibility"]
     material_ids = params["materials"]
     type = params["item_type_id"]
@@ -75,7 +97,7 @@ defmodule KiraBijouxWeb.ItemController do
           p
       end
     materials = Repo.all(from m in Material, select: m, where: m.id in ^material_ids)
-    case Repo.insert %Item{item_parent_id: parent.id, subtitle: subtitle, length: length, price: price, stock: stock, description: description, visibility: visibility} do
+    case Repo.insert %Item{item_parent_id: parent.id, subtitle: subtitle, length: length, price: price, stock: stock, tva: tva, description: description, visibility: visibility} do
       {:ok, item} ->
         b = materials
         |> Enum.map(&Repo.insert %Material.Item{material_id: &1.id, item_id: item.id})
@@ -181,6 +203,7 @@ defmodule KiraBijouxWeb.ItemController do
         price: 35.5,
         length: "35 cm",
         stock: 4,
+        tva: 0.2,
         visibility: true,
         materials: [1,4],
         collection_id: 1,
@@ -195,6 +218,7 @@ defmodule KiraBijouxWeb.ItemController do
     name = params["name"] || parent.name
     price = params["price"] || item.price
     stock = params["stock"] || item.stock
+    tva = params["tva"] || item.tva
     subtitle = params["subtitle"] || item.subtitle
     description = params["description"] || item.description
     length = params["length"] || item.length
@@ -210,7 +234,7 @@ defmodule KiraBijouxWeb.ItemController do
         p ->
           p
       end
-    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, subtitle: subtitle, length: length, price: price, stock: stock, description: description, visibility: visibility}) do
+    case Repo.update Item.changeset(item, %{item_parent_id: parent.id, subtitle: subtitle, length: length, price: price, stock: stock, tva: tva, description: description, visibility: visibility}) do
       {:ok, item} ->
         if Enum.all?(existing_materials, & Enum.member?(materials, &1)) && length(existing_materials) == length(materials) do
           put_status(conn, 200)

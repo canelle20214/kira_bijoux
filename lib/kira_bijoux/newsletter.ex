@@ -4,7 +4,7 @@ defmodule KiraBijoux.Newsletter do
 
   schema "newsletters" do
     field :name, :string
-    field :cc, :string
+    field :object, :string
     field :content, :string
 
     timestamps()
@@ -13,7 +13,7 @@ defmodule KiraBijoux.Newsletter do
   @doc false
   def changeset(newsletter, attrs) do
     newsletter
-    |> cast(attrs, [:name, :cc, :content])
-    |> validate_required([:name, :cc, :content])
+    |> cast(attrs, [:name, :object, :content])
+    |> validate_required([:name, :object, :content])
   end
 end

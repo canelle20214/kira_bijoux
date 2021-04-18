@@ -31,11 +31,13 @@ defmodule KiraBijouxWeb.Router do
     get("/users", UserController, :index)
     get("/users/:id", UserController, :show)
     post("/users", UserController, :create)
-    post("/users/address/:id", UserController, :createAddress)
     put("/users/:id", UserController, :update)
-    put("/users/address/:user_id/:address_id", UserController, :updateAddress)
     delete("/users/:id", UserController, :delete)
-    delete("/users/address/:id", UserController, :deleteAddress)
+
+    get("/address/:id", AddressController, :show)
+    post("/address/:id", AddressController, :create)
+    put("/address/:user_id/:address_id", AddressController, :update)
+    delete("/address/:id", AddressController, :delete)
 
     get("/items", ItemController, :index)
     get("/items/:id", ItemController, :show)
@@ -53,6 +55,20 @@ defmodule KiraBijouxWeb.Router do
     post("/shop", ShoppingCartController, :create)
     put("/shop/:item_id/:user_id", ShoppingCartController, :update)
     delete("/shop/:item_id/:user_id", ShoppingCartController, :delete)
+
+    get("/orders", OrderController, :index)
+    get("/orders/:id", OrderController, :show)
+    get("/orders/user/:id", OrderController, :showByUserId)
+    post("/orders", OrderController, :create)
+    put("/orders/:id", OrderController, :update)
+    delete("/orders/:id", OrderController, :delete)
+
+    get("/order-items", OrderItemController, :index)
+    get("/order-items/:id", OrderItemController, :show)
+    get("/order-items/order/:id", OrderItemController, :showByOrderId)
+    post("/order-items", OrderItemController, :create)
+    put("/order-items/:id", OrderItemController, :update)
+    delete("/order-items/:id", OrderItemController, :delete)
   end
 
   scope "/api/swagger" do

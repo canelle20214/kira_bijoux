@@ -34,6 +34,7 @@ defmodule KiraBijouxWeb.ItemView do
     |> Map.put(:description, item.description)
     |> Map.put(:length, item.length)
     |> Map.put(:stock, item.stock)
+    |> Map.put(:tva, item.tva)
     |> Map.put(:price, item.price)
     |> Map.put(:materials, materials)
     |> Map.put(:item_type, type)
