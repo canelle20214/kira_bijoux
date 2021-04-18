@@ -1,7 +1,5 @@
 defmodule KiraBijouxWeb.AuthController do
-  import Plug.Conn.Status, only: [code: 1]
   use KiraBijouxWeb, :controller
-  use PhoenixSwagger
   alias KiraBijoux.Accounts
 
   def swagger_definitions do

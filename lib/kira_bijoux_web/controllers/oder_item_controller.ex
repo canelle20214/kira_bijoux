@@ -88,7 +88,7 @@ defmodule KiraBijouxWeb.OrderItemController do
     get("/order-items/order/{id}")
     summary("Get order_item by order id")
     description("Order.Item filtered by order_id")
-    parameter :id, :path, :string, "Id of order's order items to be displayed", required: true
+    parameter :id, :path, :integer, "Id of order's order items to be displayed", required: true
     response(code(:ok), "Success")
   end
 
