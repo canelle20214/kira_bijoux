@@ -10,7 +10,5 @@ defmodule KiraBijoux.Repo.Migrations.AlterTableOrders do
     alter table(:items) do
       add :tva, :float, default: 0.2
     end
-
-    rename table(:newsletters), :cc, to: :object
   end
 end

@@ -83,12 +83,12 @@ defmodule KiraBijouxWeb.OrderItemController do
   end
 
 
-  # get order item by user
-  swagger_path :showByUserId do
-    get("/order-items/user/{id}")
-    summary("Get order_item by user id")
-    description("Order.Item filtered by user_id")
-    parameter :name, :path, :string, "Id of user's order items to be displayed", required: true
+  # get order item by order
+  swagger_path :showByOrderId do
+    get("/order-items/order/{id}")
+    summary("Get order_item by order id")
+    description("Order.Item filtered by order_id")
+    parameter :id, :path, :string, "Id of order's order items to be displayed", required: true
     response(code(:ok), "Success")
   end
 
