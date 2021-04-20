@@ -3,7 +3,7 @@ defmodule KiraBijoux.Repo.Migrations.AddColumnRefTableOrders do
 
   def change do
     alter table(:orders) do
-      add :reference, :text
+      add :reference, :string
     end
 
   end
