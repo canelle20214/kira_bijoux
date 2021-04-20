@@ -29,5 +29,7 @@ defmodule KiraBijouxWeb.OrderView do
     |> Map.put(:price, order.price)
     |> Map.put(:inserted_at, order.inserted_at)
     |> Map.put(:updated_at, order.updated_at)
+    |> Map.put(:send_at, order.send_at)
+    |> Map.put(:received_at, order.received_at)
   end
 end
