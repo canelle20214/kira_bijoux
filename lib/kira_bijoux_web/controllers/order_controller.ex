@@ -42,7 +42,7 @@ defmodule KiraBijouxWeb.OrderController do
           order_status_id: 3,
           user_address_id: 1,
           payment_type_id: 1,
-          reference: "KB-20210417",
+          reference: "KB-20210417124321",
           price: 43.57,
           send_at: "2020-01-27",
           received_at: "2020-02-04"
@@ -56,7 +56,7 @@ defmodule KiraBijouxWeb.OrderController do
           order_status_id: 3,
           user_address_id: 1,
           payment_type_id: 1,
-          reference: "KB-20210417",
+          reference: "KB-20210417124321",
           price: 43.57,
           send_at: "2020-01-27",
           received_at: "2020-02-04"
@@ -141,7 +141,7 @@ defmodule KiraBijouxWeb.OrderController do
         order_status_id: 3,
         user_address_id: 1,
         payment_type_id: 1,
-        reference: "KB-20210417",
+        reference: "KB-20210417124321",
         price: 43.57,
         send_at: "2020-01-27",
         received_at: "2020-02-04"
