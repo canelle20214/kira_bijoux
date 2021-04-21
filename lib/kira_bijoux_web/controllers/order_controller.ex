@@ -24,6 +24,7 @@ defmodule KiraBijouxWeb.OrderController do
           order_status_id :integer, "Order status id"
           user_address_id :integer, "User address id"
           payment_type_id :integer, "Payment type id"
+          reference :string, "Reference"
           price :number, "Price"
           send_at :string, "Send at in YYYY-MM-DD hh:mm:ss format", format: "ISO-8601"# Date.from_iso8601/1
           received_at :string, "Received at in YYYY-MM-DD hh:mm:ss format", format: "ISO-8601"# Date.from_iso8601/1
@@ -41,6 +42,7 @@ defmodule KiraBijouxWeb.OrderController do
           order_status_id: 3,
           user_address_id: 1,
           payment_type_id: 1,
+          reference: "KB-20210417124321",
           price: 43.57,
           send_at: "2020-01-27",
           received_at: "2020-02-04"
@@ -54,6 +56,7 @@ defmodule KiraBijouxWeb.OrderController do
           order_status_id: 3,
           user_address_id: 1,
           payment_type_id: 1,
+          reference: "KB-20210417124321",
           price: 43.57,
           send_at: "2020-01-27",
           received_at: "2020-02-04"
@@ -66,6 +69,7 @@ defmodule KiraBijouxWeb.OrderController do
     order_status_id = params["order_status_id"]
     user_address_id = params["user_address_id"]
     payment_type_id = params["payment_type_id"]
+    reference = params["reference"]
     price = params["price"]
     send_at = case NaiveDateTime.from_iso8601(params["send_at"]) do
       {:ok, send_at} -> send_at
@@ -75,7 +79,7 @@ defmodule KiraBijouxWeb.OrderController do
       {:ok, received_at} -> received_at
       {:error, _} -> nil
     end
-    case Repo.insert %Order{order_status_id: order_status_id, user_address_id: user_address_id, payment_type_id: payment_type_id, price: price, send_at: send_at, received_at: received_at} do
+    case Repo.insert %Order{order_status_id: order_status_id, user_address_id: user_address_id, payment_type_id: payment_type_id, reference: reference, price: price, send_at: send_at, received_at: received_at} do
       {:ok, order} ->
         put_status(conn, 201)
         |> OrderView.render("index.json", %{order: order})
@@ -137,6 +141,7 @@ defmodule KiraBijouxWeb.OrderController do
         order_status_id: 3,
         user_address_id: 1,
         payment_type_id: 1,
+        reference: "KB-20210417124321",
         price: 43.57,
         send_at: "2020-01-27",
         received_at: "2020-02-04"
@@ -149,6 +154,7 @@ defmodule KiraBijouxWeb.OrderController do
     order_status_id = params["order_status_id"] || order.order_status_id
     user_address_id = params["user_address_id"] || order.user_address_id
     payment_type_id = params["payment_type_id"] || order.payment_type_id
+    reference = params["reference"] || order.reference
     price = params["price"] || order.price
     send_at = case NaiveDateTime.from_iso8601(params["send_at"]) do
       {:ok, send_at} -> send_at
@@ -158,7 +164,7 @@ defmodule KiraBijouxWeb.OrderController do
       {:ok, received_at} -> received_at
       {:error, _} -> nil || order.received_at
     end
-    case Repo.update Order.changeset(order, %{order_status_id: order_status_id, user_address_id: user_address_id, payment_type_id: payment_type_id, price: price, send_at: send_at, received_at: received_at}) do
+    case Repo.update Order.changeset(order, %{order_status_id: order_status_id, user_address_id: user_address_id, payment_type_id: payment_type_id, reference: reference, price: price, send_at: send_at, received_at: received_at}) do
       {:ok, order} ->
         put_status(conn, 200)
         |> OrderView.render("index.json", %{order: order})
