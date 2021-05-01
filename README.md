@@ -18,6 +18,11 @@
   * [Commandes Git Basique](#commandes-git-basique)
   * [Commandes Git Avancees](#commandes-git-avancees)
   * [Commandes Git Autres](#commandes-git-autres)
+* [Partie Deploiement](#partie-deploiement)
+  * [Etape 1 (Configuration Heroku)](#etape-1-configuration-heroku)
+  * [Etape 2 (Connection)](#etape-2-connection)
+  * [Etape 3 (Configurer les Applications)](#etape-3-configurer-les-applications)
+  * [Etape 4 (Deployer vos modifications)](#etape-4-deployer-vos-modifications)
   
 ## Pour demarrer votre serveur Phoenix
 
@@ -167,3 +172,56 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   |                          git fetch origin                     |        récupère l'état des branches    |
   |                         git rebase origin                     |        récupère la source des branches |
   |                          git restore .                        |       annule toutes les modifications  |
+
+## Partie Deploiement
+
+### Etape 1 (Configuration Heroku)
+
+  - Commencer par vous créer un compte sur [Heroku](https://bit.ly/3eJlD49)
+  - Ensuite regarder vos mails vous avez du recevoir une invitation d'Heroku 
+  - Afin de pouvoir accéder aux apps que j'ai déjà créer
+  - Une fois que vous aurez les apps sur votre dashboard Heroku vous devez installer le [CLI de Heroku](https://devcenter.heroku.com/articles/heroku-cli)
+    - Si vous êtes sur Windows et que vous avez une erreur pour lancer l'exe 
+    - C'est qu'il est bloqué par votre protection Windows 
+    - Vous devez alors lancer votre `cmd` en mode Adminsitrateur 
+    - Et vous mettre sur le chemin de l'exe avec un `cd Download`
+    - Une fois dessus vous pourrez executer l'exe en mettant le nom du fichier à éxécuter 
+    - Par exemple la commande `heroku-x64.exe` marche très bien
+  - Une fois que votre installation s'est terminée lancer votre terminal favori 
+  - Et éxécuter la commande `heroku` dessus ou `heroku --version`
+  - Si vous avez bien comme réponse toutes les commandes de heroku 
+  - Ainsi que votre version actuelle de Heroku c'est que l'installation c'est bien passé 
+
+### Etape 2 (Connection)
+
+  - Maintenant vous devez vous connecter à votre compte heroku depuis votre terminal
+  - Pour cela vous devez taper la commande `heroku login` puis taper n'importe quel lettre sauf `q`
+  - Cela devrait ouvrir heroku sur votre navigateur web, vous devez clicker sur login 
+  - Une fois cela fait la commande `heroku login` devrait vous retourner comme réponse votre mail
+
+### Etape 3 (Configurer les Applications)
+
+  - Ensuite vous devrez récupérer le code de la dernière version du build de l'application grace à `git`
+  - Pour récupérer le code du Back vous devez le cloner : 
+    - et éxécuter la commande `heroku git:clone -a frozen-bayou-52604` 
+    - et faire un `cd frozen-bayou-52604`
+  - Et pour le Front c'est pareil vous devez aussi le cloner : 
+    - et éxécuter la commande `heroku git:clone -a secure-gorge-17007` 
+    - et faire un `cd secure-gorge-17007`
+
+### Etape 4 (Deployer vos modifications)
+
+  - Pour déployer c'est comme avec Gitlab ou Github c'est les memes commandes 
+  - Commencer par vérifier que vous avez bien le remote sur vos 2 dossiers clonés 
+  - En faisant la commande `git remote -v` et regarder si vous avez le remote de Heroku
+  - Ensuite faites vos modifications dans le code source
+  - Puis vous devrez les ajouter au projet en faisant un `git add .` et faire un commit 
+  - Avec la commande `git commit -m "make it better"` par exemple
+  - Puis pour finir déployer vos modifs avec la commande :
+    - `git push heroku master` pour le Front 
+    - `git push heroku main` pour le Back
+  - C'est un peu long cette commande prend au moins 5 minutes à s'éxécuter soyez patients
+    - Si vous avez fait des modifs sur les fichiers de migration et donc sur la base de donnée
+    - Vous devez alors supprimer la base de donnée actuelle avec un `heroku pg:reset DATABASE`
+    - Puis remettez la en place avec un `heroku run "POOL_SIZE=2 mix ecto.migrate"`
+    - Soyez bien surs de vous avant d'éxéctuer ces commandes :)
