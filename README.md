@@ -21,7 +21,7 @@
 * [Partie Deploiement](#partie-deploiement)
   * [Etape 1 (Configuration Heroku)](#etape-1-configuration-heroku)
   * [Etape 2 (Connection)](#etape-2-connection)
-  * [Etape 3 (Configurer les Applications)](#etape-2-configurer-les-applications)
+  * [Etape 3 (Configurer les Applications)](#etape-3-configurer-les-applications)
   * [Etape 4 (Deployer vos modifications)](#etape-4-deployer-vos-modifications)
   
 ## Pour demarrer votre serveur Phoenix
