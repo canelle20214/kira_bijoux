@@ -189,7 +189,8 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - Par exemple la commande `heroku-x64.exe` marche très bien
   - Une fois que votre installation s'est terminée lancer votre terminal favori 
   - Et éxécuter la commande `heroku` dessus ou `heroku --version`
-  - Si vous avez bien comme réponse toutes les commandes de heroku s'est que l'installation c'est bien passé 
+  - Si vous avez bien comme réponse toutes les commandes de heroku 
+  - Ainsi que votre version actuelle de Heroku c'est que l'installation c'est bien passé 
 
 ### Etape 2 (Connection)
 
@@ -202,20 +203,25 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 
   - Ensuite vous devrez récupérer le code de la dernière version du build de l'application grace à `git`
   - Pour récupérer le code du Back vous devez le cloner : 
-    - et éxécuter la commande `heroku git:clone -a frozen-bayou-52604` et faire un `cd frozen-bayou-52604`
+    - et éxécuter la commande `heroku git:clone -a frozen-bayou-52604` 
+    - et faire un `cd frozen-bayou-52604`
   - Et pour le Front c'est pareil vous devez aussi le cloner : 
-    - et éxécuter la commande `heroku git:clone -a secure-gorge-17007` et faire un `cd secure-gorge-17007`
+    - et éxécuter la commande `heroku git:clone -a secure-gorge-17007` 
+    - et faire un `cd secure-gorge-17007`
 
 ### Etape 4 (Deployer vos modifications)
 
   - Pour déployer c'est comme avec Gitlab ou Github c'est les memes commandes 
-  - Commencer par vérifier que vous avez bien le remotesur vos 2 dossiers clonés 
+  - Commencer par vérifier que vous avez bien le remote sur vos 2 dossiers clonés 
   - En faisant la commande `git remote -v` et regarder si vous avez le remote de Heroku
   - Ensuite faites vos modifications dans le code source
   - Puis vous devrez les ajouter au projet en faisant un `git add .` et faire un commit 
-  - Avec la commande `git commit -am "make it better"` par exemple
-  - Puis pour finir déployer vos modifs avec la commande `git push heroku master`
+  - Avec la commande `git commit -m "make it better"` par exemple
+  - Puis pour finir déployer vos modifs avec la commande :
+    - `git push heroku master` pour le Front 
+    - `git push heroku main` pour le Back
   - C'est un peu long cette commande prend au moins 5 minutes à s'éxécuter soyez patients
-    - Si vous avez des modifs sur le fichiers de migration et donc sur la base de donnée
+    - Si vous avez fait des modifs sur les fichiers de migration et donc sur la base de donnée
     - Vous devez alors supprimer la base de donnée actuelle avec un `heroku pg:reset DATABASE`
     - Puis remettez la en place avec un `heroku run "POOL_SIZE=2 mix ecto.migrate"`
+    - Soyez bien surs de vous avant d'éxéctuer ces commandes :)
