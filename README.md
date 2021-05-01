@@ -177,13 +177,18 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 
 ### Etape 1 (Configuration Heroku)
 
-  - Commencer par vous créer un compte sur [Heroku](https://bit.ly/3eJlD49){:target="_blank"}
-  - Ensuite regarder vos mails vous avez du recevoir une invitation d'Heroku pour accéder aux apps que j'ai déjà créer
-  - Une fois que vous aurez les apps sur votre dashboard Heroku vous devez installer le [CLI de Heroku](https://devcenter.heroku.com/articles/heroku-cli){:target="_blank"}
-    - Si vous êtes sur Windows et que vous avez une erreur pour lancer l'exe car il est bloqué par votre protection 
-    - Vous devez alors lancer votre `cmd` en adminsitrateur et vous mettre sur le chemin de l'exe avec un `cd Download`
-    - Une fois dessus vous pourrez executer l'exe en mettant le nom du fichier à éxécuter par exemple `heroku-x64.exe`
-  - Une fois que votre installation s'est terminée lancer votre terminal favori et éxécuter la commande `heroku` dessus
+  - Commencer par vous créer un compte sur [Heroku](https://bit.ly/3eJlD49)
+  - Ensuite regarder vos mails vous avez du recevoir une invitation d'Heroku 
+  - Afin de pouvoir accéder aux apps que j'ai déjà créer
+  - Une fois que vous aurez les apps sur votre dashboard Heroku vous devez installer le [CLI de Heroku](https://devcenter.heroku.com/articles/heroku-cli)
+    - Si vous êtes sur Windows et que vous avez une erreur pour lancer l'exe 
+    - C'est qu'il est bloqué par votre protection Windows 
+    - Vous devez alors lancer votre `cmd` en mode Adminsitrateur 
+    - Et vous mettre sur le chemin de l'exe avec un `cd Download`
+    - Une fois dessus vous pourrez executer l'exe en mettant le nom du fichier à éxécuter 
+    - Par exemple la commande `heroku-x64.exe` marche très bien
+  - Une fois que votre installation s'est terminée lancer votre terminal favori 
+  - Et éxécuter la commande `heroku` dessus ou `heroku --version`
   - Si vous avez bien comme réponse toutes les commandes de heroku s'est que l'installation c'est bien passé 
 
 ### Etape 2 (Connection)
