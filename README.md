@@ -177,9 +177,9 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
 
 ### Etape 1 (Configuration Heroku)
 
-  - Commencer par vous créer un compte sur [Heroku](https://bit.ly/3eJlD49)
+  - Commencer par vous créer un compte sur [Heroku](https://bit.ly/3eJlD49){:target="_blank"}
   - Ensuite regarder vos mails vous avez du recevoir une invitation d'Heroku pour accéder aux apps que j'ai déjà créer
-  - Une fois que vous aurez les apps sur votre dashboard Heroku vous devez installer le [CLI de Heroku](https://devcenter.heroku.com/articles/heroku-cli)
+  - Une fois que vous aurez les apps sur votre dashboard Heroku vous devez installer le [CLI de Heroku](https://devcenter.heroku.com/articles/heroku-cli){:target="_blank"}
     - Si vous êtes sur Windows et que vous avez une erreur pour lancer l'exe car il est bloqué par votre protection 
     - Vous devez alors lancer votre `cmd` en adminsitrateur et vous mettre sur le chemin de l'exe avec un `cd Download`
     - Une fois dessus vous pourrez executer l'exe en mettant le nom du fichier à éxécuter par exemple `heroku-x64.exe`
