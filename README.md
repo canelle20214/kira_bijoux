@@ -217,12 +217,12 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - `heroku buildpacks:set heroku/nodejs`
   - Et après pour les 2 applications (Front & Back)
   - Vous devez taper la commande `heroku buildpacks` 
-  - Afin de vérifier que vous avez bien ajouter le Buildpack à votre application
+  - Afin de vérifier que vous avez bien ajouter le Buildpack pour votre application
   - Maitenant pour configurer la base de donnée vous devrez faire les commandes suivantes
     - `heroku addons:create heroku-postgresql:hobby-dev`
     - `heroku config:set POOL_SIZE=18`
     - `mix phx.gen.secret`
-    - `heroku config:set SECRET_KEY_BASE="YOUR_SECRET_KEY_BASE"`
+    - `heroku config:set SECRET_KEY_BASE="YOUR_SECRET_GENERATE_KEY_BASE"`
 
 ### Etape 4 (Deployer vos modifications)
 
