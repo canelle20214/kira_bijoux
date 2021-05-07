@@ -208,6 +208,23 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
   - Et pour le Front c'est pareil vous devez aussi le cloner : 
     - et éxécuter la commande `heroku git:clone -a secure-gorge-17007` 
     - et faire un `cd secure-gorge-17007`
+  - Ensuite vous devez rajouter le Buildpack aux 2 applications
+  - Pour le Back vous devez ajouter un buildpack propre à Elixir :
+    - pour le rajouter à votre app vous devez faire la commande suivante
+    - `heroku buildpacks:set hashnuke/elixir`
+  - Pour le Front vous devez rajouter un Buildpack propre à NodeJS :
+    - pour le rajouter à votre app vous devez faire la commande suivante
+    - `heroku buildpacks:set heroku/nodejs`
+  - Et après pour les 2 applications (Front & Back)
+  - Vous devez taper la commande `heroku buildpacks` 
+  - Afin de vérifier que vous avez bien ajouter le Buildpack à votre application
+  - Maitenant pour configurer la base de donnée vous devrez faire les commandes suivantes
+    - `heroku addons:create heroku-postgresql:hobby-dev`
+    - `heroku config:set POOL_SIZE=18`
+    - `mix phx.gen.secret`
+    - `heroku config:set SECRET_KEY_BASE="YOUR_SECRET_KEY_BASE"`
+
+  heroku buildpacks:set hashnuke/elixir"
 
 ### Etape 4 (Deployer vos modifications)
 
