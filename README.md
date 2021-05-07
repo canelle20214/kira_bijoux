@@ -224,8 +224,6 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - `mix phx.gen.secret`
     - `heroku config:set SECRET_KEY_BASE="YOUR_SECRET_KEY_BASE"`
 
-  heroku buildpacks:set hashnuke/elixir"
-
 ### Etape 4 (Deployer vos modifications)
 
   - Pour déployer c'est comme avec Gitlab ou Github c'est les memes commandes 
