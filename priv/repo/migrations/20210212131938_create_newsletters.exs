@@ -4,7 +4,7 @@ defmodule KiraBijoux.Repo.Migrations.CreateNewsletters do
   def change do
     create table(:newsletters) do
       add :name, :string
-      add :cc, :string
+      add :object, :string
       add :content, :text
 
       timestamps()
