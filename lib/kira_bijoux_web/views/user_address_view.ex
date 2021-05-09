@@ -14,6 +14,7 @@ defmodule KiraBijouxWeb.UserAddressView do
 
   def user_address_construction(user_address) do
     Map.new(id: user_address.id)
+    |> Map.put(:user, user_address.user_id)
     |> Map.put(:name, user_address.name)
     |> Map.put(:recipient, user_address.recipient)
     |> Map.put(:first_line, user_address.first_line)
