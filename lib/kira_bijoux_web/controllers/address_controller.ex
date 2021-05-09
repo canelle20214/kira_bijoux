@@ -61,7 +61,6 @@ defmodule KiraBijouxWeb.AddressController do
   end
 
   def create(conn, params) do
-    # id = params["id"]
     user_id = params["user_id"]
     name = params["name"]
     first_line = params["first_line"]
@@ -71,12 +70,6 @@ defmodule KiraBijouxWeb.AddressController do
     recipient = params["recipient"]
     country = params["country"]
 
-    # user = Repo.one(from u in User, select: u, where: u.id == ^id)
-    # if user == nil do
-    #   Logger.error("le user n'existe pas")
-    #   put_status(conn, 404)
-    #   |> json([])
-    # else
       case Repo.insert %User.Address{user_id: user_id, name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: recipient} do
         {:ok, user_address} ->
           put_status(conn, 201)
@@ -85,7 +78,6 @@ defmodule KiraBijouxWeb.AddressController do
           Logger.error changeset
           put_status(conn, 500)
       end
-    # end
   end
 
   # update address to user

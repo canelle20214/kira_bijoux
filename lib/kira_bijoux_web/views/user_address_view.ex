@@ -13,10 +13,10 @@ defmodule KiraBijouxWeb.UserAddressView do
   end
 
   def user_address_construction(user_address) do
-    user = Repo.get!(User, user_address.user_id)
-    |> KiraBijouxWeb.UserView.user_construction()
+    # user = Repo.get!(User, user_address.user_id)
+    # |> KiraBijouxWeb.UserView.user_construction()
     Map.new(id: user_address.id)
-    |> Map.put(:user, user)
+    # |> Map.put(:user, user)
     |> Map.put(:name, user_address.name)
     |> Map.put(:recipient, user_address.recipient)
     |> Map.put(:first_line, user_address.first_line)
