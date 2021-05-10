@@ -103,7 +103,7 @@ defmodule KiraBijouxWeb.AddressController do
   end
 
   def update(conn, params) do
-    address = Repo.get!(Address, params["id"])
+    address = Repo.get!(User.Address, params["address_id"])
     address_id = params["address_id"]
     user_id = params["user_id"] || address.user_id
     name = params["name"]
