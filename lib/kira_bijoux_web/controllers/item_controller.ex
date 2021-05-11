@@ -148,7 +148,6 @@ defmodule KiraBijouxWeb.ItemController do
 
   def showPicture(conn, %{"id" => id}) do
     item_picture = Repo.one(from p in Item.Picture, select: p, where: p.id == ^id)
-    IO.inspect(item_picture)
     if item_picture == nil do
       Logger.error("l'image n'existe pas")
       put_status(conn, 404)
