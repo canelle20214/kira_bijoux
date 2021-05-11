@@ -137,6 +137,28 @@ defmodule KiraBijouxWeb.ItemController do
     end
   end
 
+  # get item picture by id
+  swagger_path :showPicture do
+    get("/items/picture/{id}")
+    summary("Get item picture by id")
+    description("Item picture filtered by id")
+    parameter :id, :path, :integer, "Id", required: true
+    response(code(:ok), "Success")
+  end
+
+  def showPicture(conn, %{"id" => id}) do
+    item_picture = Repo.one(from p in Item.Picture, select: p, where: p.id == ^id)
+    IO.inspect(item_picture)
+    if item_picture == nil do
+      Logger.error("l'image n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      put_status(conn, 200)
+      |> ItemPictureView.render("index.json", %{item_picture: item_picture})
+    end
+  end
+
 
   # get item by category
   swagger_path :showByCategory do
