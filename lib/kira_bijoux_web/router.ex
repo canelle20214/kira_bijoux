@@ -41,6 +41,7 @@ defmodule KiraBijouxWeb.Router do
 
     get("/items", ItemController, :index)
     get("/items/:id", ItemController, :show)
+    get("/items/picture/:id", ItemController, :showPicture)
     get("/items/category/:name", ItemController, :showByCategory)
     get("/items/category/item/:name", ItemController, :showByName)
     post("/items", ItemController, :create)

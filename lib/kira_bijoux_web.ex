@@ -30,7 +30,7 @@ defmodule KiraBijouxWeb do
 
       alias KiraBijouxWeb.Router.Helpers, as: Routes
       alias KiraBijoux.{Admin, Article, Collection, Component, Item, Material, Newsletter, Order, Page, Repo, Template, User, Payment}
-      alias KiraBijouxWeb.{ItemView, OrderItemView, OrderView, UserView}
+      alias KiraBijouxWeb.{ItemView, OrderItemView, OrderView, UserView, ItemPictureView}
     end
   end
 
