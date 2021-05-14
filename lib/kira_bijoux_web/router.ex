@@ -83,6 +83,20 @@ defmodule KiraBijouxWeb.Router do
     post("/item-types", ItemTypeController, :create)
     put("/item-types/:id", ItemTypeController, :update)
     delete("/item-types/:id", ItemTypeController, :delete)
+
+    get("/collections", CollectionController, :index)
+    get("/collections/:id", CollectionController, :show)
+    post("/collections", CollectionController, :create)
+    put("/collections/:id", CollectionController, :update)
+    delete("/collections/:id", CollectionController, :delete)
+
+    get("/item-parents", ItemParentController, :index)
+    get("/item-parents/:id", ItemParentController, :show)
+    get("/item-parents/type/:id", ItemParentController, :showByType)
+    get("/item-parents/collection/:id", ItemParentController, :showByCollection)
+    post("/item-parents", ItemParentController, :create)
+    put("/item-parents/:id", ItemParentController, :update)
+    delete("/item-parents/:id", ItemParentController, :delete)
   end
 
   scope "/api/swagger" do
