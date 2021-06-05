@@ -47,6 +47,13 @@ defmodule KiraBijouxWeb.Router do
     put("/items/:id", ItemController, :update)
     delete("/items/:id", ItemController, :delete)
 
+
+    get("/item-types", ItemTypeController, :index)
+    get("/item-types/:id", ItemTypeController, :show)
+    post("/item-types", ItemTypeController, :create)
+    put("/item-types/:id", ItemTypeController, :update)
+    delete("/item-types/:id", ItemTypeController, :delete)
+
     post("/auth/registration", AuthController, :register)
     post("/auth/connexion", AuthController, :connect)
 
@@ -55,6 +62,20 @@ defmodule KiraBijouxWeb.Router do
     post("/shop", ShoppingCartController, :create)
     put("/shop/:item_id/:user_id", ShoppingCartController, :update)
     delete("/shop/:item_id/:user_id", ShoppingCartController, :delete)
+
+
+    get("/materials", MaterialController, :index)
+    get("/materials/:id", MaterialController, :show)
+    post("/materials", MaterialController, :create)
+    put("/materials/:id", MaterialController, :update)
+    delete("/materials/:id", MaterialController, :delete)
+
+
+    get("/material-types", MaterialTypeController, :index)
+    get("/material-types/:id", MaterialTypeController, :show)
+    post("/material-types", MaterialTypeController, :create)
+    put("/material-types/:id", MaterialTypeController, :update)
+    delete("/material-types/:id", MaterialTypeController, :delete)
 
     get("/orders", OrderController, :index)
     get("/orders/:id", OrderController, :show)
