@@ -34,7 +34,7 @@ defmodule KiraBijouxWeb.MaterialController do
     summary("Create material")
     description("Create a new Material")
     parameter :material, :body, Schema.ref(:material), "Material", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-          name: "Perle",
+          name: "Argent",
           material_type_id: 1
         })
     produces "application/json"
@@ -43,7 +43,7 @@ defmodule KiraBijouxWeb.MaterialController do
       %{
         material:
         %{
-          name: "Perle",
+          name: "Argent",
           material_type_id: 1
         }
       }
@@ -73,8 +73,16 @@ defmodule KiraBijouxWeb.MaterialController do
 
   def show(conn, %{"id" => id}) do
     material = Repo.get!(Material, id)
-    put_status(conn, 200)
-    |> MaterialView.render("index.json", %{material: material})
+    case material do
+      nil ->
+        Logger.error("le type de matériau n'existe pas")
+        put_status(conn, 404)
+        |> json(%{})
+      material ->
+        put_status(conn, 200)
+        |> MaterialView.render("index.json", %{material: material})
+    end
+
   end
 
 
@@ -86,7 +94,7 @@ defmodule KiraBijouxWeb.MaterialController do
     produces "application/json"
     parameter :id, :path, :integer, "Id of the material to be updated", required: true
     parameter :material, :body, Schema.ref(:material), "Changes in material", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-        name: "Perle",
+        name: "Argent",
         material_type_id: 1
       }
     )

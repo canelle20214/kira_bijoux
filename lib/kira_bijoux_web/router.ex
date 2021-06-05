@@ -41,6 +41,7 @@ defmodule KiraBijouxWeb.Router do
 
     get("/items", ItemController, :index)
     get("/items/:id", ItemController, :show)
+    get("/items/picture/:id", ItemController, :showPicture)
     get("/items/category/:name", ItemController, :showByCategory)
     get("/items/category/item/:name", ItemController, :showByName)
     post("/items", ItemController, :create)
@@ -90,6 +91,33 @@ defmodule KiraBijouxWeb.Router do
     post("/order-items", OrderItemController, :create)
     put("/order-items/:id", OrderItemController, :update)
     delete("/order-items/:id", OrderItemController, :delete)
+
+    get("/materials", MaterialController, :index)
+    get("/materials/:id", MaterialController, :show)
+    get("/materials/type/:id", MaterialController, :showByType)
+    post("/materials", MaterialController, :create)
+    put("/materials/:id", MaterialController, :update)
+    delete("/materials/:id", MaterialController, :delete)
+
+    get("/item-types", ItemTypeController, :index)
+    get("/item-types/:id", ItemTypeController, :show)
+    post("/item-types", ItemTypeController, :create)
+    put("/item-types/:id", ItemTypeController, :update)
+    delete("/item-types/:id", ItemTypeController, :delete)
+
+    get("/collections", CollectionController, :index)
+    get("/collections/:id", CollectionController, :show)
+    post("/collections", CollectionController, :create)
+    put("/collections/:id", CollectionController, :update)
+    delete("/collections/:id", CollectionController, :delete)
+
+    get("/item-parents", ItemParentController, :index)
+    get("/item-parents/:id", ItemParentController, :show)
+    get("/item-parents/type/:id", ItemParentController, :showByType)
+    get("/item-parents/collection/:id", ItemParentController, :showByCollection)
+    post("/item-parents", ItemParentController, :create)
+    put("/item-parents/:id", ItemParentController, :update)
+    delete("/item-parents/:id", ItemParentController, :delete)
   end
 
   scope "/api/swagger" do

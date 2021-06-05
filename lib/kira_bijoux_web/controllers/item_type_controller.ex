@@ -70,8 +70,16 @@ defmodule KiraBijouxWeb.ItemTypeController do
 
   def show(conn, %{"id" => id}) do
     item_type = Repo.get!(Item.Type, id)
-    put_status(conn, 200)
-    |> ItemTypeView.render("index.json", %{item_type: item_type})
+    case item_type do
+      nil ->
+        Logger.error("le type d'item n'existe pas")
+        put_status(conn, 404)
+        |> json(%{})
+      item_type ->
+        put_status(conn, 200)
+        |> ItemTypeView.render("index.json", %{item_type: item_type})
+    end
+
   end
 
 
