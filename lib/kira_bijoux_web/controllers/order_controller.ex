@@ -48,7 +48,7 @@ defmodule KiraBijouxWeb.OrderController do
           received_at: "2020-02-04"
         })
     produces "application/json"
-    response(200, "OK", Schema.ref(:order),
+    response(201, "OK", Schema.ref(:order),
       example:
       %{
         order:
@@ -65,12 +65,7 @@ defmodule KiraBijouxWeb.OrderController do
     )
   end
 
-  def create(conn, params) do
-    order_status_id = params["order_status_id"]
-    user_address_id = params["user_address_id"]
-    payment_type_id = params["payment_type_id"]
-    reference = params["reference"]
-    price = params["price"]
+  def create(conn, %{"order_status_id" => order_status_id, "user_address_id" => user_address_id, "payment_type_id" => payment_type_id, "reference" => reference, "price" => price} = params) do
     send_at = case NaiveDateTime.from_iso8601(params["send_at"]) do
       {:ok, send_at} -> send_at
       {:error, _} -> nil
@@ -84,10 +79,11 @@ defmodule KiraBijouxWeb.OrderController do
         put_status(conn, 201)
         |> OrderView.render("index.json", %{order: order})
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def create(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # get order by id
   swagger_path :show do
@@ -99,10 +95,16 @@ defmodule KiraBijouxWeb.OrderController do
   end
 
   def show(conn, %{"id" => id}) do
-    order = Repo.get!(Order, id)
-    put_status(conn, 200)
-    |> OrderView.render("index.json", %{order: order})
+    case Repo.get(Order, id) do
+      nil ->
+        put_status(conn, 404)
+        |> json([])
+      order ->
+        put_status(conn, 200)
+        |> OrderView.render("index.json", %{order: order})
+    end
   end
+  def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
 
   # get order by user
@@ -115,19 +117,20 @@ defmodule KiraBijouxWeb.OrderController do
   end
 
   def showByUserId(conn, %{"id" => id}) do
-    orders = Repo.all(from o in Order, select: o,
+    case Repo.all(from o in Order, select: o,
       join: us in User.Address, on: o.user_address_id == us.id,
-      where: us.user_id == ^id)
-    if orders == [] do
-      Logger.error("aucun orders trouver")
-      put_status(conn, 404)
-      |> json([])
-    else
-      Logger.info("recherche orders en cours")
-      put_status(conn, 200)
-      |> OrderView.render("index.json", %{orders: orders})
+      where: us.user_id == ^id) do
+      [] ->
+        Logger.error("aucun orders trouver")
+        put_status(conn, 404)
+        |> json([])
+      orders ->
+        Logger.info("recherche orders en cours")
+        put_status(conn, 200)
+        |> OrderView.render("index.json", %{orders: orders})
     end
   end
+  def showByUserId(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
 
   # update order
@@ -149,30 +152,37 @@ defmodule KiraBijouxWeb.OrderController do
     )
   end
 
-  def update(conn, params) do
-    order = Repo.get!(Order, params["id"])
-    order_status_id = params["order_status_id"] || order.order_status_id
-    user_address_id = params["user_address_id"] || order.user_address_id
-    payment_type_id = params["payment_type_id"] || order.payment_type_id
-    reference = params["reference"] || order.reference
-    price = params["price"] || order.price
-    send_at = case NaiveDateTime.from_iso8601(params["send_at"]) do
-      {:ok, send_at} -> send_at
-      {:error, _} -> nil || order.send_at
-    end
-    received_at = case NaiveDateTime.from_iso8601(params["received_at"]) do
-      {:ok, received_at} -> received_at
-      {:error, _} -> nil || order.received_at
-    end
-    case Repo.update Order.changeset(order, %{order_status_id: order_status_id, user_address_id: user_address_id, payment_type_id: payment_type_id, reference: reference, price: price, send_at: send_at, received_at: received_at}) do
-      {:ok, order} ->
-        put_status(conn, 200)
-        |> OrderView.render("index.json", %{order: order})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+  def update(conn, %{"id" => id} = params) do
+    case Repo.get(Order, id) do
+      nil ->
+        Logger.error "L'order n'existe pas."
+        put_status(conn, 404)
+        |> json([])
+      order ->
+        order_status_id = params["order_status_id"] || order.order_status_id
+        user_address_id = params["user_address_id"] || order.user_address_id
+        payment_type_id = params["payment_type_id"] || order.payment_type_id
+        reference = params["reference"] || order.reference
+        price = params["price"] || order.price
+        send_at = case NaiveDateTime.from_iso8601(params["send_at"]) do
+          {:ok, send_at} -> send_at
+          {:error, _} -> nil || order.send_at
+        end
+        received_at = case NaiveDateTime.from_iso8601(params["received_at"]) do
+          {:ok, received_at} -> received_at
+          {:error, _} -> nil || order.received_at
+        end
+        case Repo.update Order.changeset(order, %{order_status_id: order_status_id, user_address_id: user_address_id, payment_type_id: payment_type_id, reference: reference, price: price, send_at: send_at, received_at: received_at}) do
+          {:ok, order} ->
+            put_status(conn, 200)
+            |> OrderView.render("index.json", %{order: order})
+          {:error, changeset} ->
+            Logger.error "ERROR : #{inspect changeset}"
+            put_status(conn, 500)
+        end
     end
   end
+  def update(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # delete order
   swagger_path(:delete) do
@@ -180,18 +190,24 @@ defmodule KiraBijouxWeb.OrderController do
     summary("Delete Order")
     description("Delete a Order by id")
     parameter :id, :path, :integer, "The id of the order to be deleted", required: true
-    response(203, "No Content - Deleted Successfully")
+    response(200, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"id" => id}) do
-    case Repo.delete Repo.get!(Order, id) do
-      {:ok, order} ->
-        #Phoenix.json/2 cannot render 204 status https://git.pleroma.social/pleroma/pleroma/-/issues/2029
-        put_status(conn, 200)
-        |> OrderView.render("index.json", %{order: order})
+    with order = %Order{} <- Repo.get(Order, id),
+    {:ok, _} <- Repo.delete order  do
+      #Phoenix.json/2 cannot render 204 status https://git.pleroma.social/pleroma/pleroma/-/issues/2029
+      put_status(conn, 200)
+      |> json("No Content - Deleted Successfully")
+    else
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
+      nil ->
+        Logger.error "L'order n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
     end
   end
+  def delete(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end

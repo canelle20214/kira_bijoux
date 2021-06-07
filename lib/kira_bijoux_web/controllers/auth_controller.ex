@@ -33,36 +33,29 @@ defmodule KiraBijouxWeb.AuthController do
     })
   end
 
-  def register(conn, params) do
-    firstname = params["firstname"]
-    lastname = params["lastname"]
-    mail = params["mail"]
-    password = params["password"]
-    |> Bcrypt.hash_pwd_salt()
-
-    emailExists = Repo.exists?(from u in User, where: u.mail == ^mail)
-    if emailExists == true do
-      Logger.error("l'email existe déjà")
-      put_status(conn, 500)
+  def register(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "password" => password}) do
+    with false <- Repo.exists?(from u in User, where: u.mail == ^mail),
+    {:ok, user} <- Repo.insert(%User{
+      firstname: firstname,
+      lastname: lastname,
+      mail: mail,
+      password: Bcrypt.hash_pwd_salt(password),
+      user_role_id: 1
+    }) do
+      Logger.info "Inscription terminée !"
+      put_status(conn, 201)
+      |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
     else
-      case Repo.insert(%User{
-            firstname: firstname,
-            lastname: lastname,
-            mail: mail,
-            password: password,
-            user_role_id: 1
-          }) do
-        {:ok, user} ->
-          Logger.info("successful registration")
-          put_status(conn, 201)
-          |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
-
-        {:error, changeset} ->
-          Logger.error(changeset)
-          put_status(conn, 500)
-      end
+      true ->
+        Logger.error "L'adresse mail existe déjà."
+        put_status(conn, 400)
+        |> json("Bad request")
+      {:error, changeset} ->
+        Logger.error "ERROR : #{inspect changeset}"
+        put_status(conn, 500)
     end
   end
+  def register(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # connection
   swagger_path :connect do
@@ -76,20 +69,21 @@ defmodule KiraBijouxWeb.AuthController do
     })
   end
 
-  def connect(conn, params) do
-    mail = params["mail"]
-    password = params["password"]
-    user = Accounts.get_by_email(mail)
-    hash = user.password
-    res = Bcrypt.verify_pass(password, hash)
-
-    if res == true do
-      Logger.info("successful connection")
+  def connect(conn, %{"mail" => mail, "password" => password}) do
+    with user = %User{} <- Accounts.get_by_email(mail),
+    true <- Bcrypt.verify_pass(password, user.password) do
+      Logger.info "Connexion effectuée"
       put_status(conn, 201)
       |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
     else
-      Logger.error("Adresse mail/mot de passe incorrect")
-      put_status(conn, 500)
+      nil ->
+        Logger.info "L'adresse mail n'est associée à aucun compte."
+        put_status(conn, 404)
+        |> json("Not found")
+      _ ->
+        Logger.error "Adresse mail/mot de passe incorrect"
+        put_status(conn, 500)
     end
   end
+  def connect(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end

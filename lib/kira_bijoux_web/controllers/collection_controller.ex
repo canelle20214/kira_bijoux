@@ -9,7 +9,7 @@ defmodule KiraBijouxWeb.CollectionController do
     response(code(:ok), "Success")
   end
 
-  def index(conn, _params) do
+  def index(conn, _) do
     collections = Repo.all(from c in Collection, select: c)
     put_status(conn, 200)
     |> CollectionView.render("index.json", %{collections: collections})
@@ -37,16 +37,17 @@ defmodule KiraBijouxWeb.CollectionController do
   end
 
   def show(conn, %{"id" => id}) do
-    collection = Repo.one(from c in Collection, select: c, where: c.id == ^id)
-    if collection == nil do
-      Logger.error("la collection n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> CollectionView.render("index.json", %{collection: collection})
+    case Repo.one(from c in Collection, select: c, where: c.id == ^id) do
+      nil ->
+        Logger.error("la collection n'existe pas")
+        put_status(conn, 404)
+        |> json([])
+      collection ->
+        put_status(conn, 200)
+        |> CollectionView.render("index.json", %{collection: collection})
     end
   end
+  def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # create collection
   swagger_path :create do
@@ -59,17 +60,17 @@ defmodule KiraBijouxWeb.CollectionController do
     })
   end
 
-  def create(conn, params) do
-    name = params["name"]
+  def create(conn, %{"name" => name}) do
     case Repo.insert %Collection{name: name} do
       {:ok, collection} ->
         put_status(conn, 201)
         |> CollectionView.render("index.json", %{collection: collection})
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def create(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # update collection
   swagger_path :update do
@@ -84,18 +85,21 @@ defmodule KiraBijouxWeb.CollectionController do
     )
   end
 
-  def update(conn, params) do
-    collection = Repo.get!(Collection, params["id"])
-    name = params["name"] || collection.name
-    case Repo.update Collection.changeset(collection, %{name: name}) do
-      {:ok, collection} ->
-        put_status(conn, 200)
-        |> CollectionView.render("index.json", %{collection: collection})
+  def update(conn, %{"id" => id, "name" => name}) do
+    with collection = %Collection{} <- Repo.get(Collection, id),
+    {:ok, collection} <- Repo.update Collection.changeset(collection, %{name: name}) do
+      put_status(conn, 200)
+      |> CollectionView.render("index.json", %{collection: collection})
+    else
+      nil ->
+        Logger.error "La collection n'existe pas."
+        put_status(conn, 404)
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def update(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # delete collection
   swagger_path(:delete) do
@@ -103,17 +107,23 @@ defmodule KiraBijouxWeb.CollectionController do
     summary("Delete collection")
     description("Delete a Collection by id")
     parameter :id, :path, :integer, "The id of the collection to be deleted", required: true
-    response(203, "No Content - Deleted Successfully")
+    response(200, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"id" => id}) do
-    case Repo.delete Repo.get!(Collection, id) do
-      {:ok, collection} ->
+    with collection = %Collection{} <- Repo.get(Collection, id),
+    {:ok, _} <- Repo.delete collection  do
         put_status(conn, 200)
-        |> CollectionView.render("index.json", %{collection: collection})
+        |> json([])
+    else
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
+      nil ->
+        Logger.error "La collection n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
     end
   end
+  def delete(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end

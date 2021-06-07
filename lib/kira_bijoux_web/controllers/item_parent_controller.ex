@@ -39,16 +39,17 @@ defmodule KiraBijouxWeb.ItemParentController do
   end
 
   def show(conn, %{"id" => id}) do
-    item_parent = Repo.one(from p in Item.Parent, select: p, where: p.id == ^id)
-    if item_parent == nil do
-      Logger.error("la catégorie d'item n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> ItemParentView.render("index.json", %{item_parent: item_parent})
+    case Repo.one(from p in Item.Parent, select: p, where: p.id == ^id) do
+      nil ->
+        Logger.error("la catégorie d'item n'existe pas")
+        put_status(conn, 404)
+        |> json([])
+      item_parent ->
+        put_status(conn, 200)
+        |> ItemParentView.render("index.json", %{item_parent: item_parent})
     end
   end
+  def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # get item parent by type
   swagger_path :showByType do
@@ -60,16 +61,17 @@ defmodule KiraBijouxWeb.ItemParentController do
   end
 
   def showByType(conn, %{"id" => id}) do
-    item_parents = Repo.all(from p in Item.Parent, select: p, where: p.item_type_id == ^id)
-    if item_parents == [] do
-      Logger.error("le type de catégorie d'item n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> ItemParentView.render("index.json", %{item_parents: item_parents})
+    case Repo.all(from p in Item.Parent, select: p, where: p.item_type_id == ^id) do
+      [] ->
+        Logger.error("le type de catégorie d'item n'existe pas")
+        put_status(conn, 404)
+        |> json([])
+      item_parents ->
+        put_status(conn, 200)
+        |> ItemParentView.render("index.json", %{item_parents: item_parents})
     end
   end
+  def showByType(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # get item parent by collection
   swagger_path :showByCollection do
@@ -81,16 +83,17 @@ defmodule KiraBijouxWeb.ItemParentController do
   end
 
   def showByCollection(conn, %{"id" => id}) do
-    item_parents = Repo.all(from p in Item.Parent, select: p, where: p.collection_id == ^id)
-    if item_parents == [] do
-      Logger.error("la collection de catégorie d'item n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> ItemParentView.render("index.json", %{item_parents: item_parents})
+    case Repo.all(from p in Item.Parent, select: p, where: p.collection_id == ^id) do
+      [] ->
+        Logger.error("la collection de catégorie d'item n'existe pas")
+        put_status(conn, 404)
+        |> json([])
+      item_parents ->
+        put_status(conn, 200)
+        |> ItemParentView.render("index.json", %{item_parents: item_parents})
     end
   end
+  def showByCollection(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # create item parent
   swagger_path :create do
@@ -105,19 +108,17 @@ defmodule KiraBijouxWeb.ItemParentController do
     })
   end
 
-  def create(conn, params) do
-    collection_id = params["collection_id"]
-    item_type_id = params["item_type_id"]
-    name = params["name"]
+  def create(conn, %{"collection_id" => collection_id, "item_type_id" => item_type_id, "name" => name}) do
     case Repo.insert %Item.Parent{collection_id: collection_id, item_type_id: item_type_id, name: name} do
       {:ok, item_parent} ->
         put_status(conn, 201)
         |> ItemParentView.render("index.json", %{item_parent: item_parent})
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def create(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # update item parent
   swagger_path :update do
@@ -134,20 +135,26 @@ defmodule KiraBijouxWeb.ItemParentController do
     )
   end
 
-  def update(conn, params) do
-    item_parent = Repo.get!(Item.Parent, params["id"])
-    collection_id = params["collection_id"] || item_parent.collection_id
-    item_type_id = params["item_type_id"] || item_parent.item_type_id
-    name = params["name"] || item_parent.name
-    case Repo.update Item.Parent.changeset(item_parent, %{collection_id: collection_id, item_type_id: item_type_id, name: name}) do
-      {:ok, item_parent} ->
-        put_status(conn, 200)
-        |> ItemParentView.render("index.json", %{item_parent: item_parent})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
+  def update(conn, %{"id" => id} = params) do
+    case Repo.get(Item.Parent, id) do
+      nil ->
+        Logger.error "L'item_parent n'existe pas."
+        put_status(conn, 404)
+      item_parent ->
+        collection_id = params["collection_id"] || item_parent.collection_id
+        item_type_id = params["item_type_id"] || item_parent.item_type_id
+        name = params["name"] || item_parent.name
+        case Repo.update Item.Parent.changeset(item_parent, %{collection_id: collection_id, item_type_id: item_type_id, name: name}) do
+          {:ok, item_parent} ->
+            put_status(conn, 200)
+            |> ItemParentView.render("index.json", %{item_parent: item_parent})
+          {:error, changeset} ->
+            Logger.error "ERROR : #{inspect changeset}"
+            put_status(conn, 500)
+        end
     end
   end
+  def update(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # delete item parent
   swagger_path(:delete) do
@@ -155,17 +162,23 @@ defmodule KiraBijouxWeb.ItemParentController do
     summary("Delete item parent")
     description("Delete a Item.Parent by id")
     parameter :id, :path, :integer, "The id of the item parents to be deleted", required: true
-    response(203, "No Content - Deleted Successfully")
+    response(200, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"id" => id}) do
-    case Repo.delete Repo.get!(Item.Parent, id) do
-      {:ok, item_parent} ->
-        put_status(conn, 200)
-        |> ItemParentView.render("index.json", %{item_parent: item_parent})
+    with item_parent = %Item.Parent{} <- Repo.get(Item.Parent, id),
+    {:ok, _} <- Repo.delete item_parent  do
+      put_status(conn, 200)
+      |> json("No Content - Deleted Successfully")
+    else
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
+      nil ->
+        Logger.error "L'item parent n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
     end
   end
+  def delete(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end

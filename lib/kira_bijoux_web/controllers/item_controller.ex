@@ -56,7 +56,7 @@ defmodule KiraBijouxWeb.ItemController do
           item_type_id: 1
         })
     produces "application/json"
-    response(200, "OK", Schema.ref(:Item),
+    response(201, "OK", Schema.ref(:Item),
       example:
       %{
         item:
@@ -109,9 +109,8 @@ defmodule KiraBijouxWeb.ItemController do
             put_status(conn, :conflict)
             |> ItemView.render("index.json", %{item: item})
         end
-
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
@@ -126,16 +125,17 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def show(conn, %{"id" => id}) do
-    item = Repo.one(from i in Item, select: i, where: i.id == ^id)
-    if item == nil do
-      Logger.error("l'item n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> ItemView.render("index.json", %{item: item})
+    case Repo.one(from i in Item, select: i, where: i.id == ^id) do
+      nil ->
+        Logger.error("l'item n'existe pas")
+        put_status(conn, 404)
+        |> json([])
+      item ->
+        put_status(conn, 200)
+        |> ItemView.render("index.json", %{item: item})
     end
   end
+  def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # get item picture by id
   swagger_path :showPicture do
@@ -147,16 +147,17 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def showPicture(conn, %{"id" => id}) do
-    item_picture = Repo.one(from p in Item.Picture, select: p, where: p.id == ^id)
-    if item_picture == nil do
-      Logger.error("l'image n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> ItemPictureView.render("index.json", %{item_picture: item_picture})
+    case Repo.one(from p in Item.Picture, select: p, where: p.id == ^id) do
+      nil ->
+        Logger.error("l'image n'existe pas")
+        put_status(conn, 404)
+        |> json([])
+      item_picture ->
+        put_status(conn, 200)
+        |> ItemPictureView.render("index.json", %{item_picture: item_picture})
     end
   end
+  def showPicture(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
 
   # get item by category
@@ -169,20 +170,21 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def showByCategory(conn, %{"name" => name}) do
-    items = Repo.all(from i in Item, select: i,
+    case Repo.all(from i in Item, select: i,
       join: ip in Item.Parent, on: i.item_parent_id == ip.id,
       join: it in Item.Type, on: ip.item_type_id == it.id,
-      where: it.name == ^name)
-    if items == [] do
-      Logger.error("aucun items trouver")
-      put_status(conn, 404)
-      |> json([])
-    else
-      Logger.info("recherche items en cours")
-      put_status(conn, 200)
-      |> ItemView.render("index.json", %{items: items})
+      where: it.name == ^name) do
+      [] ->
+        Logger.error("Aucun items trouver.")
+        put_status(conn, 404)
+        |> json([])
+      items ->
+        Logger.info("Recherche items en cours...")
+        put_status(conn, 200)
+        |> ItemView.render("index.json", %{items: items})
     end
   end
+  def showByCategory(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
 
   # get item by name
@@ -195,19 +197,20 @@ defmodule KiraBijouxWeb.ItemController do
   end
 
   def showByName(conn, %{"name" => name}) do
-    item = Repo.all(from i in Item, select: i,
+    case Repo.all(from i in Item, select: i,
       join: ip in Item.Parent, on: i.item_parent_id == ip.id,
-      where: ilike(ip.name, ^"%#{name}%"))
-    if item == [] do
-      Logger.error("l'item n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      Logger.info("recherche item en cours")
-      put_status(conn, 200)
-      |> ItemView.render("index.json", %{items: item})
+      where: ilike(ip.name, ^"%#{name}%")) do
+      [] ->
+        Logger.error("Aucun item ne contient cette chaine de caractère dans son nom.")
+        put_status(conn, 404)
+        |> json([])
+      items ->
+        Logger.info("Recherche d'items en cours...")
+        put_status(conn, 200)
+        |> ItemView.render("index.json", %{items: items})
     end
   end
+  def showByName(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
 
   # update item
@@ -267,7 +270,7 @@ defmodule KiraBijouxWeb.ItemController do
           |> ItemView.render("index.json", %{item: item})
         end
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
@@ -278,19 +281,23 @@ defmodule KiraBijouxWeb.ItemController do
     summary("Delete Item")
     description("Delete a Item by id")
     parameter :id, :path, :integer, "The id of the item to be deleted", required: true
-    response(203, "No Content - Deleted Successfully")
+    response(200, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"id" => id}) do
-    item = Repo.one(from i in Item, select: i, where: i.id == ^id)
-    if item == nil do
-      Logger.error("l'item n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      Repo.delete(item)
+    with item = %Item{} <- Repo.one(from i in Item, select: i, where: i.id == ^id),
+    {:ok, _} <- Repo.delete item do
       put_status(conn, 200)
-      |> ItemView.render("index.json", %{item: item})
+      |> json("No Content - Deleted Successfully")
+    else
+      nil ->
+        Logger.error("l'item n'existe pas")
+        put_status(conn, 404)
+        |> json("Not found")
+      {:error, changeset} ->
+        Logger.error "ERROR : #{inspect changeset}"
+        put_status(conn, 500)
     end
   end
+  def delete(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end
