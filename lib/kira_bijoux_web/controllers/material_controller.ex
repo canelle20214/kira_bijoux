@@ -5,11 +5,11 @@ defmodule KiraBijouxWeb.MaterialController do
   swagger_path :index do
     get("/materials")
     summary("Get all materials")
-    description("List of Material")
+    description("List of materials")
     response(code(:ok), "Success")
   end
 
-  def index(conn, _) do
+  def index(conn, _params) do
     materials = Repo.all(from m in Material, select: m)
     put_status(conn, 200)
     |> MaterialView.render("index.json", %{materials: materials})
@@ -17,50 +17,16 @@ defmodule KiraBijouxWeb.MaterialController do
 
   def swagger_definitions do
     %{
-      material: swagger_schema do
+      Material: swagger_schema do
         title "Material"
         description "Material descr"
         properties do
-          name :string, "Name"
-          material_type_id :integer, "Material type id"
+          material_type_id :integer, "Type id"
+          name :integer, "Name"
         end
       end
     }
   end
-
-  # create material
-  swagger_path :create do
-    post("/materials")
-    summary("Create material")
-    description("Create a new Material")
-    parameter :material, :body, Schema.ref(:material), "Material", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-          name: "Argent",
-          material_type_id: 1
-        })
-    produces "application/json"
-    response(200, "OK", Schema.ref(:material),
-      example:
-      %{
-        material:
-        %{
-          name: "Argent",
-          material_type_id: 1
-        }
-      }
-    )
-  end
-
-  def create(conn, %{"material_type_id" => material_type_id, "name" => name}) do
-    case Repo.insert %Material{material_type_id: material_type_id, name: name} do
-      {:ok, material} ->
-        put_status(conn, 201)
-        |> MaterialView.render("index.json", %{material: material})
-      {:error, changeset} ->
-        Logger.error changeset
-        put_status(conn, 500)
-    end
-  end
-  def create(conn, _), do: put_status(conn, 400)
 
   # get material by id
   swagger_path :show do
@@ -72,19 +38,62 @@ defmodule KiraBijouxWeb.MaterialController do
   end
 
   def show(conn, %{"id" => id}) do
-    material = Repo.get!(Material, id)
-    case material do
-      nil ->
-        Logger.error("le type de matériau n'existe pas")
-        put_status(conn, 404)
-        |> json(%{})
-      material ->
-        put_status(conn, 200)
-        |> MaterialView.render("index.json", %{material: material})
+    material = Repo.one(from m in Material, select: m, where: m.id == ^id)
+    if material == nil do
+      Logger.error("le matériau n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      put_status(conn, 200)
+      |> MaterialView.render("index.json", %{material: material})
     end
-
   end
 
+  # get material by type
+  swagger_path :showByType do
+    get("/materials/type/{id}")
+    summary("Get material by type id")
+    description("Material filtered by type id")
+    parameter :id, :path, :integer, "Id of type of the material to be displayed", required: true
+    response(code(:ok), "Success")
+  end
+
+  def showByType(conn, %{"id" => id}) do
+    materials = Repo.all(from m in Material, select: m, where: m.material_type_id == ^id)
+    if materials == [] do
+      Logger.error("le type de matériau n'existe pas")
+      put_status(conn, 404)
+      |> json([])
+    else
+      put_status(conn, 200)
+      |> MaterialView.render("index.json", %{materials: materials})
+    end
+  end
+
+  # create material
+  swagger_path :create do
+    post("/materials")
+    summary("Create Material")
+    description("Create a new Material")
+    produces "application/json"
+    parameter :material, :body, Schema.ref(:Material), "Material", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      material_type_id: 1,
+      name: "Pierre"
+    })
+  end
+
+  def create(conn, params) do
+    material_type_id = params["material_type_id"]
+    name = params["name"]
+    case Repo.insert %Material{material_type_id: material_type_id, name: name} do
+      {:ok, material} ->
+        put_status(conn, 201)
+        |> MaterialView.render("index.json", %{material: material})
+      {:error, changeset} ->
+        Logger.error changeset
+        put_status(conn, 500)
+    end
+  end
 
   # update material
   swagger_path :update do
@@ -93,18 +102,18 @@ defmodule KiraBijouxWeb.MaterialController do
     description("Update an existing Material")
     produces "application/json"
     parameter :id, :path, :integer, "Id of the material to be updated", required: true
-    parameter :material, :body, Schema.ref(:material), "Changes in material", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-        name: "Argent",
-        material_type_id: 1
+    parameter :material, :body, Schema.ref(:Material), "Changes in material", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+        material_type_id: 1,
+        name: "Argent"
       }
     )
   end
 
-  def update(conn, %{"id" => id} = params) do
-    material = Repo.get!(Material, id)
-    name = params["name"] || material.name
+  def update(conn, params) do
+    material = Repo.get!(Material, params["id"])
     material_type_id = params["material_type_id"] || material.material_type_id
-    case Repo.update Material.changeset(material, %{name: name, material_type_id: material_type_id}) do
+    name = params["name"] || material.name
+    case Repo.update Material.changeset(material, %{material_type_id: material_type_id, name: name}) do
       {:ok, material} ->
         put_status(conn, 200)
         |> MaterialView.render("index.json", %{material: material})
@@ -113,7 +122,6 @@ defmodule KiraBijouxWeb.MaterialController do
         put_status(conn, 500)
     end
   end
-  def update(conn, _), do: put_status(conn, 400)
 
   # delete material
   swagger_path(:delete) do
@@ -127,7 +135,6 @@ defmodule KiraBijouxWeb.MaterialController do
   def delete(conn, %{"id" => id}) do
     case Repo.delete Repo.get!(Material, id) do
       {:ok, material} ->
-        #Phoenix.json/2 cannot render 204 status https://git.pleroma.social/pleroma/pleroma/-/issues/2029
         put_status(conn, 200)
         |> MaterialView.render("index.json", %{material: material})
       {:error, changeset} ->
