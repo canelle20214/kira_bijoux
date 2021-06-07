@@ -37,16 +37,17 @@ defmodule KiraBijouxWeb.ItemTypeController do
   end
 
   def show(conn, %{"id" => id}) do
-    item_type = Repo.one(from t in Item.Type, select: t, where: t.id == ^id)
-    if item_type == nil do
-      Logger.error("l'item type n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      put_status(conn, 200)
-      |> ItemTypeView.render("index.json", %{item_type: item_type})
+    case Repo.one(from t in Item.Type, select: t, where: t.id == ^id) do
+      nil ->
+        Logger.error "L'item type n'existe pas"
+        put_status(conn, 404)
+        |> json([])
+      item_type ->
+        put_status(conn, 200)
+        |> ItemTypeView.render("index.json", %{item_type: item_type})
     end
   end
+  def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # create item type
   swagger_path :create do
@@ -59,17 +60,17 @@ defmodule KiraBijouxWeb.ItemTypeController do
     })
   end
 
-  def create(conn, params) do
-    name = params["name"]
+  def create(conn, %{"name" => name}) do
     case Repo.insert %Item.Type{name: name} do
       {:ok, item_type} ->
         put_status(conn, 201)
         |> ItemTypeView.render("index.json", %{item_type: item_type})
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def create(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # update item type
   swagger_path :update do
@@ -84,18 +85,18 @@ defmodule KiraBijouxWeb.ItemTypeController do
     )
   end
 
-  def update(conn, params) do
-    item_type = Repo.get!(Item.Type, params["id"])
-    name = params["name"] || item_type.name
+  def update(conn, %{"id" => id, "name" => name}) do
+    item_type = Repo.get!(Item.Type, id)
     case Repo.update Item.Type.changeset(item_type, %{name: name}) do
       {:ok, item_type} ->
         put_status(conn, 200)
         |> ItemTypeView.render("index.json", %{item_type: item_type})
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def update(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # delete item type
   swagger_path(:delete) do
@@ -103,17 +104,23 @@ defmodule KiraBijouxWeb.ItemTypeController do
     summary("Delete item types")
     description("Delete a Item.Types by id")
     parameter :id, :path, :integer, "The id of the item types to be deleted", required: true
-    response(203, "No Content - Deleted Successfully")
+    response(200, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"id" => id}) do
-    case Repo.delete Repo.get!(Item.Type, id) do
-      {:ok, item_type} ->
-        put_status(conn, 200)
-        |> ItemTypeView.render("index.json", %{item_type: item_type})
+    with item_type = %Item.Type{} <- Repo.get(Item.Type, id),
+    {:ok, _} <- Repo.delete item_type  do
+      put_status(conn, 200)
+      |> json("No Content - Deleted Successfully")
+    else
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
+      nil ->
+        Logger.error "Le type d'item n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
     end
   end
+  def delete(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end
