@@ -6,8 +6,8 @@ defmodule KiraBijouxWeb.UserAddressView do
     |> json(user_address_construction(user_address))
   end
 
-  def render(conn, "index.json", %{user_addresss: user_addresss}) do
-    user_addresss = Enum.map(user_addresss, & user_address_construction(&1))
+  def render(conn, "index.json", %{user_addresses: user_addresses}) do
+    user_addresss = Enum.map(user_addresses, & user_address_construction(&1))
     conn
     |> json(user_addresss)
   end

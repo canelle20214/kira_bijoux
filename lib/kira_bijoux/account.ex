@@ -4,9 +4,7 @@ defmodule KiraBijoux.Accounts do
 
   alias KiraBijoux.User
 
-  def get_by_email(mail) when is_nil(mail) do
-    nil
-  end
+  def get_by_email(nil), do: nil
   def get_by_email(mail) do
     Repo.get_by(User, mail: mail)
   end

@@ -9,7 +9,7 @@ defmodule KiraBijouxWeb.UserController do
     response(code(:ok), "Success")
   end
 
-  def index(conn, _params) do
+  def index(conn, _) do
     users = Repo.all(from u in User, select: u)
     put_status(conn, 200)
     |> KiraBijouxWeb.UserView.render("index.json", %{users: users})
@@ -36,6 +36,7 @@ defmodule KiraBijouxWeb.UserController do
       |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
     end
   end
+  def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   def swagger_definitions do
     %{
@@ -68,22 +69,27 @@ defmodule KiraBijouxWeb.UserController do
     })
   end
 
-  def create(conn, params) do
-    firstname = params["firstname"]
-    lastname = params["lastname"]
-    mail = params["mail"]
-    phone = params["phone"] || nil
-    password = params["password"]
-    |> Bcrypt.hash_pwd_salt()
-    case Repo.insert %User{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password, user_role_id: 1} do
+  def create(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "phone" => phone, "password" => password}) do
+    case Repo.insert %User{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: Bcrypt.hash_pwd_salt(password), user_role_id: 1} do
       {:ok, user} ->
         put_status(conn, 201)
         |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
       {:error, changeset} ->
-        Logger.error changeset
+        Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
     end
   end
+  def create(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "password" => password}) do
+    case Repo.insert %User{firstname: firstname, lastname: lastname, mail: mail, password: Bcrypt.hash_pwd_salt(password), user_role_id: 1} do
+      {:ok, user} ->
+        put_status(conn, 201)
+        |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+      {:error, changeset} ->
+        Logger.error "ERROR : #{inspect changeset}"
+        put_status(conn, 500)
+    end
+  end
+  def create(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # update user
   swagger_path :update do
@@ -101,31 +107,34 @@ defmodule KiraBijouxWeb.UserController do
     })
   end
 
-  def update(conn, params) do
-    id = params["id"]
-    firstname = params["firstname"]
-    lastname = params["lastname"]
-    mail = params["mail"]
-    phone = params["phone"]
-    password = params["password"]
-    |> Bcrypt.hash_pwd_salt()
-
-    user = Repo.one(from u in User, select: u, where: u.id == ^id)
-    if user == nil do
-      Logger.error("le user n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      case Repo.update User.changeset(user, %{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password}) do
-        {:ok, user} ->
-          put_status(conn, 200)
-          |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
-        {:error, changeset} ->
-          Logger.error changeset
-          put_status(conn, 500)
-      end
+  def update(conn, %{"id" => id} = params) do
+    case Repo.one(from u in User, select: u, where: u.id == ^id) do
+      nil ->
+        Logger.error "Le user n'existe pas."
+        put_status(conn, 404)
+        |> json([])
+      user ->
+        firstname = params["firstname"] || user.firstname
+        lastname = params["lastname"] || user.firstname
+        mail = params["mail"] || user.firstname
+        phone = params["phone"] || user.firstname
+        password = case params["password"] do
+          nil ->
+            user.password
+          password ->
+            Bcrypt.hash_pwd_salt(password)
+        end
+        case Repo.update User.changeset(user, %{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: password}) do
+          {:ok, user} ->
+            put_status(conn, 200)
+            |> UserView.render("index.json", %{user: user})
+          {:error, changeset} ->
+            Logger.error "ERROR : #{inspect changeset}"
+            put_status(conn, 500)
+        end
     end
   end
+  def update(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # delete user
   swagger_path(:delete) do
@@ -133,19 +142,23 @@ defmodule KiraBijouxWeb.UserController do
     summary("Delete User")
     description("Delete a user by id")
     parameter :id, :path, :integer, "The id of the user to be deleted", required: true
-    response(203, "No Content - Deleted Successfully")
+    response(200, "No Content - Deleted Successfully")
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Repo.one(from u in User, select: u, where: u.id == ^id)
-    if user == nil do
-      Logger.error("le user n'existe pas")
-      put_status(conn, 404)
-      |> json([])
-    else
-      Repo.delete(user)
+    with user = %User{} <- Repo.one(from u in User, select: u, where: u.id == ^id),
+    {:ok, _} <- Repo.delete user do
       put_status(conn, 200)
-      |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
+      |> json("No Content - Deleted Successfully")
+    else
+      nil ->
+        Logger.error "Le user n'existe pas"
+        put_status(conn, 404)
+        |> json("Not found")
+      {:error, changeset} ->
+        Logger.error "ERROR : #{inspect changeset}"
+        put_status(conn, 500)
     end
   end
+  def delete(conn, _), do: put_status(conn, 400) |> json("Bad request")
 end
