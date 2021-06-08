@@ -22,7 +22,7 @@ defmodule KiraBijouxWeb.MaterialController do
         description "Material descr"
         properties do
           material_type_id :integer, "Type id"
-          name :integer, "Name"
+          name :string, "Name"
         end
       end
     }
@@ -42,7 +42,7 @@ defmodule KiraBijouxWeb.MaterialController do
       nil ->
         Logger.error "Le matériaux n'existe pas."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       material ->
         put_status(conn, 200)
         |> MaterialView.render("index.json", %{material: material})
@@ -64,7 +64,7 @@ defmodule KiraBijouxWeb.MaterialController do
       [] ->
         Logger.error "Le type de matériau n'existe pas"
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       materials ->
         put_status(conn, 200)
         |> MaterialView.render("index.json", %{materials: materials})
@@ -82,6 +82,14 @@ defmodule KiraBijouxWeb.MaterialController do
       material_type_id: 1,
       name: "Pierre"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Material),
+      example:
+        %{
+          material_type_id: 1,
+          name: "Pierre"
+        }
+    )
   end
 
   def create(conn, %{"material_type_id" => material_type_id, "name" => name}) do
@@ -108,6 +116,14 @@ defmodule KiraBijouxWeb.MaterialController do
         name: "Argent"
       }
     )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Material),
+      example:
+        %{
+          material_type_id: 1,
+          name: "Argent"
+        }
+    )
   end
 
   def update(conn, %{"id" => id} = params) do
@@ -115,6 +131,7 @@ defmodule KiraBijouxWeb.MaterialController do
       nil ->
         Logger.error "Le matériel n'existe pas."
         put_status(conn, 404)
+        |> json("Not found")
       material ->
         material_type_id = params["material_type_id"] || material.material_type_id
         name = params["name"] || material.name

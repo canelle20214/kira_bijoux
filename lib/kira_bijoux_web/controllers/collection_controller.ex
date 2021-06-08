@@ -21,7 +21,7 @@ defmodule KiraBijouxWeb.CollectionController do
         title "Collection"
         description "Collection descr"
         properties do
-          name :integer, "Name"
+          name :string, "Name"
         end
       end
     }
@@ -41,7 +41,7 @@ defmodule KiraBijouxWeb.CollectionController do
       nil ->
         Logger.error("la collection n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       collection ->
         put_status(conn, 200)
         |> CollectionView.render("index.json", %{collection: collection})
@@ -58,6 +58,13 @@ defmodule KiraBijouxWeb.CollectionController do
     parameter :collection, :body, Schema.ref(:Collection), "Collection", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       name: "Collection 2022"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Collection),
+      example:
+        %{
+          name: "Collection 2022"
+        }
+    )
   end
 
   def create(conn, %{"name" => name}) do
@@ -83,6 +90,13 @@ defmodule KiraBijouxWeb.CollectionController do
       name: "Collection 2023"
       }
     )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Collection),
+      example:
+        %{
+          name: "Collection 2022"
+        }
+    )
   end
 
   def update(conn, %{"id" => id, "name" => name}) do
@@ -94,6 +108,7 @@ defmodule KiraBijouxWeb.CollectionController do
       nil ->
         Logger.error "La collection n'existe pas."
         put_status(conn, 404)
+        |> json("Not found")
       {:error, changeset} ->
         Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)

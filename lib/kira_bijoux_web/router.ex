@@ -74,6 +74,12 @@ defmodule KiraBijouxWeb.Router do
     put("/materials/:id", MaterialController, :update)
     delete("/materials/:id", MaterialController, :delete)
 
+    get("/newsletters", NewsletterController, :index)
+    get("/newsletters/:id", NewsletterController, :show)
+    post("/newsletters", NewsletterController, :create)
+    put("/newsletters/:id", NewsletterController, :update)
+    delete("/newsletters/:id", NewsletterController, :delete)
+
     get("/orders", OrderController, :index)
     get("/orders/:id", OrderController, :show)
     get("/orders/user/:id", OrderController, :showByUserId)
@@ -100,6 +106,15 @@ defmodule KiraBijouxWeb.Router do
     post("/shops", ShoppingCartController, :create)
     put("/shops/:item_id/:order_id", ShoppingCartController, :update)
     delete("/shops/:item_id/:order_id", ShoppingCartController, :delete)
+
+    get("/user-newsletters", UserNewsletterController, :index)
+    get("/user-newsletters/:id", UserNewsletterController, :show)
+    get("/user-newsletters/item/:id", UserNewsletterController, :showByItemId)
+    get("/user-newsletters/user/:id", UserNewsletterController, :showByUserId)
+    get("/user-newsletters/mail/:mail", UserNewsletterController, :showByMail)
+    post("/user-newsletters", UserNewsletterController, :create)
+    put("/user-newsletters/:id", UserNewsletterController, :update)
+    delete("/user-newsletters/:id", UserNewsletterController, :delete)
 
     get("/users", UserController, :index)
     get("/users/:id", UserController, :show)

@@ -17,11 +17,11 @@ defmodule KiraBijouxWeb.MaterialTypeController do
 
   def swagger_definitions do
     %{
-      Item_Type: swagger_schema do
+      Material_Type: swagger_schema do
         title "Material.Type"
         description "Material.Type descr"
         properties do
-          name :integer, "Name"
+          name :string, "Name"
         end
       end
     }
@@ -41,7 +41,7 @@ defmodule KiraBijouxWeb.MaterialTypeController do
       nil ->
         Logger.error("l'material type n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       material_type ->
         put_status(conn, 200)
         |> MaterialTypeView.render("index.json", %{material_type: material_type})
@@ -55,9 +55,16 @@ defmodule KiraBijouxWeb.MaterialTypeController do
     summary("Create Material Types")
     description("Create a new Material.Type")
     produces "application/json"
-    parameter :material_type, :body, Schema.ref(:Item_Type), "Item_Type", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-      name: "Bague"
+    parameter :material_type, :body, Schema.ref(:Material_Type), "Material_Type", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+      name: "Pierre semi-précieuse"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Material_Type),
+      example:
+        %{
+          name: "Pierre semi-précieuse"
+        }
+    )
   end
 
   def create(conn, %{"name" => name}) do
@@ -79,18 +86,29 @@ defmodule KiraBijouxWeb.MaterialTypeController do
     description("Update an existing Material.Type")
     produces "application/json"
     parameter :id, :path, :integer, "Id of the material type to be updated", required: true
-    parameter :material_type, :body, Schema.ref(:Item_Type), "Changes in material type", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-        name: "Anneau"
+    parameter :material_type, :body, Schema.ref(:Material_Type), "Changes in material type", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
+        name: "Pierre semi-précieuse"
       }
+    )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Material_Type),
+      example:
+        %{
+          name: "Pierre semi-précieuse"
+        }
     )
   end
 
   def update(conn, %{"id" => id, "name" => name}) do
-    material_type = Repo.get!(Material.Type, id)
-    case Repo.update Material.Type.changeset(material_type, %{name: name}) do
-      {:ok, material_type} ->
-        put_status(conn, 200)
-        |> MaterialTypeView.render("index.json", %{material_type: material_type})
+    with material_type = %Material.Type{} <- Repo.get(Material.Type, id),
+    {:ok, material_type} <- Repo.update Material.Type.changeset(material_type, %{name: name}) do
+      put_status(conn, 200)
+      |> MaterialTypeView.render("index.json", %{material_type: material_type})
+    else
+      nil ->
+        Logger.error "Le type de matériaux n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
       {:error, changeset} ->
         Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)

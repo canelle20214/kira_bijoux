@@ -14,7 +14,7 @@ defmodule KiraBijoux.User.Newsletter do
   @doc false
   def changeset(newsletter, attrs) do
     newsletter
-    |> cast(attrs, [:user_id, :newsletter_id, :item_alerts, :mail])
+    |> cast(attrs, [:user_id, :newsletter_id, :item_id, :mail])
     |> check_constraint(:user_newsletters, name: :user_newsletters_constraint)
     |> validate_required([:newsletter_id])
   end

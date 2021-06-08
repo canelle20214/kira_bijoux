@@ -39,15 +39,12 @@ defmodule KiraBijouxWeb.UserFavoriteController do
           item_id: 2
         })
     produces "application/json"
-    response(201, "OK", Schema.ref(:user_favorite),
+    response(201, "Created", Schema.ref(:user_favorite),
       example:
-      %{
-        user_favorite:
         %{
           user_id: 1,
           item_id: 2
         }
-      }
     )
   end
 
@@ -95,7 +92,7 @@ defmodule KiraBijouxWeb.UserFavoriteController do
       [] ->
         Logger.error "Aucun user_favorites trouver"
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       user_favorites ->
         Logger.info "Recherche user_favorites en cours"
         put_status(conn, 200)
@@ -115,6 +112,14 @@ defmodule KiraBijouxWeb.UserFavoriteController do
         user_id: 1,
         item_id: 2
       }
+    )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:user_favorite),
+      example:
+        %{
+          user_id: 1,
+          item_id: 2
+        }
     )
   end
 

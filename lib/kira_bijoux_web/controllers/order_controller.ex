@@ -48,10 +48,8 @@ defmodule KiraBijouxWeb.OrderController do
           received_at: "2020-02-04"
         })
     produces "application/json"
-    response(201, "OK", Schema.ref(:order),
+    response(201, "Created", Schema.ref(:order),
       example:
-      %{
-        order:
         %{
           order_status_id: 3,
           user_address_id: 1,
@@ -61,7 +59,6 @@ defmodule KiraBijouxWeb.OrderController do
           send_at: "2020-01-27",
           received_at: "2020-02-04"
         }
-      }
     )
   end
 
@@ -98,7 +95,7 @@ defmodule KiraBijouxWeb.OrderController do
     case Repo.get(Order, id) do
       nil ->
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       order ->
         put_status(conn, 200)
         |> OrderView.render("index.json", %{order: order})
@@ -123,7 +120,7 @@ defmodule KiraBijouxWeb.OrderController do
       [] ->
         Logger.error("aucun orders trouver")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       orders ->
         Logger.info("recherche orders en cours")
         put_status(conn, 200)
@@ -150,6 +147,19 @@ defmodule KiraBijouxWeb.OrderController do
         received_at: "2020-02-04"
       }
     )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:order),
+      example:
+        %{
+          order_status_id: 3,
+          user_address_id: 1,
+          payment_type_id: 1,
+          reference: "KB-20210417124321",
+          price: 43.57,
+          send_at: "2020-01-27",
+          received_at: "2020-02-04"
+        }
+    )
   end
 
   def update(conn, %{"id" => id} = params) do
@@ -157,7 +167,7 @@ defmodule KiraBijouxWeb.OrderController do
       nil ->
         Logger.error "L'order n'existe pas."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       order ->
         order_status_id = params["order_status_id"] || order.order_status_id
         user_address_id = params["user_address_id"] || order.user_address_id

@@ -31,6 +31,17 @@ defmodule KiraBijouxWeb.AuthController do
       password: "1234",
       phone: "0643239066"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Auth),
+      example:
+        %{
+          firstname: "John",
+          lastname: "Doe",
+          mail: "john.doe@gmail.com",
+          password: "1234",
+          phone: "0643239066"
+        }
+    )
   end
 
   def register(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "password" => password}) do
@@ -62,11 +73,18 @@ defmodule KiraBijouxWeb.AuthController do
     post("/auth/connexion")
     summary("Connect user")
     description("Connect a new user")
-    produces "application/json"
     parameter :auth, :body, Schema.ref(:Auth), "Auth", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       mail: "john.doe@gmail.com",
-      password: "1234",
+      password: "1234"
     })
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Auth),
+      example:
+        %{
+          mail: "john.doe@gmail.com",
+          password: "1234"
+        }
+    )
   end
 
   def connect(conn, %{"mail" => mail, "password" => password}) do

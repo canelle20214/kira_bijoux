@@ -56,7 +56,7 @@ defmodule KiraBijouxWeb.ItemController do
           item_type_id: 1
         })
     produces "application/json"
-    response(201, "OK", Schema.ref(:Item),
+    response(201, "Created", Schema.ref(:Item),
       example:
       %{
         item:
@@ -129,7 +129,7 @@ defmodule KiraBijouxWeb.ItemController do
       nil ->
         Logger.error("l'item n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       item ->
         put_status(conn, 200)
         |> ItemView.render("index.json", %{item: item})
@@ -151,7 +151,7 @@ defmodule KiraBijouxWeb.ItemController do
       nil ->
         Logger.error("l'image n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       item_picture ->
         put_status(conn, 200)
         |> ItemPictureView.render("index.json", %{item_picture: item_picture})
@@ -177,7 +177,7 @@ defmodule KiraBijouxWeb.ItemController do
       [] ->
         Logger.error("Aucun items trouver.")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       items ->
         Logger.info("Recherche items en cours...")
         put_status(conn, 200)
@@ -203,7 +203,7 @@ defmodule KiraBijouxWeb.ItemController do
       [] ->
         Logger.error("Aucun item ne contient cette chaine de caractère dans son nom.")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       items ->
         Logger.info("Recherche d'items en cours...")
         put_status(conn, 200)
@@ -233,6 +233,23 @@ defmodule KiraBijouxWeb.ItemController do
         collection_id: 1,
         item_type_id: 1
       }
+    )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Item),
+      example:
+        %{
+          name: "Collier",
+          subtitle: "Collier",
+          description: "Collier",
+          price: 35.5,
+          length: "35 cm",
+          stock: 4,
+          tva: 0.2,
+          visibility: true,
+          materials: [1,4],
+          collection_id: 1,
+          item_type_id: 1
+        }
     )
   end
 
