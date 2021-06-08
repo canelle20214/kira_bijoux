@@ -21,7 +21,7 @@ defmodule KiraBijouxWeb.OrderStatusController do
         title "Order.Status"
         description "Order.Status descr"
         properties do
-          name :integer, "Name"
+          name :string, "Name"
         end
       end
     }
@@ -41,7 +41,7 @@ defmodule KiraBijouxWeb.OrderStatusController do
       nil ->
         Logger.error("l'order status n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       order_status ->
         put_status(conn, 200)
         |> OrderStatusView.render("index.json", %{order_status: order_status})
@@ -58,6 +58,13 @@ defmodule KiraBijouxWeb.OrderStatusController do
     parameter :order_status, :body, Schema.ref(:Order_Status), "Order_Status", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       name: "Envoyée"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Order_Status),
+      example:
+        %{
+          name: "Envoyée"
+        }
+    )
   end
 
   def create(conn, %{"name" => name}) do
@@ -83,14 +90,25 @@ defmodule KiraBijouxWeb.OrderStatusController do
         name: "Envoyée"
       }
     )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Order_Status),
+      example:
+        %{
+          name: "Envoyée"
+        }
+    )
   end
 
   def update(conn, %{"id" => id, "name" => name}) do
-    order_status = Repo.get!(Order.Status, id)
-    case Repo.update Order.Status.changeset(order_status, %{name: name}) do
-      {:ok, order_status} ->
-        put_status(conn, 200)
-        |> OrderStatusView.render("index.json", %{order_status: order_status})
+    with order_status = %Order.Status{} <- Repo.get(Order.Status, id),
+    {:ok, order_status} <- Repo.update Order.Status.changeset(order_status, %{name: name}) do
+      put_status(conn, 200)
+      |> OrderStatusView.render("index.json", %{order_status: order_status})
+    else
+      nil ->
+        Logger.error "Le status de la commande n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
       {:error, changeset} ->
         Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)

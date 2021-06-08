@@ -30,7 +30,7 @@ defmodule KiraBijouxWeb.UserController do
     if user == nil do
       Logger.error("le user n'existe pas")
       put_status(conn, 404)
-      |> json([])
+      |> json("Not found")
     else
       put_status(conn, 200)
       |> KiraBijouxWeb.UserView.render("index.json", %{user: user})
@@ -67,6 +67,17 @@ defmodule KiraBijouxWeb.UserController do
       password: "1234",
       phone: "0643239066"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:User),
+      example:
+      %{
+        firstname: "John",
+        lastname: "Doe",
+        mail: "john.doe@gmail.com",
+        password: "1234",
+        phone: "0643239066"
+      }
+    )
   end
 
   def create(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "phone" => phone, "password" => password}) do
@@ -105,6 +116,17 @@ defmodule KiraBijouxWeb.UserController do
       password: "12345",
       phone: "0643239067"
     })
+    produces "application/json"
+    response(200, "OK", Schema.ref(:User),
+      example:
+      %{
+        firstname: "John",
+        lastname: "Doe",
+        mail: "john.doe@gmail.com",
+        password: "1234",
+        phone: "0643239066"
+      }
+    )
   end
 
   def update(conn, %{"id" => id} = params) do
@@ -112,7 +134,7 @@ defmodule KiraBijouxWeb.UserController do
       nil ->
         Logger.error "Le user n'existe pas."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       user ->
         firstname = params["firstname"] || user.firstname
         lastname = params["lastname"] || user.firstname
