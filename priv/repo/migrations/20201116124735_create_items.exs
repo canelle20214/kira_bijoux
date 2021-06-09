@@ -9,7 +9,7 @@ defmodule KiraBijoux.Repo.Migrations.CreateItems do
       add :length, :string
       add :price, :float
       add :stock, :integer
-      add :visibility, :boolean, default: true, null: true
+      add :visibility, :boolean, null: true
 
       timestamps()
     end
