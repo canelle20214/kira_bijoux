@@ -10,14 +10,14 @@ defmodule KiraBijoux.Item do
     field :length, :string
     field :stock, :integer
     field :description, :string
-    field :visibility, :boolean, default: true
+    field :visibility, :boolean
     timestamps()
   end
 
   @doc false
   def changeset(item, attrs \\ %{}) do
     item
-    |> cast(attrs, [:item_parent_id, :subtitle, :price, :length, :stock, :tva, :visibility])
+    |> cast(attrs, [:item_parent_id, :description, :subtitle, :price, :length, :stock, :tva, :visibility])
     |> validate_required([:item_parent_id, :subtitle, :price, :length, :stock, :tva, :visibility])
   end
 end
