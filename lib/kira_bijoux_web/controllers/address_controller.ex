@@ -25,7 +25,7 @@ defmodule KiraBijouxWeb.AddressController do
 
   # get addresses by user
   swagger_path :showByUserId do
-    get("/addresses/{id}")
+    get("/addresses/user/{id}")
     summary("Get address by user")
     description("Address filtered by user")
     parameter :id, :path, :integer, "The id of the user to be display", required: true
@@ -66,11 +66,10 @@ defmodule KiraBijouxWeb.AddressController do
 
   # create address to user
   swagger_path :create do
-    post("/addresses/{id}")
+    post("/addresses")
     summary("Create address")
     description("Create a new address")
     produces "application/json"
-    parameter :id, :path, :integer, "The id of the user who want add address", required: true
     parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       user_id: 1,
       name: "Maison",
@@ -97,7 +96,7 @@ defmodule KiraBijouxWeb.AddressController do
     )
   end
 
-  def create(conn, %{"id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "second_line" => second_line, "post_code" => post_code, "town" => town, "country" => country}) do
+  def create(conn, %{"user_id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "second_line" => second_line, "post_code" => post_code, "town" => town, "country" => country}) do
     case Repo.insert %User.Address{user_id: user_id, name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: recipient} do
       {:ok, user_address} ->
         put_status(conn, 201)
@@ -107,7 +106,7 @@ defmodule KiraBijouxWeb.AddressController do
         put_status(conn, 500)
     end
   end
-  def create(conn, %{"id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "post_code" => post_code, "town" => town, "country" => country}) do
+  def create(conn, %{"user_id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "post_code" => post_code, "town" => town, "country" => country}) do
     case Repo.insert %User.Address{user_id: user_id, name: name, first_line: first_line, post_code: post_code, town: town, country: country, recipient: recipient} do
       {:ok, user_address} ->
         put_status(conn, 201)
