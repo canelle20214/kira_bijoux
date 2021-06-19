@@ -40,16 +40,13 @@ defmodule KiraBijouxWeb.OrderItemController do
           item_id: 2
         })
     produces "application/json"
-    response(201, "OK", Schema.ref(:order_item),
+    response(201, "Created", Schema.ref(:order_item),
       example:
-      %{
-        order_item:
         %{
           order_id: 1,
           quantity: 3,
           item_id: 2
         }
-      }
     )
   end
 
@@ -79,7 +76,7 @@ defmodule KiraBijouxWeb.OrderItemController do
       nil ->
         Logger.error "L'order_item n'existe pas."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       order_item ->
         put_status(conn, 200)
         |> OrderItemView.render("index.json", %{order_item: order_item})
@@ -102,7 +99,7 @@ defmodule KiraBijouxWeb.OrderItemController do
       [] ->
         Logger.error("aucun order_items trouver")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       order_items ->
         Logger.info("recherche order_items en cours")
         put_status(conn, 200)
@@ -125,6 +122,15 @@ defmodule KiraBijouxWeb.OrderItemController do
         item_id: 2
       }
     )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:order_item),
+      example:
+        %{
+          order_id: 1,
+          quantity: 3,
+          item_id: 2
+        }
+    )
   end
 
   def update(conn, %{"id" => id} = params) do
@@ -132,6 +138,7 @@ defmodule KiraBijouxWeb.OrderItemController do
       nil ->
         Logger.error "L'order_item n'existe pas."
         put_status(conn, 404)
+        |> json("Not found")
       order_item ->
         order_id = params["order_id"] || order_item.order_id
         quantity = params["quantity"] || order_item.quantity

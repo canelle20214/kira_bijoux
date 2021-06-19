@@ -21,7 +21,7 @@ defmodule KiraBijouxWeb.ItemTypeController do
         title "Item.Type"
         description "Item.Type descr"
         properties do
-          name :integer, "Name"
+          name :string, "Name"
         end
       end
     }
@@ -41,7 +41,7 @@ defmodule KiraBijouxWeb.ItemTypeController do
       nil ->
         Logger.error "L'item type n'existe pas"
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       item_type ->
         put_status(conn, 200)
         |> ItemTypeView.render("index.json", %{item_type: item_type})
@@ -58,6 +58,13 @@ defmodule KiraBijouxWeb.ItemTypeController do
     parameter :item_type, :body, Schema.ref(:Item_Type), "Item_Type", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       name: "Bague"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Item_Type),
+      example:
+        %{
+          name: "Bague"
+        }
+    )
   end
 
   def create(conn, %{"name" => name}) do
@@ -80,17 +87,28 @@ defmodule KiraBijouxWeb.ItemTypeController do
     produces "application/json"
     parameter :id, :path, :integer, "Id of the item type to be updated", required: true
     parameter :item_type, :body, Schema.ref(:Item_Type), "Changes in item type", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-        name: "Anneau"
+        name: "Bague"
       }
+    )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Item_Type),
+      example:
+        %{
+          name: "Bague"
+        }
     )
   end
 
   def update(conn, %{"id" => id, "name" => name}) do
-    item_type = Repo.get!(Item.Type, id)
-    case Repo.update Item.Type.changeset(item_type, %{name: name}) do
-      {:ok, item_type} ->
-        put_status(conn, 200)
-        |> ItemTypeView.render("index.json", %{item_type: item_type})
+    with item_type = %Item.Type{} <- Repo.get(Item.Type, id),
+    {:ok, item_type} <- Repo.update Item.Type.changeset(item_type, %{name: name}) do
+      put_status(conn, 200)
+      |> ItemTypeView.render("index.json", %{item_type: item_type})
+    else
+      nil ->
+        Logger.error "Le type de l'item n'existe pas."
+        put_status(conn, 404)
+        |> json("Not found")
       {:error, changeset} ->
         Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)

@@ -23,7 +23,7 @@ defmodule KiraBijouxWeb.ItemParentController do
         properties do
           collection_id :integer, "Collection id"
           item_type_id :integer, "Type id"
-          name :integer, "Name"
+          name :string, "Name"
         end
       end
     }
@@ -43,7 +43,7 @@ defmodule KiraBijouxWeb.ItemParentController do
       nil ->
         Logger.error("la catégorie d'item n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       item_parent ->
         put_status(conn, 200)
         |> ItemParentView.render("index.json", %{item_parent: item_parent})
@@ -65,7 +65,7 @@ defmodule KiraBijouxWeb.ItemParentController do
       [] ->
         Logger.error("le type de catégorie d'item n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       item_parents ->
         put_status(conn, 200)
         |> ItemParentView.render("index.json", %{item_parents: item_parents})
@@ -87,7 +87,7 @@ defmodule KiraBijouxWeb.ItemParentController do
       [] ->
         Logger.error("la collection de catégorie d'item n'existe pas")
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       item_parents ->
         put_status(conn, 200)
         |> ItemParentView.render("index.json", %{item_parents: item_parents})
@@ -104,8 +104,17 @@ defmodule KiraBijouxWeb.ItemParentController do
     parameter :item_parent, :body, Schema.ref(:Item_Parent), "Item_Parent", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       collection_id: 1,
       item_type_id: 1,
-      name: "Test"
+      name: "Lanaa"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Item_Parent),
+      example:
+        %{
+          collection_id: 1,
+          item_type_id: 1,
+          name: "Lanaa"
+        }
+    )
   end
 
   def create(conn, %{"collection_id" => collection_id, "item_type_id" => item_type_id, "name" => name}) do
@@ -130,8 +139,17 @@ defmodule KiraBijouxWeb.ItemParentController do
     parameter :item_parent, :body, Schema.ref(:Item_Parent), "Changes in item parents", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
         collection_id: 1,
         item_type_id: 1,
-        name: "Testo"
+        name: "Lanaa"
       }
+    )
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Item_Parent),
+      example:
+        %{
+          collection_id: 1,
+          item_type_id: 1,
+          name: "Lanaa"
+        }
     )
   end
 
@@ -140,6 +158,7 @@ defmodule KiraBijouxWeb.ItemParentController do
       nil ->
         Logger.error "L'item_parent n'existe pas."
         put_status(conn, 404)
+        |> json("Not found")
       item_parent ->
         collection_id = params["collection_id"] || item_parent.collection_id
         item_type_id = params["item_type_id"] || item_parent.item_type_id

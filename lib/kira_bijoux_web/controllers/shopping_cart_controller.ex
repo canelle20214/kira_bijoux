@@ -34,10 +34,10 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       nil ->
         Logger.error "Aucun panier ne porte cet id."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       [] ->
         Logger.error "Le panier est vide."
-        put_status(conn, 404)
+        put_status(conn, 200)
         |> json([])
     end
   end
@@ -67,10 +67,10 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       nil ->
         Logger.error "Aucun panier n'est lié à cette adresse."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       [] ->
         Logger.error "Le panier est vide."
-        put_status(conn, 404)
+        put_status(conn, 200)
         |> json([])
     end
   end
@@ -101,45 +101,78 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       user_address_id: 1,
       quantity: 1
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Shop),
+      example:
+        %{
+          item_id: 1,
+          user_address_id: 1,
+          quantity: 2
+        }
+    )
   end
 
   def create(conn, %{"item_id" => item_id, "user_address_id" => user_address_id, "quantity" => quantity}) do
-    # on vérifie si l'item n'est pas déjà présent dans le panier de l'utilisateur
     with order = %Order{} <- Repo.all(from o in Order, select: o,
     where: o.user_address_id == ^user_address_id,
-    order_by: [desc: o.id]) |> List.first,
-    order_items when order_items != [] <- Repo.all(from i in Order.Item, select: i, where: i.order_id == ^order.id),
-    {:order_item, order_item = %Order.Item{}} <- {:order_item, Enum.find(order_items, &(&1.item_id == item_id))},
-    stock when is_integer(stock) <- Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id),
-    false <- (quantity + order_item.quantity) > stock do
+    order_by: [desc: o.id]) |> List.first, #dernier order inséré à l'adresse donnée
+    order_items when order_items != [] <- Repo.all(from i in Order.Item, select: i, where: i.order_id == ^order.id), #liste des order_items correspondant à l'order non vide
+    {:order_item, order_item = %Order.Item{}} <- {:order_item, Enum.find(order_items, &(&1.item_id == item_id))}, #order_item dans l'order ayant le même id que celui que l'on souhaite ajouté
+    {:stock, stock} when is_integer(stock) <- {:stock, Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)}, #stock est un integer
+    false <- (quantity + order_item.quantity) > stock do #quantity valide en fonction du stock
       case Repo.update Order.Item.changeset(order_item, %{quantity: quantity}) do
         {:ok, order_item} ->
-          put_status(conn, 200)
+          put_status(conn, 201)
           |> OrderItemView.render("index.json", %{order_item: order_item})
         {:error, changeset} ->
           Logger.error "ERROR : #{inspect changeset}"
           put_status(conn, 500)
       end
     else
-      [] ->
-        Logger.error "Le panier ne contient aucun order_item."
+      [] -> #l'order ne possède pas encore d'order_items
+        order_id = Repo.all(from o in Order, select: o.id,
+        where: o.user_address_id == ^user_address_id,
+        order_by: [desc: o.id]) |> List.first
+        with item_stock when is_integer(item_stock) <- Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id), #stock est un integer
+        false <- quantity > item_stock, #quantity valide en fonction du stock
+        {:ok, order_item} <- Repo.insert %Order.Item{order_id: order_id, item_id: item_id, quantity: quantity} do #insertion de l'order_item
+          put_status(conn, 201)
+          |> OrderItemView.render("index.json", %{order_item: order_item})
+        else
+          nil -> #le stock n'est pas un integer
+            Logger.error "L'item n'existe pas."
+            put_status(conn, 404)
+            |> json("Not found")
+          true -> #quantity non valide
+            Logger.error("la quantite saisi est incorrecte")
+            put_status(conn, 400)
+            |> json("Bad request")
+          {:error, changeset} ->
+            Logger.error "ERROR : #{inspect changeset}"
+            put_status(conn, 500)
+          end
+      {:stock , _} -> #le stock n'est pas un integer
+        Logger.error "L'item n'existe pas."
         put_status(conn, 404)
-      nil ->
+        |> json("Not found")
+      nil -> #aucun order ne correspond à cette adresse
         Logger.error "Le panier n'existe pas."
         put_status(conn, 404)
-      true ->
+        |> json("Not found")
+      true -> #quantity non valide
         Logger.error("la quantite saisi est incorrecte")
         put_status(conn, 400)
-        |> json([])
-      {:order_item, nil} ->
+        |> json("Bad request")
+      {:order_item, nil} -> #order_item non présent dans le panier
         item_stock = Repo.one(from i in Item, select: i.stock, where: i.id == ^item_id)
         if quantity > item_stock do
           Logger.error("la quantité saisi est incorrecte")
-          put_status(conn, 404)
-          |> json([])
+          put_status(conn, 400)
+          |> json("Bad request")
         else
-          # si on n'a pas d'erreur alors on ajoute l'item au panier
-          order_id = Repo.one(from o in Order, select: o.id, where: o.user_address_id == ^user_address_id)
+          order_id = Repo.all(from o in Order, select: o.id,
+          where: o.user_address_id == ^user_address_id,
+          order_by: [desc: o.id]) |> List.first
           case Repo.insert %Order.Item{order_id: order_id, item_id: item_id, quantity: quantity} do
           {:ok, order_item} ->
             put_status(conn, 201)
@@ -164,6 +197,15 @@ defmodule KiraBijouxWeb.ShoppingCartController do
       order_id :path, :integer, "The id of the order of the shopping cart to be updated", required: true
       quantity :query, :integer, "The quantity of the shopping cart to be updated", required: true
     end
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Shop),
+      example:
+        %{
+          item_id: 1,
+          user_address_id: 1,
+          quantity: 2
+        }
+    )
   end
 
   def update(conn, %{"item_id" => item_id, "order_id" => order_id, "quantity" => quantity}) do

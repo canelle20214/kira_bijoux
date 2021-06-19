@@ -15,17 +15,17 @@ defmodule KiraBijouxWeb.AddressController do
       nil ->
         Logger.error "L'adresse n'existe pas."
         put_status(conn, 404)
-        |> json([])
-      address ->
+        |> json("Not found")
+        user_address ->
         put_status(conn, 200)
-        |> UserAddressView.render("index.json", %{address: address})
+        |> UserAddressView.render("index.json", %{user_address: user_address})
     end
   end
   def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
 
   # get addresses by user
   swagger_path :showByUserId do
-    get("/addresses/{id}")
+    get("/addresses/user/{id}")
     summary("Get address by user")
     description("Address filtered by user")
     parameter :id, :path, :integer, "The id of the user to be display", required: true
@@ -37,10 +37,10 @@ defmodule KiraBijouxWeb.AddressController do
       [] ->
         Logger.error "Aucune adresse ne correspond à cet utilisateur."
         put_status(conn, 404)
-        |> json([])
-      addresses ->
+        |> json("Not found")
+        user_addresses ->
         put_status(conn, 200)
-        |> UserAddressView.render("index.json", %{addresses: addresses})
+        |> UserAddressView.render("index.json", %{user_addresses: user_addresses})
     end
   end
   def showByUserId(conn, _), do: put_status(conn, 400) |> json("Bad request")
@@ -66,11 +66,10 @@ defmodule KiraBijouxWeb.AddressController do
 
   # create address to user
   swagger_path :create do
-    post("/addresses/{id}")
+    post("/addresses")
     summary("Create address")
     description("Create a new address")
     produces "application/json"
-    parameter :id, :path, :integer, "The id of the user who want add address", required: true
     parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
       name: "Maison",
       first_line: "8 rue de la gare",
@@ -80,9 +79,23 @@ defmodule KiraBijouxWeb.AddressController do
       recipient: "M John Doe",
       country: "France"
     })
+    produces "application/json"
+    response(201, "Created", Schema.ref(:Address),
+      example:
+        %{
+          user_id: 1,
+          name: "Maison",
+          first_line: "8 rue de la gare",
+          second_line: "",
+          post_code: "75009",
+          town: "Paris",
+          recipient: "M John Doe",
+          country: "France"
+        }
+    )
   end
 
-  def create(conn, %{"id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "second_line" => second_line, "post_code" => post_code, "town" => town, "country" => country}) do
+  def create(conn, %{"user_id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "second_line" => second_line, "post_code" => post_code, "town" => town, "country" => country}) do
     case Repo.insert %User.Address{user_id: user_id, name: name, first_line: first_line, second_line: second_line, post_code: post_code, town: town, country: country, recipient: recipient} do
       {:ok, user_address} ->
         put_status(conn, 201)
@@ -92,7 +105,7 @@ defmodule KiraBijouxWeb.AddressController do
         put_status(conn, 500)
     end
   end
-  def create(conn, %{"id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "post_code" => post_code, "town" => town, "country" => country}) do
+  def create(conn, %{"user_id" => user_id, "name" => name, "recipient" => recipient, "first_line" => first_line, "post_code" => post_code, "town" => town, "country" => country}) do
     case Repo.insert %User.Address{user_id: user_id, name: name, first_line: first_line, post_code: post_code, town: town, country: country, recipient: recipient} do
       {:ok, user_address} ->
         put_status(conn, 201)
@@ -118,9 +131,23 @@ defmodule KiraBijouxWeb.AddressController do
       second_line: "",
       post_code: "75006",
       town: "Paris",
-      recipient: "M Johno Doe",
+      recipient: "M John Doe",
       country: "France"
     })
+    produces "application/json"
+    response(200, "OK", Schema.ref(:Address),
+      example:
+        %{
+          user_id: 1,
+          name: "Maison",
+          first_line: "9 rue de la gare",
+          second_line: "",
+          post_code: "75006",
+          town: "Paris",
+          recipient: "M John Doe",
+          country: "France"
+        }
+    )
   end
 
   def update(conn, %{"id" => id} = params) do
@@ -128,7 +155,7 @@ defmodule KiraBijouxWeb.AddressController do
       nil ->
         Logger.error "L'adresse n'existe pas."
         put_status(conn, 404)
-        |> json([])
+        |> json("Not found")
       address ->
         user_id = params["user_id"] || address.user_id
         name = params["name"] || address.name
