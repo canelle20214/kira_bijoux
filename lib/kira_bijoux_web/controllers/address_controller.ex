@@ -71,7 +71,6 @@ defmodule KiraBijouxWeb.AddressController do
     description("Create a new address")
     produces "application/json"
     parameter :address, :body, Schema.ref(:Address), "Address", required: true, default: Jason.Formatter.pretty_print(Jason.encode!%{
-      user_id: 1,
       name: "Maison",
       first_line: "8 rue de la gare",
       second_line: "",
