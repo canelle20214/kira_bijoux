@@ -16,9 +16,9 @@ defmodule KiraBijouxWeb.AddressController do
         Logger.error "L'adresse n'existe pas."
         put_status(conn, 404)
         |> json("Not found")
-      address ->
+        user_address ->
         put_status(conn, 200)
-        |> UserAddressView.render("index.json", %{address: address})
+        |> UserAddressView.render("index.json", %{user_address: user_address})
     end
   end
   def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
@@ -38,9 +38,9 @@ defmodule KiraBijouxWeb.AddressController do
         Logger.error "Aucune adresse ne correspond à cet utilisateur."
         put_status(conn, 404)
         |> json("Not found")
-      addresses ->
+        user_addresses ->
         put_status(conn, 200)
-        |> UserAddressView.render("index.json", %{addresses: addresses})
+        |> UserAddressView.render("index.json", %{user_addresses: user_addresses})
     end
   end
   def showByUserId(conn, _), do: put_status(conn, 400) |> json("Bad request")
