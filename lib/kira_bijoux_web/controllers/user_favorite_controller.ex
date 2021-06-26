@@ -86,7 +86,7 @@ defmodule KiraBijouxWeb.UserFavoriteController do
     response(code(:ok), "Success")
   end
 
-  def showByUserId(conn, %{"id" => id}) do
+  def showByOrderId(conn, %{"id" => id}) do
     case Repo.all(from uf in User.Favorite, select: uf,
       where: uf.user_id == ^id) do
       [] ->
