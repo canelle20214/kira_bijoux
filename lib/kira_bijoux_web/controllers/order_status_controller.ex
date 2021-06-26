@@ -42,9 +42,9 @@ defmodule KiraBijouxWeb.OrderStatusController do
         Logger.error("l'order status n'existe pas")
         put_status(conn, 404)
         |> json("Not found")
-      order_status ->
+      order_statut ->
         put_status(conn, 200)
-        |> OrderStatusView.render("index.json", %{order_status: order_status})
+        |> OrderStatusView.render("index.json", %{order_statut: order_statut})
     end
   end
   def show(conn, _), do: put_status(conn, 400) |> json("Bad request")
@@ -69,9 +69,9 @@ defmodule KiraBijouxWeb.OrderStatusController do
 
   def create(conn, %{"name" => name}) do
     case Repo.insert %Order.Status{name: name} do
-      {:ok, order_status} ->
+      {:ok, order_statut} ->
         put_status(conn, 201)
-        |> OrderStatusView.render("index.json", %{order_status: order_status})
+        |> OrderStatusView.render("index.json", %{order_statut: order_statut})
       {:error, changeset} ->
         Logger.error "ERROR : #{inspect changeset}"
         put_status(conn, 500)
@@ -101,9 +101,9 @@ defmodule KiraBijouxWeb.OrderStatusController do
 
   def update(conn, %{"id" => id, "name" => name}) do
     with order_status = %Order.Status{} <- Repo.get(Order.Status, id),
-    {:ok, order_status} <- Repo.update Order.Status.changeset(order_status, %{name: name}) do
+    {:ok, order_statut} <- Repo.update Order.Status.changeset(order_status, %{name: name}) do
       put_status(conn, 200)
-      |> OrderStatusView.render("index.json", %{order_status: order_status})
+      |> OrderStatusView.render("index.json", %{order_statut: order_statut})
     else
       nil ->
         Logger.error "Le status de la commande n'existe pas."
