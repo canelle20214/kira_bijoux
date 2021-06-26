@@ -1,9 +1,9 @@
 defmodule KiraBijouxWeb.OrderStatusView do
   use KiraBijouxWeb, :view
 
-  def render(conn, "show.json", %{order_status: order_status}) do
+  def render(conn, "index.json", %{order_statut: order_statut}) do
     conn
-    |> json(order_status_construction(order_status))
+    |> json(order_status_construction(order_statut))
   end
 
   def render(conn, "index.json", %{order_status: order_status}) do
