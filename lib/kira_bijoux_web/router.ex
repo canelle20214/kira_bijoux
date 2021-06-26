@@ -74,6 +74,12 @@ defmodule KiraBijouxWeb.Router do
     put("/materials/:id", MaterialController, :update)
     delete("/materials/:id", MaterialController, :delete)
 
+    get("/material-types", MaterialTypeController, :index)
+    get("/material-types/:id", MaterialTypeController, :show)
+    post("/material-types", MaterialTypeController, :create)
+    put("/material-types/:id", MaterialTypeController, :update)
+    delete("/material-types/:id", MaterialTypeController, :delete)
+
     get("/newsletters", NewsletterController, :index)
     get("/newsletters/:id", NewsletterController, :show)
     post("/newsletters", NewsletterController, :create)
@@ -107,6 +113,19 @@ defmodule KiraBijouxWeb.Router do
     put("/shops/:item_id/:order_id", ShoppingCartController, :update)
     delete("/shops/:item_id/:order_id", ShoppingCartController, :delete)
 
+    get("/users", UserController, :index)
+    get("/users/:id", UserController, :show)
+    post("/users", UserController, :create)
+    put("/users/:id", UserController, :update)
+    delete("/users/:id", UserController, :delete)
+
+    get("/user-favorites", UserFavoriteController, :index)
+    get("/user-favorites/:id", UserFavoriteController, :show)
+    get("/user-favorites/order/:id", UserFavoriteController, :showByOrderId)
+    post("/user-favorites", UserFavoriteController, :create)
+    put("/user-favorites/:id", UserFavoriteController, :update)
+    delete("/user-favorites/:id", UserFavoriteController, :delete)
+
     get("/user-newsletters", UserNewsletterController, :index)
     get("/user-newsletters/:id", UserNewsletterController, :show)
     get("/user-newsletters/item/:id", UserNewsletterController, :showByItemId)
@@ -116,11 +135,6 @@ defmodule KiraBijouxWeb.Router do
     put("/user-newsletters/:id", UserNewsletterController, :update)
     delete("/user-newsletters/:id", UserNewsletterController, :delete)
 
-    get("/users", UserController, :index)
-    get("/users/:id", UserController, :show)
-    post("/users", UserController, :create)
-    put("/users/:id", UserController, :update)
-    delete("/users/:id", UserController, :delete)
   end
 
   scope "/api/swagger" do
