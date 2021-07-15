@@ -45,6 +45,12 @@ defmodule KiraBijouxWeb.AuthController do
   end
 
   def register(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "password" => password}) do
+    if String.length(password) < 8 do
+      Logger.error "le mot de passe doit comporter au moins 8 characteres"
+      put_status(conn, 400)
+      |> json("Bad request")
+      exit(:shutdown)
+    end
     with false <- Repo.exists?(from u in User, where: u.mail == ^mail),
     {:ok, user} <- Repo.insert(%User{
       firstname: firstname,
