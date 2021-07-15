@@ -5,7 +5,7 @@ defmodule KiraBijoux.Repo.Migrations.InsertUserNewsletters do
     newsletter1 = Repo.one(from n in Newsletter, select: n.id, where: n.name == "Newletter")
     newsletter2 = Repo.one(from n in Newsletter, select: n.id, where: n.name == "Alerte stock")
     newsletter3 = Repo.one(from n in Newsletter, select: n.id, where: n.name == "Promo")
-    user = Repo.one(from u in User, select: u.id, where: u.mail == "test@test.com")
+    user = Repo.one(from u in User, select: u.id, where: u.mail == "marie-berger@gmail.com")
     mail = "unknown@gmail.com"
     item = Repo.one(from i in Item, select: i.id, where: i.subtitle == "Collier Daenerys en perles de Larvikite")
     Repo.insert_all(User.Newsletter,

@@ -12,7 +12,6 @@
 * [Infos utiles](#infos-utiles)
   * [Generer le Swagger](#generer-le-swagger)
   * [Generer le schema de la base de donnee (SGBD)](#generer-le-schema-de-la-base-de-donnee-sgbd)
-  * [Infos Utilisateurs deja creer hashes avec Bcrypt](#infos-utilisateurs-deja-creer-hashes-avec-bcrypt)
   * [Exemples Erreurs](#exemples-erreurs)
 * [Partie Git](#partie-git)
   * [Commandes Git Basique](#commandes-git-basique)
@@ -109,15 +108,6 @@ Prêt à entrer en production ? Veuillez [consulter nos guides de déploiement](
     - ensuite dans le menu en haut clicker sur Database puis Reverse Engineer
     - puis sélectionner la base de donnée utilisé puis faites valider
     - et réaranger le schéma en vous basant sur l'exemple de la dernière version du SBGD
-
-### Infos Utilisateurs deja creer hashes avec Bcrypt
-
-  - Users de test : 
-    - Test => email : test@test.com / password : test 
-    - Toto => email : toto@toto.com / password : toto 
-    - Tonton => email : tonton@tonton.com / password : tonton 
-  - Admin de test :
-    - Admin => email : admin@gmail.com / password : admin
 
 ### Exemples Erreurs
 
