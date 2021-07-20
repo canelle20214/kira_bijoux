@@ -17,8 +17,9 @@ defmodule KiraBijoux.Repo.Migrations.InsertItemParents do
       %{name: "Kena", collection_id: collection, item_type_id: collier, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "Meredith", collection_id: collection, item_type_id: bracelet, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "Marie", collection_id: collection, item_type_id: bo, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
-      %{name: "Shana", collection_id: collection, item_type_id: collier, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
-      ]
+      %{name: "Shana", collection_id: collection, item_type_id: collier, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "Melinda", collection_id: collection, item_type_id: bracelet, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
+    ]
     )
   end
 end

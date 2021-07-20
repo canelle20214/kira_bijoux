@@ -9,7 +9,7 @@ defmodule KiraBijouxWeb.ItemTypeController do
     response(code(:ok), "Success")
   end
 
-  def index(conn, _params) do
+  def index(conn, _) do
     item_types = Repo.all(from t in Item.Type, select: t)
     put_status(conn, 200)
     |> ItemTypeView.render("index.json", %{item_types: item_types})
