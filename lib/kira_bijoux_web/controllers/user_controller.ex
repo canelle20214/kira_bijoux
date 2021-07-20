@@ -81,6 +81,12 @@ defmodule KiraBijouxWeb.UserController do
   end
 
   def create(conn, %{"firstname" => firstname, "lastname" => lastname, "mail" => mail, "phone" => phone, "password" => password}) do
+    if String.length(password) < 8 do
+      Logger.error "le mot de passe doit comporter au moins 8 characteres"
+      put_status(conn, 400)
+      |> json("Bad request")
+      exit(:shutdown)
+    end
     case Repo.insert %User{firstname: firstname, lastname: lastname, phone: phone, mail: mail, password: Bcrypt.hash_pwd_salt(password), user_role_id: 1} do
       {:ok, user} ->
         put_status(conn, 201)
