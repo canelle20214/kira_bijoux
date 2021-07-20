@@ -29,6 +29,14 @@ defmodule KiraBijouxWeb.Router do
   scope "/api", KiraBijouxWeb do
     pipe_through :api
 
+    get("/articles", ArticleController, :index)
+    get("/articles/:id", ArticleController, :show)
+    get("/articles/page/:id", ArticleController, :showByPageId)
+    post("/articles", ArticleController, :create)
+    put("/articles/:id", ArticleController, :update)
+    delete("/articles/:id", ArticleController, :delete)
+
+
     get("/addresses/:id", AddressController, :show)
     get("/addresses/user/:id", AddressController, :showByUserId)
     post("/addresses", AddressController, :create)
@@ -105,6 +113,12 @@ defmodule KiraBijouxWeb.Router do
     post("/order-status", OrderStatusController, :create)
     put("/order-status/:id", OrderStatusController, :update)
     delete("/order-status/:id", OrderStatusController, :delete)
+
+    get("/pages", PageController, :index)
+    get("/pages/:id", PageController, :show)
+    post("/pages", PageController, :create)
+    put("/pages/:id", PageController, :update)
+    delete("/pages/:id", PageController, :delete)
 
     get("/shops", ShoppingCartController, :index)
     get("/shops/:id", ShoppingCartController, :show)

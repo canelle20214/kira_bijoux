@@ -4,7 +4,7 @@ defmodule KiraBijoux.Repo.Migrations.CreatePages do
   def change do
     create table(:pages) do
       add :name, :string
-      add :visibility, :boolean, default: true, null: true
+      add :visibility, :boolean, default: true
 
       timestamps()
     end

@@ -6,10 +6,10 @@ defmodule KiraBijouxWeb.OrderStatusView do
     |> json(order_status_construction(order_statut))
   end
 
-  def render(conn, "index.json", %{order_status: order_status}) do
-    order_status = Enum.map(order_status, & order_status_construction(&1))
+  def render(conn, "index.json", %{list_of_order_status: list_of_order_status}) do
+    list_of_order_status = Enum.map(list_of_order_status, & order_status_construction(&1))
     conn
-    |> json(order_status)
+    |> json(list_of_order_status)
   end
 
   def order_status_construction(order_status) do

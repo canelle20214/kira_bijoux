@@ -4,7 +4,7 @@ defmodule KiraBijoux.Page do
 
   schema "pages" do
     field :name, :string
-    field :visibility, :boolean, default: true
+    field :visibility, :boolean
 
     timestamps()
   end
