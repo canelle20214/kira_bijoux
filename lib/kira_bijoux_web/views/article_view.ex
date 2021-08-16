@@ -14,7 +14,7 @@ defmodule KiraBijouxWeb.ArticleView do
 
   def article_construction(article) do
     page = Repo.get!(Page, article.page_id)
-    |> KiraBijouxWeb.PageView.page_construction()
+    |> KiraBijouxWeb.CreatePageView.page_construction()
     Map.new(id: article.id)
     |> Map.put(:name, article.name)
     |> Map.put(:content, article.content)
