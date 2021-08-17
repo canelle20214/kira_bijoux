@@ -123,12 +123,11 @@ defmodule KiraBijoux.Repo.Migrations.InsertItemPictures do
       %{name: "shana-8.jpg", path: "assets/img/pictures/Shana/", place: 8, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "shana-9.jpg", path: "assets/img/pictures/Shana/", place: 9, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "shana-10.jpg", path: "assets/img/pictures/Shana/", place: 10, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
-
       %{name: "melinda-1.jpg", path: "assets/img/pictures/Melinda/", place: 1, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "melinda-2.jpg", path: "assets/img/pictures/Melinda/", place: 2, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "melinda-3.jpg", path: "assets/img/pictures/Melinda/", place: 3, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "melinda-4.jpg", path: "assets/img/pictures/Melinda/", place: 4, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
-      %{name: "melinda-5.jpg", path: "assets/img/pictures/Melinda/", place: 5, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "melinda-5.jpg", path: "assets/img/pictures/Melinda/", place: 5, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
       ]
     )
   end
