@@ -114,11 +114,11 @@ defmodule KiraBijouxWeb.Router do
     put("/order-status/:id", OrderStatusController, :update)
     delete("/order-status/:id", OrderStatusController, :delete)
 
-    get("/pages", PageController, :index)
-    get("/pages/:id", PageController, :show)
-    post("/pages", PageController, :create)
-    put("/pages/:id", PageController, :update)
-    delete("/pages/:id", PageController, :delete)
+    get("/pages", CreatePageController, :index)
+    get("/pages/:id", CreatePageController, :show)
+    post("/pages", CreatePageController, :create)
+    put("/pages/:id", CreatePageController, :update)
+    delete("/pages/:id", CreatePageController, :delete)
 
     get("/shops", ShoppingCartController, :index)
     get("/shops/:id", ShoppingCartController, :show)
