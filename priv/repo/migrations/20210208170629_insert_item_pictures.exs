@@ -18,7 +18,8 @@ defmodule KiraBijoux.Repo.Migrations.InsertItemPictures do
     {:ok, item13} = Enum.fetch(items, 12)
     {:ok, item14} = Enum.fetch(items, 13)
     {:ok, item15} = Enum.fetch(items, 14)
-    [ item16 | _ ] = Enum.reverse(items)
+    {:ok, item16} = Enum.fetch(items, 15)
+    [ item17 | _ ] = Enum.reverse(items)
     Repo.insert_all(Item.Picture,
       [ %{name: "aylee-1.jpg", path: "assets/img/pictures/Aylee/", place: 1, item_id: item1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "aylee-2.jpg", path: "assets/img/pictures/Aylee/", place: 2, item_id: item1, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
@@ -121,7 +122,12 @@ defmodule KiraBijoux.Repo.Migrations.InsertItemPictures do
       %{name: "shana-7.jpg", path: "assets/img/pictures/Shana/", place: 7, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "shana-8.jpg", path: "assets/img/pictures/Shana/", place: 8, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
       %{name: "shana-9.jpg", path: "assets/img/pictures/Shana/", place: 9, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
-      %{name: "shana-10.jpg", path: "assets/img/pictures/Shana/", place: 10, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
+      %{name: "shana-10.jpg", path: "assets/img/pictures/Shana/", place: 10, item_id: item16, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "melinda-1.jpg", path: "assets/img/pictures/Melinda/", place: 1, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "melinda-2.jpg", path: "assets/img/pictures/Melinda/", place: 2, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "melinda-3.jpg", path: "assets/img/pictures/Melinda/", place: 3, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "melinda-4.jpg", path: "assets/img/pictures/Melinda/", place: 4, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)},
+      %{name: "melinda-5.jpg", path: "assets/img/pictures/Melinda/", place: 5, item_id: item17, inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second), updated_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)}
       ]
     )
   end

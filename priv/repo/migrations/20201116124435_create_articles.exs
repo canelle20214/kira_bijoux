@@ -4,7 +4,6 @@ defmodule KiraBijoux.Repo.Migrations.CreateArticles do
   def change do
     create table(:articles) do
       add :page_id, references(:pages, [ on_delete: :delete_all, on_update: :update_all ])
-      add :template_id, references(:templates, [ on_delete: :delete_all, on_update: :update_all ])
       add :name, :string
       add :content, :text
       add :place, :integer
@@ -13,6 +12,5 @@ defmodule KiraBijoux.Repo.Migrations.CreateArticles do
     end
 
     create index(:articles, [:page_id])
-    create index(:articles, [:template_id])
   end
 end

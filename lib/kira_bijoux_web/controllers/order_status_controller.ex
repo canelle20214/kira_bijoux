@@ -9,10 +9,10 @@ defmodule KiraBijouxWeb.OrderStatusController do
     response(code(:ok), "Success")
   end
 
-  def index(conn, _params) do
-    order_status = Repo.all(from os in Order.Status, select: os)
+  def index(conn, _) do
+    list_of_order_status = Repo.all(from os in Order.Status, select: os)
     put_status(conn, 200)
-    |> OrderStatusView.render("index.json", %{order_status: order_status})
+    |> OrderStatusView.render("index.json", %{list_of_order_status: list_of_order_status})
   end
 
   def swagger_definitions do

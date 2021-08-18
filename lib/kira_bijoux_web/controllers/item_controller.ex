@@ -21,7 +21,7 @@ defmodule KiraBijouxWeb.ItemController do
         title "Item"
         description "Item descr"
         properties do
-          name :string, "Subtitle"
+          name :string, "Name"
           subtitle :string, "Subtitle"
           description :string, "Description"
           price :number, "Price"
